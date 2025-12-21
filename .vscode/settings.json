@@ -1,0 +1,10 @@
+{
+	"Lua.diagnostics.globals": [
+		"GTR_NOTITLECARD",
+		"GTR_NOSPECTATORSPAWN",
+		"GTR_FRIENDLY",
+		"GTR_SPECTATORS",
+		"int_none",
+		"continue"
+	]
+}

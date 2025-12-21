@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run SRB2",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"D:/stuff/SRB2-v2215-Full/srb2win.exe -folder \"${workspaceFolder}\" -windowed -console"
+			],
+			"options": {
+				"cwd": "D:/stuff/SRB2-v2215-Full"
+			},
+			"presentation": {
+				"reveal": "never",
+				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		}
+	]
+}
