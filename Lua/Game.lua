@@ -27,6 +27,8 @@ addHook("PlayerThink", function(player)
 		FH:initPlayerRound(player)
 	end
 
+	player.heistRound
+
 	if FH:isPlayerExiting(player) then
 		print("we leaving")
 	end
