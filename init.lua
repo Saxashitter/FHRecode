@@ -8,15 +8,9 @@ G_AddGametype({
     description = "Chill out from the battles and races and relax with your friends in your favorite levels without a care in the world."
 })
 
---- @class FH
---- @field playerInit fun(player: player_t)
-
---- @type FH
 rawset(_G, "FH", {})
+rawset(_G, "FHN", {}) -- network synched
+rawset(_G, "FHR", {}) -- network synched
 
---- @class FHN
-
---- @type FH
-rawset(_G, "FHN", {})
-
-dofile("Game.lua")
+dofile("config.lua")
+dofile("game.lua")

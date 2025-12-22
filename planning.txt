@@ -10,5 +10,5 @@ FangsHeist/
 │  ├─ player.lua        -- player-specific logic (heist_t, playerInit, etc.)
 │  ├─ utils.lua         -- general helper functions
 │  └─ hooks.lua         -- general hook registration helpers
-├─ Game.lua             -- main game coordinator
+├─ game.lua             -- main game coordinator
 └─ config.lua           -- configuration, constants, etc.
