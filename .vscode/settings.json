@@ -5,6 +5,8 @@
 		"GTR_FRIENDLY",
 		"GTR_SPECTATORS",
 		"int_none",
-		"continue"
+		"continue",
+		"GTR_ENEMIES",
+		"GTR_SPAWNENEMIES"
 	]
 }

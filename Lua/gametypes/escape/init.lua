@@ -3,6 +3,9 @@
 --- Base gamemode for all the other ones.
 
 local escape = setmetatable({}, FH:returnGametypeMetatable())
+
+escape.rules = GTR_SPAWNENEMIES
+
 rawset(_G, "_FH_ESCAPE", escape)
 
 dofile("gametypes/escape/game.lua")
