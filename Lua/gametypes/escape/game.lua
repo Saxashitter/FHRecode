@@ -19,6 +19,16 @@ function escape:update()
 	end
 end
 
+--- @param player player_t
+function escape:playerUpdate(player)
+	if not player.mo then return end
+	if not player.mo.health then return end
+
+	if FH:isPlayerInExitSector(player) and not FHN.escape then
+		escape:startEscape(player)
+	end
+end
+
 --- Starts the escape sequence.
 --- @param starter player_t
 function escape:startEscape(starter)

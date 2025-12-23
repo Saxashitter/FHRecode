@@ -33,6 +33,7 @@ local heistGametype_t = {
 	typeoflevel = TOL_COOP,
 	rules = 0,
 	headercolor = 103,
+
 	init = function() end,
 	update = function() end,
 	playerUpdate = function() end,
@@ -111,6 +112,18 @@ function FH:callGametypeFunc(gametypeKey, key, ...)
 		return gametype[key](gametype, ...)
 	end
 end
+
+--- Returns heistGametype_t if the player is playing a Fang's Heist gamemode, otherwise false.
+--- @return heistGametype_t|false
+function FH:isMode()
+	if self.gametypeByID[gametype] == nil then
+		return false
+	end
+
+	--- @type heistGametype_t
+	return FH.gametypes[self.gametypeByID[gametype]]
+end
+
 
 --- Get all gametypes within Fang's Heist
 dofile("gametypes/escape/init.lua")
