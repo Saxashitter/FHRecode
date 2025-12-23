@@ -6,6 +6,7 @@ local escape = setmetatable({}, FH:returnGametypeMetatable())
 rawset(_G, "_FH_ESCAPE", escape)
 
 dofile("gametypes/escape/game.lua")
+dofile("gametypes/escape/player.lua")
 
 --- We're done! Delete the global and return.
 rawset(_G, "_FH_ESCAPE", nil)

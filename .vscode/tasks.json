@@ -7,7 +7,7 @@
 			"command": "cmd",
 			"args": [
 				"/c",
-				"D:/stuff/SRB2-v2215-Full/srb2win.exe -folder \"${workspaceFolder}\" -windowed -console"
+				"D:/stuff/SRB2-v2215-Full/srb2win.exe -folder \"${workspaceFolder}\" -windowed -console -server -gametype 8"
 			],
 			"options": {
 				"cwd": "D:/stuff/SRB2-v2215-Full"
@@ -18,6 +18,24 @@
 				"panel": "shared"
 			},
 			"problemMatcher": []
+		},
+		{
+			"label": "Dual-Boot SRB2 (Server & Client)",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"start \"\" D:/stuff/SRB2-v2215-Full/srb2win.exe -folder \"${workspaceFolder}\" -windowed -console -server -gametype 8 && start \"\" D:/stuff/SRB2-v2215-Full/srb2win.exe -folder \"${workspaceFolder} -windowed -console"
+			],
+			"options": {
+				"cwd": "D:/stuff/SRB2-v2215-Full"
+			},
+			"presentation": {
+				"reveal": "never",
+				"panel": "shared"
+			},
+			"problemMatcher": []
 		}
-	]
+
+	],
 }

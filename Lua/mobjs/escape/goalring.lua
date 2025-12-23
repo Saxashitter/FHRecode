@@ -1,0 +1,1 @@
+--- The ring players jump into when the escape sequence starts.

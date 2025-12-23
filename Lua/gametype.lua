@@ -14,12 +14,12 @@
 --- @field headercolor number
 --- Runs upon gametype initalization, after Fang's Heist initalizes itself.
 --- @field init fun(self: heistGametype_t)
---- Runs every tic that the game is active for, excluding intermission.
---- @field update fun(self: heistGametype_t)
+--- Runs every tic that the game is active for.
+--- @field update fun(self: heistGametype_t, currentState: string)
 --- Runs every tic for every player, regardless if they are dead or alive. Follows the same rules as the update function.
---- @field playerUpdate fun(self: heistGametype_t, player: player_t)
+--- @field playerUpdate fun(self: heistGametype_t, player: player_t, currentState: string)
 --- Runs upon the game ending, useful for de-initing or stopping stuff.
---- @field finish fun(self: heistGametype_t)
+--- @field finish fun(self: heistGametype_t, currentState: string)
 --- Runs immediately after the finish function. Return a list of sorted players to determine their place on the leaderboard, or return nil to use the default profit-sorted list.
 --- @field declareWinner fun(self: heistGametype_t, players: player_t[]): player_t[]|nil
 --- @field __index heistGametype_t
