@@ -1,29 +1,39 @@
---- Checks if the player is in a exit sector. Mainly used to start the escape sequence in Escape modes.
---- @param player player_t
-function FH:isPlayerInExitSector(player)
-	if player.mo.subsector.sector.specialflags & SSF_EXIT > 0 then
-		return true
+--- House-keeping for rounds, per-match.
+--- @class heistRoundGlobal_t
+
+--- Returns heistGametype_t if the player is playing a Fang's Heist gamemode, otherwise false.
+--- @return heistGametype_t|false
+function FH:isMode()
+	if self.gametypeByID[gametype] == nil then
+		return false
 	end
 
-	for fof in player.mo.subsector.sector.ffloors() do
-		if player.mo.z < fof.bottomheight then continue end
-		if player.mo.z+player.mo.height > fof.topheight then continue end
-		if fof.sector.specialflags & SSF_EXIT == 0 then continue end
-
-		return true
-	end
-
-	return false
+	--- @type heistGametype_t
+	return FH.gametypes[self.gametypeByID[gametype]]
 end
 
---- @param player player_t
-addHook("PlayerThink", function(player)
-	if not player.heistGlobal then
-		FH:initPlayerGlobal(player)
-	end
-	if not player.heistRound then
-		FH:initPlayerRound(player)
-	end
+--- Initalize the game round, ran inside MapChange. This does not reset the gametype!
+--- @param gametype heistGametype_t
+function FH:initRound(gametype)
+	--- @type heistRoundGlobal_t
+	local roundGlobal = {}
+	FHR = roundGlobal
+
+	gametype:init()
+end
+
+addHook("MapChange", function()
+	local gametype = FH:isMode()
+	if not gametype then return end
+
+	FH:initRound(gametype)
+end)
+
+addHook("ThinkFrame", function()
+	--- @type heistGametype_t
+	local gametype = FH.gametypes[FHN.currentGametype] or FH.gametypes[1]
+
+	gametype:update()
 end)
 
 --- @param network function

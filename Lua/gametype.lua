@@ -41,24 +41,30 @@ local heistGametype_t = {
 }
 heistGametype_t.__index = heistGametype_t
 
---- Add a gametype to Fang's Heist.
---- @param gametypeTable table
+--- Return the gametype metatable for use with creating gametypes.
 --- @return heistGametype_t
-function FH:addGametype(gametypeTable)
-	local gametype = setmetatable(gametypeTable, heistGametype_t)
+function FH:returnGametypeMetatable()
+	return heistGametype_t
+end
 
-	table.insert(FH.gametypes, gametype)
+--- Add a gametype to Fang's Heist.
+--- @param gametypeStruct heistGametype_t
+--- @return heistGametype_t
+function FH:addGametype(gametypeStruct)
+	table.insert(self.gametypes, gametypeStruct)
+
 	G_AddGametype{
-		identifier = freeslot("GT_"..gametype.id),
-		name = gametype.name,
-		description = gametype.description,
-		typeoflevel = gametype.typeoflevel,
-		rules = gametype.rules,
-		headercolor = gametype.headercolor,
+		identifier = gametypeStruct.id,
+		name = gametypeStruct.name,
+		description = gametypeStruct.description,
+		typeoflevel = gametypeStruct.typeoflevel,
+		rules = gametypeStruct.rules,
+		headercolor = gametypeStruct.headercolor,
 		intermissiontype = int_none,
 	}
+	self.gametypeByID[_G["GT_"..gametypeStruct.id:upper()]] = #self.gametypes
 
-	return gametype
+	return gametypeStruct
 end
 
 --- Get a gametype that exists within Fang's Heist using the gametype's ID.
