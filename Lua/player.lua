@@ -55,10 +55,17 @@ end
 
 --- @param player player_t
 addHook("PlayerThink", function(player)
+	--- @type heistGametype_t|false
+	local gametype = FH:isMode()
+
+	if not gametype then return end
+
 	if not player.heistGlobal then
 		FH:initPlayerGlobal(player)
 	end
 	if not player.heistRound then
 		FH:initPlayerRound(player)
 	end
+
+	gametype:playerUpdate(player)
 end)
