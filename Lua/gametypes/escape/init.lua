@@ -8,4 +8,4 @@ local escape = _FH_ESCAPE
 
 --- We're done! Delete the global and return.
 rawset(_G, "_FH_ESCAPE", nil)
-return escape
+return FH:addGametype(escape)

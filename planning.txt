@@ -1,14 +1,11 @@
-this was generated with chatgpt i have no idea what to do for a clean architecture
-can someone help me out here
-
 FangsHeist/
-├─ gamemodes/
-│  ├─ heist.lua
-│  ├─ race.lua
-│  └─ ctf.lua
-├─ core/
-│  ├─ player.lua        -- player-specific logic (heist_t, playerInit, etc.)
-│  ├─ utils.lua         -- general helper functions
-│  └─ hooks.lua         -- general hook registration helpers
-├─ game.lua             -- main game coordinator
-└─ config.lua           -- configuration, constants, etc.
+├─ hud/             -- hud drawers
+├─ mobjs/           -- srb2 mobjs
+├─ gametypes/       -- fangs heist gametypes
+├─ gamestates/      -- states for the game (pre-game, ingame, intermission), custom gametypes are able to add their own too
+├─ config.lua       -- table initalization and init functions for game
+├─ gametypes.lua    -- main gametype coordinator
+├─ game.lua         -- main game coordinator
+├─ player.lua       -- main player coordinator
+├─ collectibles.lua -- main collectible coordinator
+└─ hud.lua          -- main hud coordinator

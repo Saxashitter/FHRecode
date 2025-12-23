@@ -1,8 +1,6 @@
-
-
---- Checks if the player is in a exit sector.
+--- Checks if the player is in a exit sector. Mainly used to start the escape sequence in Escape modes.
 --- @param player player_t
-function FH:isPlayerExiting(player)
+function FH:isPlayerInExitSector(player)
 	if player.mo.subsector.sector.specialflags & SSF_EXIT > 0 then
 		return true
 	end
@@ -26,10 +24,10 @@ addHook("PlayerThink", function(player)
 	if not player.heistRound then
 		FH:initPlayerRound(player)
 	end
+end)
 
-	player.heistRound
-
-	if FH:isPlayerExiting(player) then
-		print("we leaving")
-	end
+--- @param network function
+addHook("NetVars", function(network)
+	FHN = network($)
+	FHR = network($)
 end)
