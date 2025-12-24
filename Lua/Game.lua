@@ -22,6 +22,10 @@ function FH:initRound(gametype)
 	}
 	FHR = roundGlobal
 
+	for player in players.iterate do
+		FH:initPlayerRound(player)
+	end
+
 	FH:setGamestate("game")
 	gametype:init()
 end

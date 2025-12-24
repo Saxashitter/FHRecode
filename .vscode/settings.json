@@ -8,5 +8,9 @@
 		"continue",
 		"GTR_ENEMIES",
 		"GTR_SPAWNENEMIES"
+	],
+	"Lua.diagnostics.disable": [
+		"exp-in-action",
+		"inject-field"
 	]
 }

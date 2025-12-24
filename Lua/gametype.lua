@@ -14,6 +14,8 @@
 --- @field headercolor number
 --- Runs upon gametype initalization, after Fang's Heist initalizes itself.
 --- @field init fun(self: heistGametype_t)
+--- Runs during MapLoad, useful for initalizing points of objects within maps.
+--- @field load fun(self: heistGametype_t)
 --- Runs every tic that the game is active for.
 --- @field update fun(self: heistGametype_t, currentState: string)
 --- Runs every tic for every player, regardless if they are dead or alive. Follows the same rules as the update function.
@@ -35,6 +37,7 @@ local heistGametype_t = {
 	headercolor = 103,
 
 	init = function() end,
+	load = function() end,
 	update = function() end,
 	playerUpdate = function() end,
 	finish = function() end,

@@ -8,18 +8,22 @@ function escape:init()
 	print("Started.")
 end
 
+function escape:escapeUpdate()
+	if FHN.escapeTime then
+		FHN.escapeTime = $ - 1
+
+		if FHN.escapeTime % TICRATE == 0 then
+			print("Tick... "..FHN.escapeTime / TICRATE)
+		end
+	end
+end
+
 --- @param currentState string
 function escape:update(currentState)
 	if currentState ~= "game" then return end
 
 	if FHN.escape then
-		if FHN.escapeTime then
-			FHN.escapeTime = $ - 1
-
-			if FHN.escapeTime % TICRATE == 0 then
-				print("Tick... "..FHN.escapeTime / TICRATE)
-			end
-		end
+		self:escapeUpdate()
 	end
 end
 
