@@ -46,6 +46,14 @@ addHook("MapChange", function()
 	FH:initRound(gametype)
 end)
 
+addHook("MapLoad", function()
+	--- @type heistGametype_t|false
+	local gametype = FH:isMode()
+	if not gametype then return end
+
+	gametype:load()
+end)
+
 addHook("ThinkFrame", function()
 	--- @type heistGametype_t|false
 	local gametype = FH:isMode()

@@ -1,11 +1,20 @@
 local escape = _FH_ESCAPE
 
 escape.timeLeft = 20 * TICRATE -- 2 minutes
+escape.signpostThing = 501
 
 function escape:init()
 	FHN.escape = false
 	FHN.escapeTime = 0
 	print("Started.")
+end
+
+function escape:load()
+	for mapthing in mapthings.iterate do
+		if mapthing.type == self.signpostThing then
+			self:spawnSignpost(FH:getMapthingWorldPosition(mapthing))
+		end
+	end
 end
 
 function escape:escapeUpdate()
@@ -33,4 +42,17 @@ function escape:startEscape(starter)
 	FHN.escape = true
 	FHN.escapeTime = escape.timeLeft -- TODO: use cvars
 	FH:changeMusic("FH_ESC")
+end
+
+--- Spawn the signpost at the given coordinates.
+--- @param x fixed_t
+--- @param y fixed_t
+--- @param z fixed_t
+--- @param angle angle_t
+function escape:spawnSignpost(x, y, z, angle)
+	print("Signpost spawned at: ")
+	print("    X: "..x/FU)
+	print("    Y: "..y/FU)
+	print("    Z: "..z/FU)
+	print("    ANGLE: "..AngleFixed(angle)/FU)
 end
