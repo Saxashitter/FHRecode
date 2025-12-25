@@ -1,5 +1,9 @@
 local escape = _FH_ESCAPE
 
+--- @class heistPlayerRound_t
+--- If set to true, the player has escaped in one of the Escape modes.
+--- @field escaped boolean
+
 --- Checks if the player is in a exit sector. Mainly used to start the escape sequence in Escape modes.
 --- @param player player_t
 function escape:isPlayerInExitSector(player)
@@ -9,7 +13,7 @@ function escape:isPlayerInExitSector(player)
 
 	for fof in player.mo.subsector.sector.ffloors() do
 		if player.mo.z < fof.bottomheight then continue end
-		if player.mo.z+player.mo.height > fof.topheight then continue end
+		if player.mo.z + player.mo.height > fof.topheight then continue end
 		if fof.sector.specialflags & SSF_EXIT == 0 then continue end
 
 		return true
@@ -28,4 +32,20 @@ function escape:playerUpdate(player, currentState)
 	if self:isPlayerInExitSector(player) and not FHN.escape then
 		escape:startEscape(player)
 	end
+end
+
+--- @param player player_t
+--- @param currentState string
+function escape:playerDeath(player, currentState)
+	if currentState ~= "game" then return end
+
+	self:safeFinish()
+end
+
+--- @param player player_t
+--- @param currentState string
+function escape:playerQuit(player, currentState)
+	if currentState ~= "game" then return end
+
+	self:safeFinish()
 end

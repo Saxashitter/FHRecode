@@ -4,28 +4,7 @@ local MT_FH_RING = freeslot("MT_FH_RING")
 local S_FH_GOALRING = freeslot("S_FH_GOALRING")
 local SPR_GORI = freeslot("SPR_GORI")
 
-FH.ringStates = {
-	goal = {
-		--- @type statenum_t
-		state = S_FH_GOALRING,
-		--- @type function
-		spawn = function(ring, ...)
-			print("spawn ring")
-		end,
-		--- @type function
-		touch = function(ring, player)
-			if not FHN.escape then return end
-
-			player.heistRound.forcedPosition = {
-				x = ring.x,
-				y = ring.y,
-				z = ring.z,
-				angle = player.drawangle
-			}
-			player.mo.alpha = 0
-		end
-	}
-}
+FH.ringStates = {}
 
 ---@diagnostic disable-next-line: missing-fields
 mobjinfo[MT_FH_RING] = {
@@ -72,10 +51,6 @@ function FH:spawnRing(x, y, z, ringType, ...)
 
 	return ring
 end
-
-COM_AddCommand("fh_spawnring", function(player)
-	FH:spawnRing(player.mo.x, player.mo.y, player.mo.z, "goal")
-end)
 
 addHook("TouchSpecial", function(ring, player)
 	if not player.valid then return true end

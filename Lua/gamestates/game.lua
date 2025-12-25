@@ -6,6 +6,12 @@ end
 function gamestate:update()
 end
 
+function gamestate:preUpdate()
+end
+
+function gamestate:playerUpdate()
+end
+
 addHook("ShouldDamage", function(targ, inf, source)
 	--- @type heistGametype_t|false
 	local gametype = FH:isMode()

@@ -20,6 +20,12 @@
 --- @field update fun(self: heistGametype_t, currentState: string)
 --- Runs every tic for every player, regardless if they are dead or alive. Follows the same rules as the update function.
 --- @field playerUpdate fun(self: heistGametype_t, player: player_t, currentState: string)
+--- Runs once the player.heistRound is initalized. Useful for appending variables in certain modes.
+--- @field playerInit fun(self: heistGametype_t, player: player_t)
+--- Runs once the player quits.
+--- @field playerQuit fun(self: heistGametype_t, player: player_t, currentState: string)
+--- Runs once the player dies.
+--- @field playerDeath fun(self: heistGametype_t, player: player_t, currentState: string)
 --- Runs upon the game ending, useful for de-initing or stopping stuff.
 --- @field finish fun(self: heistGametype_t, currentState: string)
 --- Runs immediately after the finish function. Return a list of sorted players to determine their place on the leaderboard, or return nil to use the default profit-sorted list.
@@ -39,7 +45,10 @@ local heistGametype_t = {
 	init = function() end,
 	load = function() end,
 	update = function() end,
+	playerInit = function() end,
 	playerUpdate = function() end,
+	playerQuit = function() end,
+	playerDeath = function() end,
 	finish = function() end,
 	declareWinner = function() end
 }

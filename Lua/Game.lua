@@ -26,7 +26,7 @@ function FH:initRound(gametype)
 		FH:initPlayerRound(player)
 	end
 
-	FH:setGamestate("game")
+	FH:setGamestate("pregame")
 	gametype:init()
 end
 
@@ -36,6 +36,15 @@ end
 function FH:changeMusic(music)
 	S_ChangeMusic(music, true)
 	mapmusname = music
+end
+
+function FH:endGame()
+	--- @type heistGametype_t|false
+	local gametype = FH:isMode()
+	if not gametype then return end
+
+	G_ExitLevel()
+	gametype:finish(FHR.currentState)
 end
 
 addHook("MapChange", function()

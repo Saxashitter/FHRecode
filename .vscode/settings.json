@@ -7,10 +7,12 @@
 		"int_none",
 		"continue",
 		"GTR_ENEMIES",
-		"GTR_SPAWNENEMIES"
+		"GTR_SPAWNENEMIES",
+		"mobjs"
 	],
 	"Lua.diagnostics.disable": [
 		"exp-in-action",
-		"inject-field"
+		"inject-field",
+		"need-check-nil"
 	]
 }
