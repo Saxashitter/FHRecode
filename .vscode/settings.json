@@ -13,6 +13,6 @@
 	"Lua.diagnostics.disable": [
 		"exp-in-action",
 		"inject-field",
-		"need-check-nil"
+		"need-check-nil",
 	]
 }

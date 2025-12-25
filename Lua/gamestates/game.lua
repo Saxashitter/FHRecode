@@ -9,7 +9,8 @@ end
 function gamestate:preUpdate()
 end
 
-function gamestate:playerUpdate()
+--- @param player player_t
+function gamestate:playerUpdate(player)
 end
 
 addHook("ShouldDamage", function(targ, inf, source)

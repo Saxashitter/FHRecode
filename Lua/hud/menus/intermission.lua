@@ -1,0 +1,20 @@
+local intermissionMenu = {}
+
+intermissionMenu.states = {
+	character = dofile("hud/menus/pregame/character.lua"),
+	team = dofile("hud/menus/pregame/team.lua"),
+	waiting = dofile("hud/menus/pregame/waiting.lua")
+}
+
+--- @param v videolib
+--- @param player player_t
+--- @param camera camera_t
+function intermissionMenu:draw(v, player, camera)
+	if FHR.currentState ~= "intermission" then return end
+
+	FH.playerIconParallax:draw(v, skins[player and player.skin or 0].name, leveltime)
+
+	SSL.drawFixedString(v, 160*FU, 100*FU, FU, "There is no winner screen yet...\nSorry.", "STCFN%03d", 0, FU/2, FU/2, 0, 0, 2 * FU)
+end
+
+return intermissionMenu, "intermissionMenu", 1, "global"

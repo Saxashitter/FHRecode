@@ -12,8 +12,6 @@
 --- @field lastForwardmove SINT8
 --- The last pressed buttons for the player. Useful for menus.
 --- @field lastButtons UINT16
---- The player's current skin. The player is locked to this skin at all times, but the player is able to change this within Pre-Game.
---- @field skin number
 
 --- Initalizes the player's global variables. Should be called once per player initalization.
 --- @param player player_t
@@ -26,8 +24,7 @@ function FH:initPlayerGlobal(player)
 		buttons = player.cmd.buttons,
 		lastSidemove = player.cmd.sidemove,
 		lastForwardmove = player.cmd.forwardmove,
-		lastButtons = player.cmd.buttons,
-		skin = 0,
+		lastButtons = player.cmd.buttons
 	}
 
 	print("global player initalization")
@@ -44,6 +41,8 @@ end
 --- @field forcedPosition table?
 --- Set this to true to stop the player from pressing any inputs whatsoever. This should be used over PF_STASIS due to it resetting ALL the player's buttons, as well as ensuring compatibility with menus.
 --- @field stasis boolean
+--- Used during Pre-Game for animations in the UI.
+--- @field selectedSkinTime number
 
 --- Initalizes the player's round variables. Should be called once per-round.
 --- @param player player_t
@@ -54,7 +53,8 @@ function FH:initPlayerRound(player)
 	--- @type heistPlayerRound_t
 	local playerRound = {
 		profit = 0,
-		stasis = false
+		stasis = false,
+		selectedSkinTime = 0
 	}
 	
 	print("round player initalization")
@@ -80,6 +80,16 @@ local function initChecks(player, gametype)
 		FH:initPlayerRound(player)
 	end
 end
+
+--- @param player player_t
+addHook("PlayerSpawn", function(player)
+	--- @type heistGametype_t|false
+	local gametype = FH:isMode()
+
+	if not gametype then return end
+
+	initChecks(player, gametype)
+end)
 
 addHook("PreThinkFrame", function()
 	--- @type heistGametype_t|false
@@ -139,18 +149,23 @@ end)
 
 --- @param player player_t
 addHook("PlayerQuit", function(player)
+	print("Player quit.")
+
 	--- @type heistGametype_t|false
 	local gametype = FH:isMode()
 
 	if not gametype then return end
 
 	initChecks(player, gametype)
+	player.hasLeftServer = true -- used internally, lets face it the players quitting anyway this doesnt matter a single bit LOL
 
 	gametype:playerQuit(player, FHR.currentState)
 end)
 
 --- @param target mobj_t
 addHook("MobjDeath", function(target)
+	print("Player death.")
+
 	--- @type heistGametype_t|false
 	local gametype = FH:isMode()
 

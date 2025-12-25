@@ -93,11 +93,18 @@ end
 
 function escape:safeFinish()
 	print("Running game-ending check.")
+
+	if not FHN.escape then
+		print("Not escape yet, so don't let the game end.")
+		return
+	end
+
 	local leavingCount = 0
 	local totalCount = 0
 
 	for player in players.iterate do
-		if player.spectator or not player.mo or not player.mo.health then continue end
+---@diagnostic disable-next-line: undefined-field
+		if player.spectator or not player.mo or not player.mo.health or player.hasLeftServer then continue end
 
 		totalCount = $ + 1
 

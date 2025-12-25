@@ -43,7 +43,7 @@ function FH:endGame()
 	local gametype = FH:isMode()
 	if not gametype then return end
 
-	G_ExitLevel()
+	self:setGamestate("intermission")
 	gametype:finish(FHR.currentState)
 end
 
