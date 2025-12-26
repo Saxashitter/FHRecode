@@ -45,6 +45,10 @@ end
 --- @field selectedSkinTime number
 --- Decides the current state of the menu for Pre-Game.
 --- @field pregameState string
+--- The last skin the player had enabled before switching. It's only purpose is for the Pre-Game UI.
+--- @field lastSkin INT32|nil
+--- The last direction the player switched characters towards. It's only purpose is for the Pre-Game UI. Either -1 or 1.
+--- @field lastSwap number|nil
 
 --- Initalizes the player's round variables. Should be called once per-round.
 --- @param player player_t

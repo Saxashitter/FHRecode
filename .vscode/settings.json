@@ -8,11 +8,13 @@
 		"continue",
 		"GTR_ENEMIES",
 		"GTR_SPAWNENEMIES",
-		"mobjs"
+		"mobjs",
+		"ease"
 	],
 	"Lua.diagnostics.disable": [
 		"exp-in-action",
 		"inject-field",
 		"need-check-nil",
+		"param-type-mismatch"
 	]
 }

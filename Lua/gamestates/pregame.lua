@@ -100,8 +100,10 @@ function gamestate:playerUpdate(player)
 				newSkin = 0
 			end
 
-			R_SetPlayerSkin(player, newSkin)
+			player.heistRound.lastSkin = player.skin
+			player.heistRound.lastSwap = x
 			player.heistRound.selectedSkinTime = leveltime
+			R_SetPlayerSkin(player, newSkin)
 		end
 
 		if jump then
