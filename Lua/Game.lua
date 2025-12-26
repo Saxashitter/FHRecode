@@ -60,6 +60,9 @@ addHook("MapLoad", function()
 	local gametype = FH:isMode()
 	if not gametype then return end
 
+	local state = FH.gamestates[FHR.currentState]
+
+	state:load()
 	gametype:load()
 end)
 

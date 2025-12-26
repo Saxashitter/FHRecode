@@ -43,6 +43,8 @@ end
 --- @field stasis boolean
 --- Used during Pre-Game for animations in the UI.
 --- @field selectedSkinTime number
+--- Decides the current state of the menu for Pre-Game.
+--- @field pregameState string
 
 --- Initalizes the player's round variables. Should be called once per-round.
 --- @param player player_t
@@ -54,7 +56,8 @@ function FH:initPlayerRound(player)
 	local playerRound = {
 		profit = 0,
 		stasis = false,
-		selectedSkinTime = 0
+		selectedSkinTime = 0,
+		pregameState = "character"
 	}
 	
 	print("round player initalization")
@@ -100,13 +103,13 @@ addHook("PreThinkFrame", function()
 	for player in players.iterate do
 		initChecks(player, gametype)
 
-		player.heistRound.lastSidemove = player.heistRound.sidemove
-		player.heistRound.lastForwardmove = player.heistRound.forwardmove
-		player.heistRound.lastButtons = player.heistRound.buttons
+		player.heistGlobal.lastSidemove = player.heistGlobal.sidemove
+		player.heistGlobal.lastForwardmove = player.heistGlobal.forwardmove
+		player.heistGlobal.lastButtons = player.heistGlobal.buttons
 
-		player.heistRound.sidemove = player.cmd.sidemove
-		player.heistRound.forwardmove = player.cmd.forwardmove
-		player.heistRound.buttons = player.cmd.buttons
+		player.heistGlobal.sidemove = player.cmd.sidemove
+		player.heistGlobal.forwardmove = player.cmd.forwardmove
+		player.heistGlobal.buttons = player.cmd.buttons
 
 		if player.heistRound.stasis then
 			player.cmd.sidemove = 0

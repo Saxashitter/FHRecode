@@ -3,11 +3,14 @@ local gamestate = {}
 gamestate.timeLeft = 5 * TICRATE
 
 function gamestate:init()
-	-- apply MF_NOTHINk to all mobjs to ensure nothing moves. do this once as well so we dont gotta worry about lag
+	-- apply MF_NOTHINK to all mobjs to ensure nothing moves. do this once as well so we dont gotta worry about lag
 
 	for mobj in mobjs.iterate() do
 		mobj.flags = $|MF_NOTHINK
 	end
+end
+
+function gamestate:load()
 end
 
 function gamestate:update()

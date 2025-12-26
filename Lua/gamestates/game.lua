@@ -3,6 +3,9 @@ local gamestate = {}
 function gamestate:init()
 end
 
+function gamestate:load()
+end
+
 function gamestate:update()
 end
 
