@@ -30,14 +30,6 @@ function FH:initRound(gametype)
 	gametype:init()
 end
 
---- Changes the song used for the mod. Unlike S_ChangeMusic, this globally changes it, even for new players.
---- TODO: Actually make this true using MusicChange and NetVars.
---- @param music string
-function FH:changeMusic(music)
-	S_ChangeMusic(music, true)
-	mapmusname = music
-end
-
 function FH:endGame()
 	--- @type heistGametype_t|false
 	local gametype = FH:isMode()
@@ -87,3 +79,4 @@ end)
 dofile("gamestates/pregame.lua")
 dofile("gamestates/game.lua")
 dofile("gamestates/intermission.lua")
+dofile("gamestates/titlecard.lua")

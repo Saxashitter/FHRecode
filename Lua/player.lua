@@ -150,8 +150,8 @@ addHook("PlayerThink", function(player)
 
 	local state = FH.gamestates[FHR.currentState]
 
-	gametype:playerUpdate(player, FHR.currentState)
 	state:playerUpdate(player)
+	gametype:playerUpdate(player, FHR.currentState)
 end)
 
 --- @param player player_t
@@ -166,6 +166,9 @@ addHook("PlayerQuit", function(player)
 	initChecks(player, gametype)
 	player.hasLeftServer = true -- used internally, lets face it the players quitting anyway this doesnt matter a single bit LOL
 
+	local state = FH.gamestates[FHR.currentState]
+
+	state:playerQuit(player)
 	gametype:playerQuit(player, FHR.currentState)
 end)
 
@@ -197,3 +200,6 @@ addHook("ThinkFrame", function()
 		player.score = player.heistRound.profit/FU
 	end
 end)
+
+-- require needed external luas
+dofile("player/profit.lua")

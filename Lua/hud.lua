@@ -102,3 +102,4 @@ FH.playerIconParallax = dofile("hud/reusable/playerIconParallax.lua")
 
 doUiFile("menus/pregame")
 doUiFile("menus/intermission")
+doUiFile("menus/titlecard")

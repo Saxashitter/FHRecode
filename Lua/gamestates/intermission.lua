@@ -8,6 +8,36 @@ function gamestate:init()
 	for mobj in mobjs.iterate() do
 		mobj.flags = $|MF_NOTHINK
 	end
+
+	-- get the best performing player and list them here
+	local winner
+
+	for player in players.iterate do
+		if not player.heistRound then continue end
+		---@diagnostic disable-next-line: undefined-field
+		if player.hasLeftServer then continue end
+
+		if not winner then
+			winner = player
+			continue
+		end
+
+		if player.score > winner.score then
+			winner = player
+			continue
+		end
+	end
+
+	if winner then
+		FHN.winningPlayer = {
+			name = winner.name,
+			profit = winner.heistRound.profit,
+			skin = winner.skin,
+			color = winner.skincolor
+		}
+	end
+
+	S_FadeMusic(0, TICRATE)
 end
 
 function gamestate:load()
@@ -29,7 +59,7 @@ function gamestate:update()
 end
 
 function gamestate:preUpdate() end
-function gamestate:playerUpdate()
-end
+function gamestate:playerUpdate() end
+function gamestate:playerQuit() end
 
 FH.gamestates.intermission = gamestate

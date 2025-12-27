@@ -23,7 +23,8 @@ return function(v, player)
 
 	local skin = skins[player and player.skin or 0]
 	local color = skincolors[skin.prefcolor]
-	local palette = color.ramp[7]
+	local inverseColor = skincolors[color.invcolor]
+	local palette = inverseColor.ramp[7]
 	local textmap = color.chatcolor
 
 	local stringWidth = SSL.getStringWidth(v, skin.realname, "STCFN%03d")

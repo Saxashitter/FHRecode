@@ -1,9 +1,12 @@
 local gamestate = {}
 
-gamestate.timeLeft = 5 * TICRATE
+gamestate.timeLeft = 60 * TICRATE
+
+-- view game.lua for gamestate documentation
 
 function gamestate:init()
 	FHN.pregameTimeLeft = self.timeLeft
+	print("setGamestate")
 
 	for player in players.iterate do
 		if not player.heistRound then return end
@@ -13,8 +16,9 @@ function gamestate:init()
 end
 
 function gamestate:load()
+	FH:changeMusic("FH_PRG")
+	
 	-- apply MF_NOTHINK to all mobjs to ensure nothing moves. do this once as well so we dont gotta worry about lag
-
 	for mobj in mobjs.iterate() do
 		mobj.__hasNoThink = mobj.flags & MF_NOTHINK > 0
 		mobj.flags = $|MF_NOTHINK
@@ -25,33 +29,12 @@ function gamestate:update()
 	if FHN.pregameTimeLeft then
 		FHN.pregameTimeLeft = $ - 1
 	else
-		for mobj in mobjs.iterate() do
-			if not mobj.__hasNoThink then
-				mobj.flags = $ & ~MF_NOTHINK
-			end
-			mobj.__hasNoThink = nil
-		end
-
-		for player in players.iterate do
-			if not player.heistRound then return end
-
-			player.heistRound.stasis = false
-			player.mo.tics = states[player.mo.state].tics
-			player.cmd.sidemove = player.heistGlobal.sidemove
-			player.cmd.forwardmove = player.heistGlobal.forwardmove
-			player.cmd.buttons = player.heistGlobal.buttons
-			player.lastbuttons = player.heistGlobal.buttons
-
-			player.heistGlobal.skin = player.skin
-		end
-
-		FH:setGamestate("game")
-
+		self:switch()
 		return
 	end
 
 	for player in players.iterate do
-		if not player.heistRound then return end
+		if not player.heistRound then continue end
 
 		player.heistRound.stasis = true
 		player.mo.momx = 0
@@ -61,12 +44,24 @@ function gamestate:update()
 	end
 end
 
+function gamestate:switch()
+	for player in players.iterate do
+		if not player.heistRound then continue end
+
+		player.heistGlobal.skin = player.skin
+	end
+	FH:setGamestate("titlecard")
+end
+
 function gamestate:canSwitch()
 	local count = 0
 	local finishedCount = 0
 
 	for player in players.iterate do
-		if not player.heistRound then return end
+		if not player.heistRound then continue end
+		---@diagnostic disable-next-line: undefined-field
+		if player.hasLeftServer then continue end
+
 		count = $+1
 
 		if player.heistRound.pregameState == "waiting" then
@@ -83,7 +78,7 @@ end
 function gamestate:playerUpdate(player)
 	local inputRegister = 50/4
 
-	local x, y = FH:isMovePressed(player, inputRegister)
+	local x, _ = FH:isMovePressed(player, inputRegister)
 	local jump = FH:isButtonPressed(player, BT_JUMP)
 	local spin = FH:isButtonPressed(player, BT_SPIN)
 
@@ -103,19 +98,30 @@ function gamestate:playerUpdate(player)
 			player.heistRound.lastSkin = player.skin
 			player.heistRound.lastSwap = x
 			player.heistRound.selectedSkinTime = leveltime
+			S_StartSound(nil, sfx_kc39)
 			R_SetPlayerSkin(player, newSkin)
 		end
 
 		if jump then
 			-- to waiting state you go
 			player.heistRound.pregameState = "waiting"
+			if self:canSwitch() then
+				self:switch()
+			else
+				S_StartSound(nil, sfx_kc5e)
+			end
 		end
 	elseif player.heistRound.pregameState == "waiting" then
 		if spin then
 			-- to character state you go
-			player.heistRound.selectedSkinTime = leveltime
 			player.heistRound.pregameState = "character"
 		end
+	end
+end
+
+function gamestate:playerQuit()
+	if self:canSwitch() then
+		self:switch()
 	end
 end
 

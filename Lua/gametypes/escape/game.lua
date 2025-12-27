@@ -78,9 +78,11 @@ function escape:startEscape(starter)
 	FHN.escape = true
 	FHN.escapeTime = escape.timeLeft -- TODO: use cvars
 
+	FH:addProfit(starter, FH.profitCVars.startedEscape.value, "Started the Escape Sequence")
+
 	-- make signs fly into air then disappear lol
 	for _, sign in ipairs(FHN.signPosts) do
-		sign.momz = 4 * FRACUNIT
+		sign.momz = 6 * FRACUNIT
 		sign.fuse = 5 * TICRATE
 		sign.flags = $|MF_NOGRAVITY
 		sign.state = S_SIGNSPIN1

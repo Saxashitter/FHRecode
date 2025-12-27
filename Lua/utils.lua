@@ -80,3 +80,43 @@ function FH:getCharPortrait(v, skin, colorable)
 
 	-- return the css portrait here
 end
+
+--- Draw numbers on the HUD using the STTNUM font.
+--- @param v videolib
+--- @param x fixed_t
+--- @param y fixed_t
+--- @param scale fixed_t
+--- @param number number
+--- @param flags UINT32|nil
+--- @param align fixed_t|nil
+--- @param valign fixed_t|nil
+function FH:drawSTT(v, x, y, scale, number, flags, align, valign)
+	if flags == nil then flags = 0 end
+	if align == nil then align = 0 end
+	if valign == nil then valign = 0 end
+
+	local string = tostring(number)
+
+	x = $ - FixedMul((8 * scale) * #string, align)
+	y = $ - FixedMul((11 * scale) * #string, valign)
+
+	for i = 1, #string do
+		local patch = v.cachePatch("STTNUM"..string:sub(i, i))
+
+		v.drawScaled(x, y, scale, patch, flags)
+		x = $ + 8 * scale
+	end
+end
+
+--- Changes the song used for the mod. Unlike S_ChangeMusic, this globally changes it, even for new players.
+--- Set this to nil to revert to the map's default music.
+--- TODO: Actually make this true using MusicChange and NetVars.
+--- @param music string|nil
+function FH:changeMusic(music)
+	if music == nil then
+		music = mapheaderinfo[gamemap].musname
+	end
+
+	S_ChangeMusic(music, true)
+	mapmusname = music
+end
