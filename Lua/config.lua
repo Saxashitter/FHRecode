@@ -1,6 +1,7 @@
 --- Global tables
 rawset(_G, "FH", {
     gamestates = {},
+    collectibles = {},
 
     --- @type heistGametype_t[]
     gametypes = {},

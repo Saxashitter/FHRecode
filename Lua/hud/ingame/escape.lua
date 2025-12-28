@@ -1,0 +1,1 @@
+-- the "GO! GO! GO!" text

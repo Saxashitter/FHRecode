@@ -32,7 +32,7 @@ function preGameMenu:draw(v, player, camera)
 	end
 
 	text = $..readyCount.."/"..count
-	FH:drawSTT(v, 12 * FU, 12 * FU, FU, FHN.pregameTimeLeft / TICRATE, V_SNAPTOLEFT|V_SNAPTOTOP, 0, 0)
+	FH:drawSTT(v, 12 * FU, 12 * FU, FU, FHR.pregameTimeLeft / TICRATE, V_SNAPTOLEFT|V_SNAPTOTOP, 0, 0)
 	SSL.drawFixedString(v, 12 * FU + 18 * FU, 12 * FU, (FU/10) * 7, text, "STCFN%03d", V_SNAPTOTOP|V_SNAPTOLEFT, 0, 0)
 end
 

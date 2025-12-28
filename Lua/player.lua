@@ -37,6 +37,8 @@ end
 --- @class heistPlayerRound_t
 --- The player's profit counter. Gained from killing enemies, collecting rings, destroying monitors, and hurting players. This would normally be what determines if they win or not.
 --- @field profit fixed_t
+--- Tics until' the Insta-Shield can be used again for the player.
+--- @field instaShieldCooldown number
 --- If this is set to a table containing x, y, z and angle positions. The player will forcefully teleport here and be unable to move until' this is set to false.
 --- @field forcedPosition table?
 --- Set this to true to stop the player from pressing any inputs whatsoever. This should be used over PF_STASIS due to it resetting ALL the player's buttons, as well as ensuring compatibility with menus.
@@ -49,6 +51,12 @@ end
 --- @field lastSkin INT32|nil
 --- The last direction the player switched characters towards. It's only purpose is for the Pre-Game UI. Either -1 or 1.
 --- @field lastSwap number|nil
+--- If this is true, the player is determined as downed. They will be forced into a crawling state, and can barely do anything. They will be revived once downedTime hits 0.
+--- @field downed boolean
+--- Set the timer for the player to be downed in tics. If set to 0, then the timer won't be active.
+--- @field downedTime number
+--- Set this to false if you don't want the player to use the insta-shield. Defaults to true.
+--- @field canUseInstaShield boolean
 
 --- Initalizes the player's round variables. Should be called once per-round.
 --- @param player player_t
@@ -61,7 +69,11 @@ function FH:initPlayerRound(player)
 		profit = 0,
 		stasis = false,
 		selectedSkinTime = 0,
-		pregameState = "character"
+		instaShieldCooldown = 0,
+		pregameState = "character",
+		downed = false,
+		downedTime = 0,
+		canUseInstaShield = true
 	}
 	
 	print("round player initalization")
@@ -203,3 +215,6 @@ end)
 
 -- require needed external luas
 dofile("player/profit.lua")
+dofile("player/instashield.lua")
+dofile("player/pvp.lua")
+dofile("player/downed.lua")

@@ -5,7 +5,7 @@ gamestate.timeLeft = 5 * TICRATE
 function gamestate:init()
 	S_StartSound(nil, sfx_s1ca)
 	S_StartSoundAtVolume(nil, sfx_kc5c, 75)
-	FHN.titleCardTime = self.timeLeft
+	FHR.titleCardTime = self.timeLeft
 	S_FadeMusic(0, 2 * MUSICRATE)
 end
 
@@ -18,31 +18,17 @@ end
 
 function gamestate:update()
 	
-	FHN.titleCardTime = $ - 1
+	FHR.titleCardTime = $ - 1
 	
-	if not FHN.titleCardTime then
+	if not FHR.titleCardTime then
 		for mobj in mobjs.iterate() do
 			if not mobj.__hasNoThink then
 				mobj.flags = $ & ~MF_NOTHINK
 			end
 			mobj.__hasNoThink = nil
 		end
-		
-		-- constantly set stasis to true even for new players
-		-- TODO: take advantage of PlayerSpawn so this doesn't run every tic
-		for player in players.iterate do
-			if not player.heistRound then continue end
 
-			player.heistRound.stasis = false
-			player.mo.tics = states[player.mo.state].tics
-			player.cmd.sidemove = player.heistGlobal.sidemove
-			player.cmd.forwardmove = player.heistGlobal.forwardmove
-			player.cmd.buttons = player.heistGlobal.buttons
-			player.lastbuttons = player.heistGlobal.buttons
-		end
-
-		FHN.titleCardEndTime = leveltime
-		FH:changeMusic()
+		FHR.titleCardEndTime = leveltime
 		FH:setGamestate("game")
 		return
 	end
@@ -55,6 +41,7 @@ function gamestate:update()
 		player.mo.momy = 0
 		player.mo.momz = 0
 		player.mo.tics = -1
+		player.mo.alpha = 0
 	end
 end
 

@@ -26,10 +26,10 @@ states[S_FH_GOALRING] = {
 }
 
 --- Spawn a special ring, used mainly for escape modes.
+--- View mobjs/escape/specialring for different types of special rings. You can add one yourself as well while making a gamemode.
 --- @param x fixed_t
 --- @param y fixed_t
 --- @param z fixed_t
---- View mobjs/escape/specialring for different types of special rings. You can add one yourself as well while making a gamemode.
 --- @param ringType string
 --- @return mobj_t|false
 function FH:spawnRing(x, y, z, ringType, ...)

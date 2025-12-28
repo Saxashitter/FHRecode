@@ -47,7 +47,7 @@ function titleCardMenu:draw(v, player, camera)
 	if FHR.currentState ~= "titlecard" then
 		if FHR.currentState == "game" then
 			-- draw transition
-			local progress = leveltime - FHN.titleCardEndTime
+			local progress = leveltime - FHR.titleCardEndTime
 
 			if progress >= 10 then return end
 
@@ -58,15 +58,27 @@ function titleCardMenu:draw(v, player, camera)
 	end
 
 	local state = FH.gamestates[FHR.currentState]
-	local progress = state.timeLeft - FHN.titleCardTime
+	local progress = state.timeLeft - FHR.titleCardTime
 
-	local ditherLength = 4
+	local ditherLength = 2
 	local colors = {
 		31,
 		skincolors[player.skincolor].ramp[15],
+		skincolors[player.skincolor].ramp[14],
+		skincolors[player.skincolor].ramp[13],
 		skincolors[player.skincolor].ramp[12],
+		skincolors[player.skincolor].ramp[11],
+		skincolors[player.skincolor].ramp[10],
+		skincolors[player.skincolor].ramp[9],
+		skincolors[player.skincolor].ramp[8],
 		skincolors[player.skincolor].ramp[7],
+		skincolors[player.skincolor].ramp[6],
+		skincolors[player.skincolor].ramp[5],
+		skincolors[player.skincolor].ramp[4],
 		skincolors[player.skincolor].ramp[3],
+		skincolors[player.skincolor].ramp[2],
+		skincolors[player.skincolor].ramp[1],
+		skincolors[player.skincolor].ramp[0],
 	}
 
 	local backgroundHeight = screenHeight / #colors
@@ -140,8 +152,8 @@ function titleCardMenu:draw(v, player, camera)
 	if progress < 10 then
 		FH:drawPaletteRect(v, 0, 0, screenWidth, screenHeight, 0, V_SNAPTOTOP|V_SNAPTOLEFT|(V_10TRANS * progress))
 	end
-	if FHN.titleCardTime < 10 then
-		FH:drawPaletteRect(v, 0, 0, screenWidth, screenHeight, 31, V_SNAPTOTOP|V_SNAPTOLEFT|(V_10TRANS * FHN.titleCardTime))
+	if FHR.titleCardTime < 10 then
+		FH:drawPaletteRect(v, 0, 0, screenWidth, screenHeight, 31, V_SNAPTOTOP|V_SNAPTOLEFT|(V_10TRANS * FHR.titleCardTime))
 	end
 end
 return titleCardMenu, "titleCardMenu", 1, "global"

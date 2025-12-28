@@ -1,11 +1,5 @@
 local intermissionMenu = {}
 
-intermissionMenu.states = {
-	character = dofile("hud/menus/pregame/character.lua"),
-	team = dofile("hud/menus/pregame/team.lua"),
-	waiting = dofile("hud/menus/pregame/waiting.lua")
-}
-
 --- @param v videolib
 --- @param player player_t
 --- @param camera camera_t
@@ -14,9 +8,9 @@ function intermissionMenu:draw(v, player, camera)
 
 	local winnerText = "The winner is..."
 
-	if FHN.winningPlayer then
-		winnerText = $.."\n"..FHN.winningPlayer.name
-		winnerText = $.."\n".."Profit: "..string.format("%.2f", FHN.winningPlayer.profit)
+	if FHR.winningPlayer then
+		winnerText = $.."\n"..FHR.winningPlayer.name
+		winnerText = $.."\n".."Profit: "..string.format("%.2f", FHR.winningPlayer.profit)
 	else
 		winnerText = $.."\n".."Nobody..."
 	end

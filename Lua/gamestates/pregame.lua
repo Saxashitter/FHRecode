@@ -5,7 +5,7 @@ gamestate.timeLeft = 60 * TICRATE
 -- view game.lua for gamestate documentation
 
 function gamestate:init()
-	FHN.pregameTimeLeft = self.timeLeft
+	FHR.pregameTimeLeft = self.timeLeft
 	print("setGamestate")
 
 	for player in players.iterate do
@@ -26,8 +26,8 @@ function gamestate:load()
 end
 
 function gamestate:update()
-	if FHN.pregameTimeLeft then
-		FHN.pregameTimeLeft = $ - 1
+	if FHR.pregameTimeLeft then
+		FHR.pregameTimeLeft = $ - 1
 	else
 		self:switch()
 		return
@@ -41,6 +41,7 @@ function gamestate:update()
 		player.mo.momy = 0
 		player.mo.momz = 0
 		player.mo.tics = -1
+		player.mo.alpha = 0
 	end
 end
 
@@ -86,7 +87,6 @@ function gamestate:playerUpdate(player)
 	if player.heistRound.pregameState == "character" then
 		if x ~= 0 then
 			local newSkin = player.skin + x
-
 			if newSkin < 0 then
 				newSkin = #skins - 1
 			end
@@ -95,10 +95,21 @@ function gamestate:playerUpdate(player)
 				newSkin = 0
 			end
 
+			while not R_SkinUsable(player, newSkin) do
+				newSkin = $ + x
+				if newSkin < 0 then
+					newSkin = #skins - 1
+				end
+
+				if newSkin > #skins - 1 then
+					newSkin = 0
+				end
+			end
+
 			player.heistRound.lastSkin = player.skin
 			player.heistRound.lastSwap = x
 			player.heistRound.selectedSkinTime = leveltime
-			S_StartSound(nil, sfx_kc39)
+			S_StartSound(nil, sfx_kc39, player)
 			R_SetPlayerSkin(player, newSkin)
 		end
 
@@ -108,7 +119,7 @@ function gamestate:playerUpdate(player)
 			if self:canSwitch() then
 				self:switch()
 			else
-				S_StartSound(nil, sfx_kc5e)
+				S_StartSound(nil, sfx_kc5e, player)
 			end
 		end
 	elseif player.heistRound.pregameState == "waiting" then

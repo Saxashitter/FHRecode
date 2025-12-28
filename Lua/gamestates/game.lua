@@ -1,12 +1,78 @@
 local gamestate = {}
+gamestate.countdown = 3 * TICRATE
+
+sfxinfo[freeslot("sfx_fh_cd5")].caption = "Five!"
+sfxinfo[freeslot("sfx_fh_cd4")].caption = "Four!"
+sfxinfo[freeslot("sfx_fh_cd3")].caption = "Three!"
+sfxinfo[freeslot("sfx_fh_cd2")].caption = "Two!"
+sfxinfo[freeslot("sfx_fh_cd1")].caption = "One!"
+sfxinfo[freeslot("sfx_fh_cd0")].caption = "GO!!"
+
+local function unstasisPlayers()
+	-- constantly set stasis to true even for new players
+	-- TODO: take advantage of PlayerSpawn so this doesn't run every tic
+	for player in players.iterate do
+		if not player.heistRound then continue end
+
+		player.heistRound.stasis = false
+		player.cmd.sidemove = player.heistGlobal.sidemove
+		player.cmd.forwardmove = player.heistGlobal.forwardmove
+		player.cmd.buttons = player.heistGlobal.buttons
+		player.lastbuttons = player.heistGlobal.buttons
+
+		if player.cmd.buttons & BT_JUMP then
+			player.pflags = $|PF_JUMPDOWN
+		end
+		if player.cmd.buttons & BT_SPIN then
+			player.pflags = $|PF_SPINDOWN
+		end
+
+		if not player.mo then continue end
+		if not player.mo.spawnpoint then continue end
+
+		player.mo.tics = states[player.mo.state].tics
+		player.mo.alpha = FU
+		player.mo.state = S_PLAY_ROLL
+		player.pflags = $|PF_SPINNING
+		P_InstaThrust(player.mo, FixedAngle(player.mo.spawnpoint.angle * FU), player.normalspeed)
+		P_SetObjectMomZ(player.mo, 12 * player.mo.scale)
+	end
+end
+
 
 function gamestate:init()
+	FHR.gameCountdown = self.countdown
+
+	for player in players.iterate do
+		if not player.mo then continue end
+
+		for mapthing in mapthings.iterate do
+			if mapthing.type == #player + 1 then
+				player.mo.spawnpoint = mapthing
+				break
+			end
+		end
+	end
 end
 
 function gamestate:load()
 end
 
 function gamestate:update()
+	if FHR.gameCountdown then
+		if FHR.gameCountdown % TICRATE == 0 then
+			local sound = _G["sfx_fh_cd"..FHR.gameCountdown / TICRATE]
+			S_StartSound(nil, sound)
+		end
+
+		FHR.gameCountdown = $ - 1
+
+		if not FHR.gameCountdown then
+			unstasisPlayers()
+			S_StartSound(nil, sfx_fh_cd0)
+			FH:changeMusic()
+		end
+	end
 end
 
 function gamestate:preUpdate()
@@ -17,19 +83,5 @@ function gamestate:playerUpdate(player)
 end
 
 function gamestate:playerQuit() end
-
-
-addHook("ShouldDamage", function(targ, inf, source)
-	--- @type heistGametype_t|false
-	local gametype = FH:isMode()
-	if not gametype then return end
-
-	if FHR.currentState ~= "game" then return false end
-
-	-- TODO: friendlyfire checks from the gamemode and the cvar
-	if source and source.valid and source.type == MT_PLAYER then
-		return true
-	end
-end, MT_PLAYER)
 
 FH.gamestates.game = gamestate

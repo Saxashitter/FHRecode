@@ -18,7 +18,7 @@ FH.profitCVars = {
 	monitor = CV_RegisterVar{name = "fh_monitorprofit", defaultvalue = "25", flags = CV_FLOAT|CV_NETVAR};
 	enemy = CV_RegisterVar{name = "fh_enemyprofit", defaultvalue = "50", flags = CV_FLOAT|CV_NETVAR};
 	playerHurt = CV_RegisterVar{name = "fh_playerhurtprofit", defaultvalue = "100", flags = CV_FLOAT|CV_NETVAR};
-	playerDamage = CV_RegisterVar{name = "fh_playerdamageprofit", defaultvalue = "200", flags = CV_FLOAT|CV_NETVAR};
+	playerDeath = CV_RegisterVar{name = "fh_playerdeathprofit", defaultvalue = "200", flags = CV_FLOAT|CV_NETVAR};
 	startedEscape = CV_RegisterVar{name = "fh_escapeprofit", defaultvalue = "500", flags = CV_FLOAT|CV_NETVAR};
 }
 

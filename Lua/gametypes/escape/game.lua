@@ -15,7 +15,7 @@ FH.ringStates.goal = {
 		local gametype = FH:isMode()
 		if not gametype then return end -- just here for formatting purposes
 
-		if not FHN.escape then return end
+		if not FHR.escape then return end
 		if player.heistRound.escaped then return end
 
 		player.heistRound.forcedPosition = {
@@ -24,7 +24,9 @@ FH.ringStates.goal = {
 			z = ring.z,
 			angle = player.drawangle
 		}
+		player.heistRound.stasis = true
 		player.heistRound.escaped = true
+		player.powers[pw_flashing] = 2 * TICRATE + 1 -- infinite invulnerability!!
 		player.mo.alpha = 0
 
 		---@diagnostic disable-next-line: undefined-field
@@ -33,9 +35,9 @@ FH.ringStates.goal = {
 }
 
 function escape:init()
-	FHN.escape = false
-	FHN.escapeTime = 0
-	FHN.signPosts = {}
+	FHR.escape = false
+	FHR.escapeTime = 0
+	FHR.signPosts = {}
 	print("Started.")
 end
 
@@ -54,11 +56,11 @@ function escape:load()
 end
 
 function escape:escapeUpdate()
-	if FHN.escapeTime then
-		FHN.escapeTime = $ - 1
+	if FHR.escapeTime then
+		FHR.escapeTime = $ - 1
 
-		if FHN.escapeTime % TICRATE == 0 then
-			print("Tick... "..FHN.escapeTime / TICRATE)
+		if FHR.escapeTime == 0 then
+			FH:endGame()
 		end
 	end
 end
@@ -67,7 +69,7 @@ end
 function escape:update(currentState)
 	if currentState ~= "game" then return end
 
-	if FHN.escape then
+	if FHR.escape then
 		self:escapeUpdate()
 	end
 end
@@ -75,18 +77,20 @@ end
 --- Starts the escape sequence.
 --- @param starter player_t
 function escape:startEscape(starter)
-	FHN.escape = true
-	FHN.escapeTime = escape.timeLeft -- TODO: use cvars
+	FHR.escape = true
+	FHR.escapeTime = escape.timeLeft -- TODO: use cvars
+	FHR.escapeStartTime = leveltime
 
 	FH:addProfit(starter, FH.profitCVars.startedEscape.value, "Started the Escape Sequence")
 
 	-- make signs fly into air then disappear lol
-	for _, sign in ipairs(FHN.signPosts) do
+	for _, sign in ipairs(FHR.signPosts) do
 		sign.momz = 6 * FRACUNIT
 		sign.fuse = 5 * TICRATE
 		sign.flags = $|MF_NOGRAVITY
 		sign.state = S_SIGNSPIN1
 	end
+	S_StartSoundAtVolume(nil, sfx_kc42, 70)
 
 	print(starter.name.." started the escape sequence!")
 
@@ -94,10 +98,7 @@ function escape:startEscape(starter)
 end
 
 function escape:safeFinish()
-	print("Running game-ending check.")
-
-	if not FHN.escape then
-		print("Not escape yet, so don't let the game end.")
+	if not FHR.escape then
 		return
 	end
 
@@ -116,12 +117,9 @@ function escape:safeFinish()
 	end
 
 	if leavingCount >= totalCount then
-		print("GAME OVER!!")
 		FH:endGame()
 		return
 	end
-
-	print("Game not over...")
 end
 
 --- Spawn the signpost at the given coordinates.
@@ -133,9 +131,9 @@ function escape:spawnSignpost(x, y, z, angle)
 	local sign = P_SpawnMobj(x, y, z, MT_SIGN)
 	sign.angle = angle
 	
-	table.insert(FHN.signPosts, sign)
+	table.insert(FHR.signPosts, sign)
 
-	print("Signpost #"..#FHN.signPosts.." spawned at: ")
+	print("Signpost #"..#FHR.signPosts.." spawned at: ")
 	print("    X: "..x/FU)
 	print("    Y: "..y/FU)
 	print("    Z: "..z/FU)
@@ -144,4 +142,8 @@ end
 
 COM_AddCommand("fh_endgame", function(player)
 	FH:endGame()
-end)
+end, COM_ADMIN)
+
+COM_AddCommand("fh_startescape", function(player)
+	escape:startEscape(player)
+end, COM_ADMIN)

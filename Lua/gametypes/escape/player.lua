@@ -29,7 +29,7 @@ function escape:playerUpdate(player, currentState)
 	if not player.mo then return end
 	if not player.mo.health then return end
 
-	if self:isPlayerInExitSector(player) and not FHN.escape then
+	if self:isPlayerInExitSector(player) and not FHR.escape then
 		escape:startEscape(player)
 	end
 end
