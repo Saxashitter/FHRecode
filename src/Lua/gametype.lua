@@ -13,15 +13,15 @@
 --- Determines the color of the header for the mode.
 --- @field headercolor number
 --- Runs upon gametype initalization, after Fang's Heist initalizes itself.
---- @field init fun(self: heistGametype_t)
+--- @field init fun(self: heistGametype_t, gamemap: number)
 --- Runs during MapLoad, useful for initalizing points of objects within maps.
 --- @field load fun(self: heistGametype_t)
 --- Runs every tic that the game is active for.
 --- @field update fun(self: heistGametype_t, currentState: string)
 --- Runs every tic for every player, regardless if they are dead or alive. Follows the same rules as the update function.
 --- @field playerUpdate fun(self: heistGametype_t, player: player_t, currentState: string)
---- Runs once the player.heistRound is initalized. Useful for appending variables in certain modes.
---- @field playerInit fun(self: heistGametype_t, player: player_t)
+--- Runs once player.heistRound is initalized. Useful for appending variables in certain modes.
+--- @field playerInit fun(self: heistGametype_t, player: player_t, currentState: string)
 --- Runs once the player quits.
 --- @field playerQuit fun(self: heistGametype_t, player: player_t, currentState: string)
 --- Runs once the player dies.

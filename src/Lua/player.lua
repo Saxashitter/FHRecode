@@ -57,6 +57,18 @@ end
 --- @field downedTime number
 --- Set this to false if you don't want the player to use the insta-shield. Defaults to true.
 --- @field canUseInstaShield boolean
+--- Set this to false if you don't want the player to use the block. Defaults to true.
+--- @field canUseBlock boolean
+--- The block's max strength it can reach to.
+--- @field blockMaxStrength fixed_t
+--- The block's current strength.
+--- @field blockStrength fixed_t
+--- The cooldown until' the block can start recharging.
+--- @field blockChargeCooldown number
+--- The cooldown until' the player can use the block again.
+--- @field blockCooldown number
+--- If the player is spectator, this will be true. Used instead of player.spectator due to the chance that the player somehow stops being a spectator.
+--- @field spectator boolean
 
 --- Initalizes the player's round variables. Should be called once per-round.
 --- @param player player_t
@@ -73,13 +85,19 @@ function FH:initPlayerRound(player)
 		pregameState = "character",
 		downed = false,
 		downedTime = 0,
-		canUseInstaShield = true
+		canUseInstaShield = true,
+		canUseBlock = true,
+		blockMaxStrength = FU,
+		blockStrength = FU,
+		blockChargeCooldown = 0,
+		blockCooldown = 0,
+		spectator = false
 	}
 	
 	print("round player initalization")
 
 	player.heistRound = playerRound
-	gametype:playerInit(player)
+	gametype:playerInit(player, FHR.currentState)
 
 	return playerRound
 end
@@ -145,7 +163,11 @@ addHook("PlayerThink", function(player)
 
 	initChecks(player, gametype)
 
-	if player.heistRound.forcedPosition and player.mo and player.mo.health then
+	if player.heistRound.spectator and player.mo and player.mo.health then
+		player.spectator = true
+	end
+
+	if player.heistRound.forcedPosition and player.mo and player.mo.health and not player.spectator then
 		P_SetOrigin(player.mo,
 			player.heistRound.forcedPosition.x,
 			player.heistRound.forcedPosition.y,
@@ -216,5 +238,6 @@ end)
 -- require needed external luas
 dofile("player/profit.lua")
 dofile("player/instashield.lua")
+dofile("player/block.lua")
 dofile("player/pvp.lua")
 dofile("player/downed.lua")

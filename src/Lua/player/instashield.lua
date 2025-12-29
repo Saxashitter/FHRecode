@@ -1,3 +1,7 @@
+--- @class mobj_t
+--- If this isn't nil, the mobj has an insta-shield active.
+--- @field fh_instashield mobj_t|nil
+
 --- Makes the Mobj follow the target.
 --- @param mobj mobj_t
 function A_FH_Follow(mobj)
@@ -15,8 +19,8 @@ end
 --- The range of the attack on the vertical axis.
 --- @param var2 fixed_t
 function A_FH_InstaShieldTicker(mobj, var1, var2)
-	if not mobj.target then return end
-	if not mobj.target.valid then return end
+	if not mobj.target then P_RemoveMobj(mobj) return end
+	if not mobj.target.valid then P_RemoveMobj(mobj) return end
 
 	local attacked = {}
 
@@ -75,28 +79,9 @@ function A_FH_PlayerInstaShieldTicker(mobj, var1, var2)
 	local player = mobj.target
 	if not player or not player.valid then return end
 
-	local sumx, sumy, sumz = 0, 0, 0
-
-	-- TODO: get the general position of the objects we hit (if an object is on the left, and another object is on the right, angle would be in the center of them)
-	sumx = attacked[1].x - player.x
-	sumy = attacked[1].y - player.y
-	sumz = (attacked[1].z + attacked[1].height/2) - (player.z + player.height/2)
-
-	-- Bail if vector cancels out
-	if sumx == 0 and sumy == 0 and sumz == 0 then return end
-
-	local mag = FixedHypot(FixedHypot(sumx, sumy), sumz)
-	if mag == 0 then return end
-
-	sumx = FixedDiv($, mag)
-	sumy = FixedDiv($, mag)
-	sumz = FixedDiv($, mag)
-
-	local dot = FixedMul(player.momx, sumx) + FixedMul(player.momy, sumy) + FixedMul(player.momz, sumz)
-
-	player.momx = $ - FixedMul(2*dot, sumx)
-	player.momy = $ - FixedMul(2*dot, sumy)
-	player.momz = $ - FixedMul(2*dot, sumz)
+	player.momx = player.momx * -1
+	player.momy = player.momy * -1
+	player.momz = player.momz * -1
 
 	for _, mo in ipairs(attacked) do
 		if not (mo.type == MT_PLAYER and mo.player and mo.player.heistRound and mo.player.heistRound.downed) then
@@ -151,8 +136,8 @@ for i = A, G do
 		frame = i, -- TODO: frame stuff
 		tics = 1,
 		action = action,
-		var1 = 100 * FU,
-		var2 = 100 * FU,
+		var1 = 150 * FU,
+		var2 = 150 * FU,
 		nextstate = S_NULL
 	}
 
@@ -172,7 +157,7 @@ mobjinfo[MT_FH_INSTASHIELD] = {
 
 addHook("MobjRemoved", function(mobj)
 	if mobj.target and mobj.target.valid and mobj.target.fh_instashield == mobj then
-		mobj.fh_instashield = nil
+		mobj.target.fh_instashield = nil
 	end
 end, MT_FH_INSTASHIELD)
 
@@ -183,7 +168,7 @@ function FH:useInstaShield(mobj)
 	instaShield.target = mobj
 	instaShield.state = S_FH_INSTASHIELD0
 
-	mobj.fh_instashield = mobj
+	mobj.fh_instashield = instaShield
 	S_StartSound(mobj, sfx_s3k64)
 
 	return instaShield

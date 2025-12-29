@@ -46,12 +46,23 @@ function gamestate:init()
 	for player in players.iterate do
 		if not player.mo then continue end
 
+		local fallback
+		local found = false
+
 		for mapthing in mapthings.iterate do
+			if mapthing.type == 1 then
+				fallback = mapthing
+			end
 			if mapthing.type == #player + 1 then
 				player.mo.spawnpoint = mapthing
+				found = true
 				break
 			end
 		end
+
+		if found then continue end
+
+		player.mo.spawnpoint = fallback
 	end
 end
 

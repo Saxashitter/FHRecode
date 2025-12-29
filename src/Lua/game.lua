@@ -15,7 +15,8 @@ end
 
 --- Initalize the game round, ran inside MapChange. This does not reset the gametype!
 --- @param gametype heistGametype_t
-function FH:initRound(gametype)
+--- @param gamemap number
+function FH:initRound(gametype, gamemap)
 	--- @type heistRoundGlobal_t
 	local roundGlobal = {
 		currentState = "" -- set later
@@ -27,7 +28,7 @@ function FH:initRound(gametype)
 	end
 
 	FH:setGamestate("pregame")
-	gametype:init()
+	gametype:init(gamemap)
 end
 
 function FH:endGame()
@@ -39,12 +40,12 @@ function FH:endGame()
 	gametype:finish(FHR.currentState)
 end
 
-addHook("MapChange", function()
+addHook("MapChange", function(gamemap)
 	--- @type heistGametype_t|false
 	local gametype = FH:isMode()
 	if not gametype then return end
 
-	FH:initRound(gametype)
+	FH:initRound(gametype, gamemap)
 end)
 
 addHook("MapLoad", function()
@@ -73,6 +74,16 @@ end)
 addHook("NetVars", function(network)
 	FHN = network($)
 	FHR = network($)
+end)
+
+addHook("MusicChange", function(old, new)
+	if new == mapmusname and FHN.globalMusic then
+		if old == FHN.globalMusic then
+			return true
+		end
+
+		return FHN.globalMusic
+	end
 end)
 
 --- Get all gamestates within Fang's Heist.

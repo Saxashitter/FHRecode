@@ -38,8 +38,19 @@ end
 --- @param currentState string
 function escape:playerDeath(player, currentState)
 	if currentState ~= "game" then return end
+	if not FHR.escape then return end
 
+	player.heistRound.spectator = true
 	self:safeFinish()
+end
+
+--- @param player player_t
+--- @param currentState string
+function escape:playerInit(player, currentState)
+	if currentState ~= "game" then return end
+	if not FHR.escape then return end
+
+	player.heistRound.spectator = true
 end
 
 --- @param player player_t

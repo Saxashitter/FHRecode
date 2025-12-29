@@ -1,0 +1,59 @@
+MainCfg
+TitleScrollXSpeed = 0
+LoopTitle = true
+HideTitlePics = true
+NumDemos = 0
+GameData = fangsheist.dat
+
+Clear All
+
+Unlockable 2
+Unlockable 3
+Unlockable 23
+
+Level 1
+Levelname = Greenflower
+Act = 1
+Keywords = GFZ1
+Music = GFZ1
+TypeOfLevel = Escape
+NextLevel = 2
+SkyNum = 1
+RecordAttack = true
+LevelSelect = 1
+SaveGame = true
+SkyboxScale = 64
+FlickyList = Bluebird,Chipmunk
+NoVisitNeeded = true
+#Flicky selection is final.
+
+Level 2
+Levelname = Greenflower
+Act = 2
+Keywords = GFZ2
+Music = GFZ2
+TypeOfLevel = Escape
+NextLevel = 3
+SkyNum = 1
+RecordAttack = true
+LevelSelect = 1
+SaveGame = true
+SkyboxScale = 64
+FlickyList = Bluebird,Chipmunk
+NoVisitNeeded = true
+#see act 1
+
+Level 30
+Levelname = Frozen Hillside
+Act = 0
+Keywords = FHZ
+Music = FH_FHZ
+NextLevel = 1100
+RecordAttack = true
+TypeOfLevel = Escape
+SkyNum = 30
+LevelSelect = 2
+Weather = 2
+FlickyList = Penguin,Seal
+NoVisitNeeded = true
+Lua.FH_EscapeTheme = FH_FHE

@@ -62,10 +62,13 @@ function gamestate:update()
 		if not player.heistRound then return end
 
 		player.heistRound.stasis = true
-		player.mo.momx = 0
-		player.mo.momy = 0
-		player.mo.momz = 0
-		player.mo.tics = -1
+
+		if player.mo then
+			player.mo.momx = 0
+			player.mo.momy = 0
+			player.mo.momz = 0
+			player.mo.tics = -1
+		end
 	end
 end
 

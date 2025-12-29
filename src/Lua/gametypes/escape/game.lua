@@ -34,11 +34,15 @@ FH.ringStates.goal = {
 	end
 }
 
-function escape:init()
+function escape:init(gamemap)
 	FHR.escape = false
 	FHR.escapeTime = 0
 	FHR.signPosts = {}
-	print("Started.")
+
+	if gamemap == FHN.lastMap then
+		print("retake")
+	end
+	FHN.lastMap = gamemap
 end
 
 function escape:load()
@@ -51,6 +55,9 @@ function escape:load()
 			local ring = FH:spawnRing(x, y, z + 128 * FU, "goal")
 
 			ring.scale = $ * 3 / 2
+		end
+		if mapthing.type == 402 and mapthing.mobj and mapthing.mobj.valid then
+			P_RemoveMobj(mapthing.mobj)
 		end
 	end
 end
@@ -94,7 +101,7 @@ function escape:startEscape(starter)
 
 	print(starter.name.." started the escape sequence!")
 
-	FH:changeMusic("FH_ESC")
+	FH:changeMusic(FH:getMapVariable(nil, "fh_escapetheme", "FH_ESC"))
 end
 
 function escape:safeFinish()
@@ -107,7 +114,7 @@ function escape:safeFinish()
 
 	for player in players.iterate do
 ---@diagnostic disable-next-line: undefined-field
-		if player.spectator or not player.mo or not player.mo.health or player.hasLeftServer then continue end
+		if (player.heistRound and player.heistRound.spectator) or not player.mo or not player.mo.health or player.hasLeftServer then continue end
 
 		totalCount = $ + 1
 

@@ -114,9 +114,29 @@ end
 --- @param music string|nil
 function FH:changeMusic(music)
 	if music == nil then
-		music = mapheaderinfo[gamemap].musname
+		FHN.globalMusic = nil
+		S_ChangeMusic(mapheaderinfo[gamemap].musname, true)
+		return
 	end
 
+	FHN.globalMusic = music
 	S_ChangeMusic(music, true)
-	mapmusname = music
+end
+
+--- Gets a variable from the passed map. If nil, uses the default one.
+--- @param map number|nil
+--- @param key string
+--- @param default any|nil
+function FH:getMapVariable(map, key, default)
+	if map == nil then map = gamemap end
+
+	if mapheaderinfo[map][key] then
+		if type(default) == "number" and tonumber(mapheaderinfo[map][key]) ~= nil then
+			return tonumber(mapheaderinfo[map][key]) 
+		else
+			return mapheaderinfo[map][key]
+		end
+	end
+
+	return default
 end

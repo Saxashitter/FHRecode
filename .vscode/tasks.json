@@ -1,44 +1,65 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "Run SRB2",
-			"type": "shell",
-			"command": "cmd",
-			"args": [
-				"/c",
-				"D:/stuff/SRB2-v2215-Full/srb2win.exe -folder \"${workspaceFolder}\" -windowed -console -server -gametype 8"
-			],
-			"options": {
-				"cwd": "D:/stuff/SRB2-v2215-Full"
-			},
-			"presentation": {
-				"reveal": "never",
-				"focus": false,
-				"panel": "shared"
-			},
-			"problemMatcher": []
-		},
-		{
-			"label": "Dual-Boot SRB2 (Server & Client)",
-			"type": "shell",
-			"command": "cmd",
-			"args": [
-				"/c",
-				"start \"\" D:/stuff/SRB2-v2215-Full/srb2win.exe -folder \"${workspaceFolder}\" -windowed -console -server -gametype 8 && start \"\" D:/stuff/SRB2-v2215-Full/srb2win.exe -folder \"${workspaceFolder} -windowed -console"
-			],
-			"options": {
-				"cwd": "D:/stuff/SRB2-v2215-Full"
-			},
-			"presentation": {
-				"reveal": "never",
-				"panel": "shared"
-			},
-			"problemMatcher": [],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
-		}
-	],
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build SRB2 PK3",
+            "type": "shell",
+            "command": "make",
+            "args": ["build"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run SRB2",
+            "type": "shell",
+            "command": "make",
+            "args": ["run"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Dual-Boot SRB2",
+            "type": "shell",
+            "command": "make",
+            "args": ["dual"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Clean Builds",
+            "type": "shell",
+            "command": "make",
+            "args": ["clean"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ]
 }

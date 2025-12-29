@@ -12,6 +12,8 @@ states[S_FH_PLAY_DOWNED] = {
 	nextstate = S_FH_PLAY_DOWNED
 }
 
+--- @param player player_t
+--- @param time number|nil
 function FH:downPlayer(player, time)
 	if FHR.currentState ~= "game" then return end
 
@@ -26,11 +28,11 @@ function FH:downPlayer(player, time)
 	player.acceleration = $ / 2
 	player.accelstart = $ / 2
 
+	FH:playerStopBlock(player)
+
 	S_StartSound(player.mo, sfx_kc31)
 	S_StartSound(player.mo, sfx_nghurt)
 	S_StartSound(player.mo, sfx_s3k6d)
-
-	print("downed player")
 end
 
 function FH:revivePlayer(player)
@@ -73,38 +75,6 @@ addHook("PlayerThink", function(player)
 		end
 	end
 end)
-
-addHook("MobjDamage", function(player, _, source)
-	if not FH:isMode() then return end
-	if not player.player then return end
-	if not player.player.heistRound then return end
-	if player.player.rings > 0 then return end
-	if player.player.powers[pw_shield] then return end
-	if player.player.powers[pw_flashing] then return end
-	if player.player.powers[pw_invulnerability] then return end
-	if player.player.powers[pw_super] then return end
-
-	FH:downPlayer(player.player, 5 * TICRATE)
-
-	if source
-	and source.valid
-	and source.type == MT_PLAYER
-	and source.player
-	and source.player.heistRound then
-		FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Downed "..player.player.name)
-	end
-	return true
-end, MT_PLAYER)
-
-addHook("ShouldDamage", function(player)
-	if not FH:isMode() then return end
-	if not player.player then return end
-	if not player.player.heistRound then return end
-
-	if player.player.heistRound.downed then
-		return false
-	end
-end, MT_PLAYER)
 
 COM_AddCommand("fh_downplayer", function(player, time)
 	FH:downPlayer(player, tonumber(time or "12"))
