@@ -105,3 +105,4 @@ doUiFile("menus/intermission")
 doUiFile("menus/titlecard")
 
 doUiFile("ingame/timer")
+doUiFile("ingame/health")

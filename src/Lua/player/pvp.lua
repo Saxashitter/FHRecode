@@ -184,6 +184,7 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 	if (damagetype & DMG_DEATHMASK) then
 		player.player.heistRound.health = 0
 	elseif player.fh_block then
+		---@diagnostic disable-next-line: assign-type-mismatch
 		player.player.heistRound.blockStrength = max(0, $ - blockDamage)
 
 		if player.player.heistRound.blockStrength <= blockDamage then
