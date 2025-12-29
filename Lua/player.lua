@@ -57,6 +57,19 @@ end
 --- @field downedTime number
 --- Set this to false if you don't want the player to use the insta-shield. Defaults to true.
 --- @field canUseInstaShield boolean
+--- The player's current health.
+--- @field health fixed_t
+
+setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
+	__index = function(self, key)
+		local ogValue = rawget(self, key)
+
+		if ogValue == nil then
+			return 100*FU
+		end
+		return ogValue
+	end
+})
 
 --- Initalizes the player's round variables. Should be called once per-round.
 --- @param player player_t
@@ -73,7 +86,8 @@ function FH:initPlayerRound(player)
 		pregameState = "character",
 		downed = false,
 		downedTime = 0,
-		canUseInstaShield = true
+		canUseInstaShield = true,
+		health = FH.characterHealths[player.mo.skin]
 	}
 	
 	print("round player initalization")
@@ -217,4 +231,4 @@ end)
 dofile("player/profit.lua")
 dofile("player/instashield.lua")
 dofile("player/pvp.lua")
-dofile("player/downed.lua")
+dofile("player/health.lua")

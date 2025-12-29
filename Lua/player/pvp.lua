@@ -1,5 +1,5 @@
 --- Global PVP manager for players.
---- Dependencies: instashield.lua, downed.lua
+--- Dependencies: instashield.lua, health.lua
 
 local instaShieldCooldown = 35
 
