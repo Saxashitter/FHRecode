@@ -155,21 +155,6 @@ addHook("MobjDamage", function(player, _, source)
 	if player.player.powers[pw_invulnerability] then return end
 	if player.player.powers[pw_super] then return end
 
-	if player.fh_block then
-		player.player.heistRound.blockStrength = max(0, $ - blockDamage)
-		if player.player.heistRound.blockStrength <= blockDamage then
-			S_StartSoundAtVolume(player, sfx_s258, 100)
-		end
-		
-		if player.player.heistRound.blockStrength > 0 then
-			player.player.powers[pw_flashing] = 12
-			S_StartSoundAtVolume(player, sfx_kc40, 60)
-			return true
-		end
-	else
-		if player.player.rings > 0 then return end
-	end
-
 	FH:downPlayer(player.player, 5 * TICRATE)
 
 	if source
@@ -180,4 +165,58 @@ addHook("MobjDamage", function(player, _, source)
 		FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Downed "..player.player.name)
 	end
 	return true
+end, MT_PLAYER)
+
+---@param player mobj_t
+---@param inflictor mobj_t
+---@param source mobj_t
+---@param damagetype integer
+addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
+	if not FH:isMode() then return end
+	if not player.player then return end
+	if not player.player.heistRound then return end
+	-- if player.player.rings > 0 then return end
+	if player.player.powers[pw_shield] then return end
+	if player.player.powers[pw_flashing] then return end
+	if player.player.powers[pw_invulnerability] then return end
+	if player.player.powers[pw_super] then return end
+
+	if (damagetype & DMG_DEATHMASK) then
+		player.player.heistRound.health = 0
+	elseif player.fh_block then
+		player.player.heistRound.blockStrength = max(0, $ - blockDamage)
+
+		if player.player.heistRound.blockStrength <= blockDamage then
+			S_StartSoundAtVolume(player, sfx_s258, 100)
+		end
+		
+		if player.player.heistRound.blockStrength > 0 then
+			player.player.powers[pw_flashing] = 12
+			S_StartSoundAtVolume(player, sfx_kc40, 60)
+			return true
+		end
+	else
+		player.player.heistRound.health = $ - 25*FU -- NOTE: make stuff do different dmg amounts maybe?
+	end
+
+	if player.player.heistRound.health <= 0 then
+		player.player.heistRound.health = 0
+
+		FH:downPlayer(player.player, 5 * TICRATE)
+
+		if source
+		and source.valid
+		and source.type == MT_PLAYER
+		and source.player
+		and source.player.heistRound then
+			FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Downed "..player.player.name)
+		end
+
+		return true
+	elseif player.player.rings <= 0 then
+		P_DoPlayerPain(player.player, source, inflictor) -- this is all u need for no ring thingies right? we're not gonna have flags or match emeralds
+		P_PlayRinglossSound(player, player.player)
+
+		return true
+	end
 end, MT_PLAYER)

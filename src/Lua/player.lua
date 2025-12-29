@@ -69,6 +69,19 @@ end
 --- @field blockCooldown number
 --- If the player is spectator, this will be true. Used instead of player.spectator due to the chance that the player somehow stops being a spectator.
 --- @field spectator boolean
+--- The player's current health.
+--- @field health fixed_t
+
+setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
+	__index = function(self, key)
+		local ogValue = rawget(self, key)
+
+		if ogValue == nil then
+			return 100*FU
+		end
+		return ogValue
+	end
+})
 
 --- Initalizes the player's round variables. Should be called once per-round.
 --- @param player player_t
@@ -86,6 +99,7 @@ function FH:initPlayerRound(player)
 		downed = false,
 		downedTime = 0,
 		canUseInstaShield = true,
+		health = FH.characterHealths[player.mo.skin],
 		canUseBlock = true,
 		blockMaxStrength = FU,
 		blockStrength = FU,
@@ -240,4 +254,4 @@ dofile("player/profit.lua")
 dofile("player/instashield.lua")
 dofile("player/block.lua")
 dofile("player/pvp.lua")
-dofile("player/downed.lua")
+dofile("player/health.lua")

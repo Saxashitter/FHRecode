@@ -12,8 +12,9 @@ rawset(_G, "FH", {
         scores = {},
         global = {}
     },
-    uiEnabled = true
+    uiEnabled = true,
 
+    characterHealths = {}
 })
 rawset(_G, "FHN", {
     currentGametype = 1

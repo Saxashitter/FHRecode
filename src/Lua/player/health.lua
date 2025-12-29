@@ -12,8 +12,9 @@ states[S_FH_PLAY_DOWNED] = {
 	nextstate = S_FH_PLAY_DOWNED
 }
 
---- @param player player_t
---- @param time number|nil
+
+---@param player player_t
+---@param time tic_t
 function FH:downPlayer(player, time)
 	if FHR.currentState ~= "game" then return end
 
@@ -35,6 +36,7 @@ function FH:downPlayer(player, time)
 	S_StartSound(player.mo, sfx_s3k6d)
 end
 
+---@param player player_t
 function FH:revivePlayer(player)
 	if FHR.currentState ~= "game" then return end
 	if not player.heistRound.downed then return end
@@ -45,6 +47,7 @@ function FH:revivePlayer(player)
 	player.heistRound.downed = false
 	player.heistRound.downedTime = 0
 	player.heistRound.canUseInstaShield = true
+	player.heistRound.health = FH.characterHealths[player.mo.skin]
 
 	player.normalspeed = skins[player.skin].normalspeed
 	player.acceleration = skins[player.skin].acceleration
@@ -53,6 +56,7 @@ function FH:revivePlayer(player)
 	S_StartSound(player.mo, sfx_s3k38)
 end
 
+---@param player player_t
 addHook("PlayerThink", function(player)
 	if not FH:isMode() then return end
 	if not player.mo then return end
@@ -75,6 +79,17 @@ addHook("PlayerThink", function(player)
 		end
 	end
 end)
+
+---@param player mobj_t
+addHook("ShouldDamage", function(player)
+	if not FH:isMode() then return end
+	if not player.player then return end
+	if not player.player.heistRound then return end
+
+	if player.player.heistRound.downed then
+		return false
+	end
+end, MT_PLAYER)
 
 COM_AddCommand("fh_downplayer", function(player, time)
 	FH:downPlayer(player, tonumber(time or "12"))
