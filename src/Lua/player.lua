@@ -89,6 +89,10 @@ setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? 
 function FH:initPlayerRound(player)
 	local gametype = FH:isMode()
 
+	player.normalspeed = skins[player.skin].normalspeed
+	player.accelstart = skins[player.skin].accelstart
+	player.acceleration = skins[player.skin].acceleration
+
 	--- @type heistPlayerRound_t
 	local playerRound = {
 		profit = 0,
@@ -99,7 +103,7 @@ function FH:initPlayerRound(player)
 		downed = false,
 		downedTime = 0,
 		canUseInstaShield = true,
-		health = FH.characterHealths[player.mo.skin],
+		health = FH.characterHealths[skins[player.skin].name],
 		canUseBlock = true,
 		blockMaxStrength = FU,
 		blockStrength = FU,

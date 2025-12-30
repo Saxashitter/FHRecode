@@ -17,7 +17,9 @@ function ui:draw(v, player, camera)
 	local div = FixedDiv(player.heistRound.health, FH.characterHealths[skins[player.skin].name])
 
 	FH:drawPaletteRect(v, x, y, self.width, self.height, 31, self.flags)
-	FH:drawPaletteRect(v, x + inside, y + inside, FixedMul(self.width - inside * 2, div), self.height - inside * 2, 112, self.flags)
+	if div then
+		FH:drawPaletteRect(v, x + inside, y + inside, FixedMul(self.width - inside * 2, div), self.height - inside * 2, 112, self.flags)
+	end
 end
 
 return ui

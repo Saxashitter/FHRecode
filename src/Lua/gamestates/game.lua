@@ -34,6 +34,7 @@ local function unstasisPlayers()
 		player.mo.alpha = FU
 		player.mo.state = S_PLAY_ROLL
 		player.pflags = $|PF_SPINNING
+		player.powers[pw_flashing] = 2 * TICRATE
 		P_InstaThrust(player.mo, FixedAngle(player.mo.spawnpoint.angle * FU), player.normalspeed)
 		P_SetObjectMomZ(player.mo, 12 * player.mo.scale)
 	end

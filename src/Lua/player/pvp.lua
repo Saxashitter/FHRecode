@@ -141,31 +141,31 @@ addHook("ShouldDamage", function(targ, inf, source)
 	end
 end, MT_PLAYER)
 
-addHook("MobjDamage", function(player, _, source)
-	if not FH:isMode() then return end
-	if not player.player then return end
-	if not player.player.heistRound then return end
+-- addHook("MobjDamage", function(player, _, source)
+-- 	if not FH:isMode() then return end
+-- 	if not player.player then return end
+-- 	if not player.player.heistRound then return end
 
-	-- if blocking, just return true. dont bother with it
+-- 	-- if blocking, just return true. dont bother with it
 
-	local bypassChecks = false
+-- 	local bypassChecks = false
 
-	if player.player.powers[pw_shield] then return end
-	if player.player.powers[pw_flashing] then return end
-	if player.player.powers[pw_invulnerability] then return end
-	if player.player.powers[pw_super] then return end
+-- 	if player.player.powers[pw_shield] then return end
+-- 	if player.player.powers[pw_flashing] then return end
+-- 	if player.player.powers[pw_invulnerability] then return end
+-- 	if player.player.powers[pw_super] then return end
 
-	FH:downPlayer(player.player, 5 * TICRATE)
+-- 	FH:downPlayer(player.player, 5 * TICRATE)
 
-	if source
-	and source.valid
-	and source.type == MT_PLAYER
-	and source.player
-	and source.player.heistRound then
-		FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Downed "..player.player.name)
-	end
-	return true
-end, MT_PLAYER)
+-- 	if source
+-- 	and source.valid
+-- 	and source.type == MT_PLAYER
+-- 	and source.player
+-- 	and source.player.heistRound then
+-- 		FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Downed "..player.player.name)
+-- 	end
+-- 	return true
+-- end, MT_PLAYER)
 
 ---@param player mobj_t
 ---@param inflictor mobj_t
@@ -175,7 +175,7 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 	if not FH:isMode() then return end
 	if not player.player then return end
 	if not player.player.heistRound then return end
-	-- if player.player.rings > 0 then return end
+
 	if player.player.powers[pw_shield] then return end
 	if player.player.powers[pw_flashing] then return end
 	if player.player.powers[pw_invulnerability] then return end
@@ -203,6 +203,7 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 	if player.player.heistRound.health <= 0 then
 		player.player.heistRound.health = 0
 
+		print("stone cold")
 		FH:downPlayer(player.player, 5 * TICRATE)
 
 		if source
