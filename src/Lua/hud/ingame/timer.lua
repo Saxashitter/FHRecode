@@ -7,53 +7,94 @@ function timer:draw(v, player, camera)
 	if FHR.currentState ~= "game" then return end
 	if not FHR.escape then return end
 
-	local t = FHR.escapeTime
-	local tics = (t/35)/60
-	local ringframe = ((((t/35) % 60) / 2)+1)
+	local escapeTime = FHR.escapeTime
 
-	if not t then
-		ringframe = 0
-	end
+	-- Tween timing
+	local easeInTics = TICRATE
 
-	local bg = v.cachePatch("FH_TMR_BG")
-	local time = v.cachePatch("STTTIME")
-	
-	local x = ease.outexpo(FixedDiv(min(leveltime - FHR.escapeStartTime, 35), 35), 320 * FU, 320 * FU - bg.width * FU - 12 * FU)
+	-- Time
+	local seconds   = escapeTime / 35
+	local minutes   = seconds / 60
+	local ringFrame = ((seconds % 60) / 2) + 1
+
+	-- Patches
+	local bgPatch   = v.cachePatch("FH_TMR_BG")
+	local timePatch = v.cachePatch("STTTIME")
+
+	-- Position
+	local x = ease.outexpo(
+		FixedDiv(min(leveltime - FHR.escapeStartTime, easeInTics), easeInTics),
+		320 * FU,
+		320 * FU - bgPatch.width * FU - 12 * FU
+	)
 	local y = 12 * FU
 
-	v.drawScaled(x + bg.width * FU / 2 - time.width * FU / 2, y, FU, time, V_SNAPTORIGHT|V_SNAPTOTOP)
+	-- "TIME" label
+	v.drawScaled(
+		x + bgPatch.width * FU / 2 - timePatch.width * FU / 2,
+		y,
+		FU,
+		timePatch,
+		V_SNAPTORIGHT|V_SNAPTOTOP
+	)
 
 	y = $ + 12 * FU
 
-	v.drawScaled(x, y, FU, bg, V_SNAPTORIGHT|V_SNAPTOTOP, v.getColormap(nil, SKINCOLOR_RED))
+	-- Background bar
+	v.drawScaled(
+		x,
+		y,
+		FU,
+		bgPatch,
+		V_SNAPTORIGHT|V_SNAPTOTOP,
+		v.getColormap(nil, SKINCOLOR_RED)
+	)
 
-	if tics % 10 > 0 then
-		local bar = v.cachePatch("FH_TMR_BAR" .. (tics % 10))
-
-		v.drawScaled(x, y, FU, bar, V_SNAPTORIGHT|V_SNAPTOTOP, v.getColormap(nil, SKINCOLOR_RED))
+	-- Progress bar (0–9)
+	local barIndex = minutes % 10
+	if barIndex > 0 then
+		local barPatch = v.cachePatch("FH_TMR_BAR" .. barIndex)
+		v.drawScaled(
+			x,
+			y,
+			FU,
+			barPatch,
+			V_SNAPTORIGHT|V_SNAPTOTOP,
+			v.getColormap(nil, SKINCOLOR_RED)
+		)
 	end
 
-	if ringframe then
-		local ring = v.cachePatch("FH_TMR_RING" .. ringframe)
-		v.drawScaled(x, y + 5*FU, FU, ring, V_SNAPTORIGHT|V_SNAPTOTOP, v.getColormap(nil, player.skincolor))
-	end
+	-- Ring indicator
+	local ringPatch = v.cachePatch("FH_TMR_RING" .. ringFrame)
+	v.drawScaled(
+		x,
+		y + 5 * FU,
+		FU,
+		ringPatch,
+		V_SNAPTORIGHT|V_SNAPTOTOP,
+		v.getColormap(nil, player.skincolor)
+	)
 
 	y = $ + 43 * FU
 
-	local string = ("%02d:%02d"):format(tics, (FHR.escapeTime / 35) % 60)
-	local textX = x + bg.width * FU / 2 - ((8 * FU) * 5 / 2)
+	-- Digital time text
+	local timeString = ("%02d:%02d"):format(minutes, seconds % 60)
+	local textX = x + bgPatch.width * FU / 2 - (8 * FU * 5 / 2)
 
-	for i = 1, #string do
-		local char = string:sub(i, i)
-		local patch
+	for i = 1, #timeString do
+		local char = timeString:sub(i, i)
+		local digitPatch = (char == ":")
+			and v.cachePatch("STTCOLON")
+			or  v.cachePatch("STTNUM" .. char)
 
-		if char == ":" then
-			patch = v.cachePatch("STTCOLON")
-		else
-			patch = v.cachePatch("STTNUM"..char)
-		end
+		v.drawScaled(
+			textX,
+			y,
+			FU,
+			digitPatch,
+			V_SNAPTORIGHT|V_SNAPTOTOP
+		)
 
-		v.drawScaled(textX, y, FU, patch, V_SNAPTORIGHT|V_SNAPTOTOP)
 		textX = $ + 8 * FU
 	end
 end

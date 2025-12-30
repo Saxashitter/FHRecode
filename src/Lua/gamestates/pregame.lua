@@ -52,7 +52,7 @@ function gamestate:switch()
 	for player in players.iterate do
 		if not player.heistRound then continue end
 
-		player.heistGlobal.skin = player.skin
+		player.heistRound.skin = player.skin
 	end
 	FH:setGamestate("titlecard")
 end

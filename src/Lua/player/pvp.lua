@@ -21,6 +21,7 @@ function FH:playerStopBlock(player)
 	player.heistRound.blockCooldown = blockCooldown
 	player.heistRound.blockChargeCooldown = blockChargeCooldown
 end
+
 --- @param player player_t
 addHook("PlayerThink", function(player)
 	local gametype = FH:isMode()
@@ -49,7 +50,8 @@ addHook("PlayerThink", function(player)
 	and player.lastbuttons & BT_FIRENORMAL == 0
 	and not player.heistRound.blockCooldown
 	and player.heistRound.canUseBlock
-	and not player.mo.fh_block then
+	and not player.mo.fh_block
+	and not player.mo.fh_instashield then
 		FH:playerUseBlock(player)
 	end
 
@@ -84,7 +86,6 @@ addHook("PlayerThink", function(player)
 		if player.mo.fh_block then
 			local t = FixedDiv(player.heistRound.blockStrength, player.heistRound.blockMaxStrength)
 			local scale = ease.linear(t, player.mo.scale / 2, player.mo.scale * 3 / 2)
-
 			local block = player.mo.fh_block
 
 			block.scale = scale
@@ -116,6 +117,24 @@ addHook("PlayerThink", function(player)
 	end
 end)
 
+addHook("JumpSpecial", function(player)
+	if not FH:isMode() then return end
+	if not player.heistRound then return end
+	if not player.mo then return end
+	if player.heistRound.downed then
+		return true
+	end
+end)
+
+addHook("SpinSpecial", function(player)
+	if not FH:isMode() then return end
+	if not player.heistRound then return end
+	if not player.mo then return end
+	if player.heistRound.downed then
+		return true
+	end
+end)
+
 addHook("ShouldDamage", function(targ, inf, source)
 	--- @type heistGametype_t|false
 	local gametype = FH:isMode()
@@ -141,32 +160,6 @@ addHook("ShouldDamage", function(targ, inf, source)
 	end
 end, MT_PLAYER)
 
--- addHook("MobjDamage", function(player, _, source)
--- 	if not FH:isMode() then return end
--- 	if not player.player then return end
--- 	if not player.player.heistRound then return end
-
--- 	-- if blocking, just return true. dont bother with it
-
--- 	local bypassChecks = false
-
--- 	if player.player.powers[pw_shield] then return end
--- 	if player.player.powers[pw_flashing] then return end
--- 	if player.player.powers[pw_invulnerability] then return end
--- 	if player.player.powers[pw_super] then return end
-
--- 	FH:downPlayer(player.player, 5 * TICRATE)
-
--- 	if source
--- 	and source.valid
--- 	and source.type == MT_PLAYER
--- 	and source.player
--- 	and source.player.heistRound then
--- 		FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Downed "..player.player.name)
--- 	end
--- 	return true
--- end, MT_PLAYER)
-
 ---@param player mobj_t
 ---@param inflictor mobj_t
 ---@param source mobj_t
@@ -181,9 +174,12 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 	if player.player.powers[pw_invulnerability] then return end
 	if player.player.powers[pw_super] then return end
 
+	local health = max(0, player.player.heistRound.health - 25*FU)
+
 	if (damagetype & DMG_DEATHMASK) then
-		player.player.heistRound.health = 0
+		health = 0
 	elseif player.fh_block then
+		-- TODO: slap this in a function
 		---@diagnostic disable-next-line: assign-type-mismatch
 		player.player.heistRound.blockStrength = max(0, $ - blockDamage)
 
@@ -196,16 +192,11 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 			S_StartSoundAtVolume(player, sfx_kc40, 60)
 			return true
 		end
-	else
-		player.player.heistRound.health = $ - 25*FU -- NOTE: make stuff do different dmg amounts maybe?
+
+		health = max(0, player.player.heistRound.health - 50*FU)
 	end
 
-	if player.player.heistRound.health <= 0 then
-		player.player.heistRound.health = 0
-
-		print("stone cold")
-		FH:downPlayer(player.player, 5 * TICRATE)
-
+	if FH:setHealth(player.player, health) then
 		if source
 		and source.valid
 		and source.type == MT_PLAYER
@@ -215,9 +206,16 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 		end
 
 		return true
-	elseif player.player.rings <= 0 then
+	else
 		P_DoPlayerPain(player.player, source, inflictor) -- this is all u need for no ring thingies right? we're not gonna have flags or match emeralds
-		P_PlayRinglossSound(player, player.player)
+
+		if player.player.rings then
+			local amount = min(player.player.rings, 25)
+
+			P_PlayRinglossSound(player, player.player)
+			P_PlayerRingBurst(player.player, amount)
+			player.player.rings = $ - amount
+		end
 
 		return true
 	end

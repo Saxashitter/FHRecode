@@ -7,6 +7,11 @@ rawset(_G, "FH", {
     gametypes = {},
     gametypeByID = {},
 
+	modifiers = {
+		difficulties = {},
+		all = {}
+	},
+
     uiElements = {
         game = {},
         scores = {},

@@ -71,6 +71,8 @@ end
 --- @field spectator boolean
 --- The player's current health.
 --- @field health fixed_t
+--- If this is set to a number, the player will be forced to that skin.
+--- @field skin number|nil
 
 setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
 	__index = function(self, key)

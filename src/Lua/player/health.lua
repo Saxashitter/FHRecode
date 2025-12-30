@@ -12,6 +12,20 @@ states[S_FH_PLAY_DOWNED] = {
 	nextstate = S_FH_PLAY_DOWNED
 }
 
+--- Sets the player's health. If set to zero, the player will be downed. Anything below zero will turn the player invincible, and anything above the player's max health acts as overheal. If this returns true, the player has been downed.
+--- @param player player_t
+--- @param health fixed_t
+--- @return boolean
+function FH:setHealth(player, health)
+	player.heistRound.health = health
+
+	if player.heistRound.health == 0 then
+		FH:downPlayer(player, 17 * TICRATE)
+		return true
+	end
+
+	return false
+end
 
 ---@param player player_t
 ---@param time tic_t
@@ -23,6 +37,7 @@ function FH:downPlayer(player, time)
 	player.heistRound.downed = true
 	player.heistRound.downedTime = time or 0
 	player.heistRound.canUseInstaShield = false
+	player.heistRound.canUseBlock = false
 
 	player.powers[pw_flashing] = 2
 	player.normalspeed = skins[player.skin].normalspeed / 5
@@ -47,7 +62,8 @@ function FH:revivePlayer(player)
 	player.heistRound.downed = false
 	player.heistRound.downedTime = 0
 	player.heistRound.canUseInstaShield = true
-	player.heistRound.health = FH.characterHealths[player.mo.skin]
+	player.heistRound.canUseBlock = true
+	FH:setHealth(player, FH.characterHealths[player.mo.skin])
 
 	player.normalspeed = skins[player.skin].normalspeed
 	player.acceleration = skins[player.skin].acceleration

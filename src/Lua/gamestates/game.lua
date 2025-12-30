@@ -74,7 +74,10 @@ function gamestate:update()
 	if FHR.gameCountdown then
 		if FHR.gameCountdown % TICRATE == 0 then
 			local sound = _G["sfx_fh_cd"..FHR.gameCountdown / TICRATE]
-			S_StartSound(nil, sound)
+
+			if sound ~= nil then
+				S_StartSound(nil, sound)
+			end
 		end
 
 		FHR.gameCountdown = $ - 1
@@ -92,6 +95,9 @@ end
 
 --- @param player player_t
 function gamestate:playerUpdate(player)
+	if player.heistRound.skin and player.skin ~= player.heistRound.skin then
+		R_SetPlayerSkin(player, player.heistRound.skin)
+	end
 end
 
 function gamestate:playerQuit() end
