@@ -1,6 +1,6 @@
 local escape = _FH_ESCAPE
 
-escape.timeLeft = 120 * TICRATE -- 2 minutes
+escape.timeLeft = 180 * TICRATE -- 3 minutes
 escape.signpostThing = 501
 escape.ringThing = 1
 
@@ -57,7 +57,7 @@ function escape:load()
 		end
 		if mapthing.type == self.ringThing then
 			local x, y, z = FH:getMapthingWorldPosition(mapthing)
-			local ring = FH:spawnRing(x, y, z + 128 * FU, "goal")
+			local ring = FH:spawnRing(x, y, z + 96 * FU, "goal")
 
 			ring.alpha = 0
 			ring.scale = $ * 3 / 2
@@ -92,10 +92,12 @@ end
 --- @param starter player_t
 function escape:startEscape(starter)
 	FHR.escape = true
-	FHR.escapeTime = escape.timeLeft -- TODO: use cvars
+	FHR.escapeTime = FH:getMapVariable(nil, "fh_time", self.timeLeft) -- TODO: use cvars
 	FHR.escapeStartTime = leveltime
 
-	FH:addProfit(starter, FH.profitCVars.startedEscape.value, "Started the Escape Sequence")
+	if starter and starter.heistRound then
+		FH:addProfit(starter, FH.profitCVars.startedEscape.value, "Started the Escape Sequence")
+	end
 
 	-- make signs fly into air then disappear lol
 	for _, sign in ipairs(FHR.signPosts) do

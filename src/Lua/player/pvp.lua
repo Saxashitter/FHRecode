@@ -16,8 +16,12 @@ function FH:playerUseBlock(player)
 end
 
 --- @param player player_t
-function FH:playerStopBlock(player)
+--- @param startCooldowns boolean|nil
+function FH:playerStopBlock(player, startCooldowns)
 	FH:stopBlock(player.mo)
+
+	if startCooldowns == false then return end
+
 	player.heistRound.blockCooldown = blockCooldown
 	player.heistRound.blockChargeCooldown = blockChargeCooldown
 end
@@ -188,7 +192,7 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 		end
 		
 		if player.player.heistRound.blockStrength > 0 then
-			player.player.powers[pw_flashing] = 12
+			player.player.powers[pw_flashing] = 16
 			S_StartSoundAtVolume(player, sfx_kc40, 60)
 
 			if inflictor and inflictor.valid and inflictor.health and inflictor.flags & MF_MISSILE then
@@ -200,7 +204,7 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 			return true
 		end
 
-		FH:playerStopBlock(player.player)
+		FH:playerStopBlock(player.player, false)
 		health = max(0, player.player.heistRound.health - 50*FU)
 	end
 

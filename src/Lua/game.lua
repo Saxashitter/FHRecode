@@ -28,7 +28,7 @@ function FH:initRound(gametype, gamemap)
 		FH:initPlayerRound(player)
 	end
 
-	FH:setGamestate("pregame")
+	self:setGamestate("pregame")
 	gametype:init(gamemap)
 end
 

@@ -5,7 +5,7 @@ modifier.name = "Eggman"
 modifier.description = "He's had enough of you!"
 modifier.difficulty = "main"
 
-modifier.chaseDelay = 3 * TICRATE
+modifier.chaseDelay = 5 * TICRATE
 
 -- yknow, we are probably better off making this a mobj
 -- but for testing sake, lets just keep it going :P
@@ -111,7 +111,7 @@ addHook("MobjThinker", function(eggmanChaser)
 
 		-- Rubberband factor
 		local baseSpeed = 24 * FU
-		local rubberband = max(1 * FU, dist / 500)
+		local rubberband = max(1 * FU, dist / 1024)
 		local targetSpeed = FixedMul(baseSpeed, rubberband)
 
 		-- Normalize vector
@@ -120,7 +120,7 @@ addHook("MobjThinker", function(eggmanChaser)
 		local vy = FixedDiv(dy, totalDist)
 		local vz = FixedDiv(dz, totalDist)
 
-		local damp = FU / 6
+		local damp = FU / 12
 	
 		if eggmanChaser.tracer ~= target.mo then
 			-- warn the player

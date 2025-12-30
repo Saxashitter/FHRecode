@@ -79,8 +79,6 @@ function A_FH_PlayerInstaShieldTicker(mobj, var1, var2)
 		FH:knockbackMobj(mo, player)
 	end
 
-	P_RemoveMobj(mobj)
-
 	-- local angle = R_PointToAngle2(0,0,sumx,sumy)
 	-- local zangle = R_PointToAngle2(0,0,FixedHypot(sumx,sumy),sumz)
 	-- local speed = R_PointToDist2(0, 0, FixedHypot(player.momx, player.momy), player.momz)

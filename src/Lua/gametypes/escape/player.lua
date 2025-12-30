@@ -32,6 +32,10 @@ function escape:playerUpdate(player, currentState)
 	if self:isPlayerInExitSector(player) and not FHR.escape then
 		escape:startEscape(player)
 	end
+
+	if player.heistRound.escaped then
+		player.powers[pw_flashing] = TICRATE
+	end
 end
 
 --- @param player player_t

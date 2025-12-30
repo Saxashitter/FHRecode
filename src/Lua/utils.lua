@@ -164,7 +164,9 @@ function FH:approach(current, target, step)
     return current
 end
 
-
+--- @param target mobj_t
+--- @param point table
+--- @param minSpeed fixed_t|nil
 function FH:knockbackMobj(target, point, minSpeed)
 	local speed = max(R_PointToDist2(0, 0, R_PointToDist2(0, 0, target.momx, target.momy), target.momz), minSpeed or 0)
 	local dist = R_PointToDist2(target.x, target.y, point.x, point.y)
