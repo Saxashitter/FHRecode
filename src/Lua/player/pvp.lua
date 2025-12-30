@@ -179,8 +179,8 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 	if (damagetype & DMG_DEATHMASK) then
 		health = 0
 	elseif player.fh_block then
-		-- TODO: slap this in a function
-		---@diagnostic disable-next-line: assign-type-mismatch
+		--- TODO: slap this in a function
+		--- @diagnostic disable-next-line: assign-type-mismatch
 		player.player.heistRound.blockStrength = max(0, $ - blockDamage)
 
 		if player.player.heistRound.blockStrength <= blockDamage then
@@ -190,9 +190,17 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 		if player.player.heistRound.blockStrength > 0 then
 			player.player.powers[pw_flashing] = 12
 			S_StartSoundAtVolume(player, sfx_kc40, 60)
+
+			if inflictor and inflictor.valid and inflictor.health and inflictor.flags & MF_MISSILE then
+				inflictor.target = player
+
+				FH:knockbackMobj(inflictor, player)
+			end
+
 			return true
 		end
 
+		FH:playerStopBlock(player.player)
 		health = max(0, player.player.heistRound.health - 50*FU)
 	end
 

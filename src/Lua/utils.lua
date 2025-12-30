@@ -140,3 +140,38 @@ function FH:getMapVariable(map, key, default)
 
 	return default
 end
+
+--- Moves 'current' toward 'target' by at most 'step'
+--- @param current number
+--- @param target number
+--- @param step number
+function FH:approach(current, target, step)
+    if current < target then
+        current = current + step
+
+        if current > target then
+            current = target
+        end
+
+    elseif current > target then
+        current = current - step
+
+        if current < target then
+            current = target
+        end
+    end
+
+    return current
+end
+
+
+function FH:knockbackMobj(target, point, minSpeed)
+	local speed = max(R_PointToDist2(0, 0, R_PointToDist2(0, 0, target.momx, target.momy), target.momz), minSpeed or 0)
+	local dist = R_PointToDist2(target.x, target.y, point.x, point.y)
+	local angle = R_PointToAngle2(target.x, target.y, point.x, point.y)
+	local aiming = R_PointToAngle2(0, 0, dist, point.z - target.z)
+
+	P_InstaThrust(target, angle, -FixedMul(speed, cos(aiming)))
+	---@diagnostic disable-next-line: assign-type-mismatch
+	target.momz = -FixedMul(speed, sin(aiming))
+end

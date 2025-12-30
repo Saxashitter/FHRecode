@@ -38,7 +38,6 @@ function FH:spawnRing(x, y, z, ringType, ...)
 	end
 
 	local ringData = self.ringStates[ringType]
-	print("Spawning ring type: "..ringType)
 
 	local ring = P_SpawnMobj(x, y, z, MT_FH_RING)
 	if not (ring and ring.valid) then

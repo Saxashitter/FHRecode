@@ -38,10 +38,15 @@ function escape:init(gamemap)
 	FHR.escape = false
 	FHR.escapeTime = 0
 	FHR.signPosts = {}
+	FHR.escapeRings = {}
 
-	if gamemap == FHN.lastMap then
-		print("retake")
+	if FHN.lastMap == gamemap then
+		FHN.retakes = $ + 1
+		print("Retake number #"..FHN.retakes)
+	else
+		FHN.retakes = 0
 	end
+
 	FHN.lastMap = gamemap
 end
 
@@ -54,7 +59,9 @@ function escape:load()
 			local x, y, z = FH:getMapthingWorldPosition(mapthing)
 			local ring = FH:spawnRing(x, y, z + 128 * FU, "goal")
 
+			ring.alpha = 0
 			ring.scale = $ * 3 / 2
+			table.insert(FHR.escapeRings, ring)
 		end
 		if mapthing.type == 402 and mapthing.mobj and mapthing.mobj.valid then
 			P_RemoveMobj(mapthing.mobj)
@@ -92,16 +99,48 @@ function escape:startEscape(starter)
 
 	-- make signs fly into air then disappear lol
 	for _, sign in ipairs(FHR.signPosts) do
+		if not sign.valid then continue end
+
 		sign.momz = 6 * FRACUNIT
 		sign.fuse = 5 * TICRATE
 		sign.flags = $|MF_NOGRAVITY
 		sign.state = S_SIGNSPIN1
 	end
+
+	-- ok rings you can be visible now
+	for _, ring in ipairs(FHR.escapeRings) do
+		if not ring.valid then continue end
+
+		ring.alpha = FU
+	end
+
 	S_StartSoundAtVolume(nil, sfx_kc42, 70)
 
 	print(starter.name.." started the escape sequence!")
 
-	FH:changeMusic(FH:getMapVariable(nil, "fh_escapetheme", "FH_ESC"))
+	local escapeSong = FH:getMapVariable(nil, "fh_escapetheme", "FH_ESC")
+
+	if FHN.retakes then
+		-- activate modifiers
+		for i = 1, FHN.retakes do
+			local type = i == 1 and "main" or "side"
+
+			if not #FH.modifiers.types[type] then
+				break -- change this to continue once we actually get side modifiers
+			end
+	
+			local choice = P_RandomRange(1, #FH.modifiers.types[type])
+
+			FH:activateModifier(FH.modifiers.types[type][choice])
+		end
+
+		-- decide on retake song based on map
+		escapeSong = FH:getMapVariable(nil, "fh_retake1theme", "FH_RTK")
+		for i = 2, FHN.retakes do
+			escapeSong = $ or FH:getMapVariable(nil, "fh_retake"..i.."theme")
+		end
+	end
+	FH:changeMusic(escapeSong)
 end
 
 function escape:safeFinish()
@@ -139,12 +178,6 @@ function escape:spawnSignpost(x, y, z, angle)
 	sign.angle = angle
 	
 	table.insert(FHR.signPosts, sign)
-
-	print("Signpost #"..#FHR.signPosts.." spawned at: ")
-	print("    X: "..x/FU)
-	print("    Y: "..y/FU)
-	print("    Z: "..z/FU)
-	print("    ANGLE: "..AngleFixed(angle)/FU)
 end
 
 COM_AddCommand("fh_endgame", function(player)

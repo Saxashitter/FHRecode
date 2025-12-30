@@ -19,7 +19,8 @@ end
 function FH:initRound(gametype, gamemap)
 	--- @type heistRoundGlobal_t
 	local roundGlobal = {
-		currentState = "" -- set later
+		currentState = "",
+		modifiers = {}
 	}
 	FHR = roundGlobal
 
@@ -84,6 +85,13 @@ addHook("MusicChange", function(old, new)
 
 		return FHN.globalMusic
 	end
+end)
+
+addHook("GameQuit", function()
+	FHR = {}
+
+	FHN.retakes = 0 -- making sure
+	FHN.lastMap = nil
 end)
 
 --- Get all gamestates within Fang's Heist.

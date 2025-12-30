@@ -88,6 +88,13 @@ function gamestate:update()
 			FH:changeMusic()
 		end
 	end
+
+	-- update modifiers
+	for k, v in ipairs(FHR.modifiers) do
+		local modifier = FH.modifiers.all[v]
+
+		modifier:update()
+	end
 end
 
 function gamestate:preUpdate()
@@ -97,6 +104,13 @@ end
 function gamestate:playerUpdate(player)
 	if player.heistRound.skin and player.skin ~= player.heistRound.skin then
 		R_SetPlayerSkin(player, player.heistRound.skin)
+	end
+
+	-- update modifiers
+	for k, v in ipairs(FHR.modifiers) do
+		local modifier = FH.modifiers.all[v]
+
+		modifier:playerUpdate(player)
 	end
 end
 

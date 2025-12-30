@@ -6,7 +6,6 @@ gamestate.timeLeft = 60 * TICRATE
 
 function gamestate:init()
 	FHR.pregameTimeLeft = self.timeLeft
-	print("setGamestate")
 
 	for player in players.iterate do
 		if not player.heistRound then return end

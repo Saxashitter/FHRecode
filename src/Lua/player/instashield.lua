@@ -2,16 +2,6 @@
 --- If this isn't nil, the mobj has an insta-shield active.
 --- @field fh_instashield mobj_t|nil
 
---- Makes the Mobj follow the target.
---- @param mobj mobj_t
-function A_FH_Follow(mobj)
-	if not mobj.target then return end
-	if not mobj.target.valid then return end
-
-	P_MoveOrigin(mobj, mobj.target.x, mobj.target.y, mobj.target.z + mobj.target.height/2)
-	mobj.angle = mobj.target.angle
-end
-
 --- Follows the target and attacks around it. If the mobj hits anybody, it'll damage them, setting the source of the attack to the mobj.
 --- @param mobj mobj_t
 --- The range of the attack on the horizontal axis.
@@ -79,18 +69,14 @@ function A_FH_PlayerInstaShieldTicker(mobj, var1, var2)
 	local player = mobj.target
 	if not player or not player.valid then return end
 
-	player.momx = player.momx * -1
-	player.momy = player.momy * -1
-	player.momz = player.momz * -1
+	FH:knockbackMobj(player, attacked[1])
 
 	for _, mo in ipairs(attacked) do
 		if not (mo.type == MT_PLAYER and mo.player and mo.player.heistRound and mo.player.heistRound.downed) then
 			continue
 		end
 
-		mo.momx = -player.momx
-		mo.momy = -player.momy
-		mo.momz = -player.momz
+		FH:knockbackMobj(mo, player)
 	end
 
 	P_RemoveMobj(mobj)

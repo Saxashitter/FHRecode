@@ -26,8 +26,6 @@ function FH:initPlayerGlobal(player)
 		lastForwardmove = player.cmd.forwardmove,
 		lastButtons = player.cmd.buttons
 	}
-
-	print("global player initalization")
 	
 	player.heistGlobal = playerGlobal
 	return playerGlobal
@@ -114,8 +112,6 @@ function FH:initPlayerRound(player)
 		spectator = false
 	}
 	
-	print("round player initalization")
-
 	player.heistRound = playerRound
 	gametype:playerInit(player, FHR.currentState)
 
@@ -210,8 +206,6 @@ end)
 
 --- @param player player_t
 addHook("PlayerQuit", function(player)
-	print("Player quit.")
-
 	--- @type heistGametype_t|false
 	local gametype = FH:isMode()
 

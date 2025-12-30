@@ -8,7 +8,10 @@ rawset(_G, "FH", {
     gametypeByID = {},
 
 	modifiers = {
-		difficulties = {},
+		types = {
+            main = {},
+            side = {}
+        },
 		all = {}
 	},
 
@@ -21,7 +24,5 @@ rawset(_G, "FH", {
 
     characterHealths = {}
 })
-rawset(_G, "FHN", {
-    currentGametype = 1
-})
+rawset(_G, "FHN", {})
 rawset(_G, "FHR", {})
