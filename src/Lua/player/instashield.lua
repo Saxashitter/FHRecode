@@ -64,7 +64,7 @@ end
 function A_FH_PlayerInstaShieldTicker(mobj, var1, var2)
 	local attacked, len = A_FH_InstaShieldTicker(mobj, var1, var2)
 	if not attacked or len == 0 then return end
-	if P_IsObjectOnGround(mobj) then return end
+	if P_IsObjectOnGround(mobj.target) then return end
 
 	local player = mobj.target
 	if not player or not player.valid then return end

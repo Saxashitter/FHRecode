@@ -112,15 +112,16 @@ end
 --- Set this to nil to revert to the map's default music.
 --- TODO: Actually make this true using MusicChange and NetVars.
 --- @param music string|nil
-function FH:changeMusic(music)
+function FH:changeMusic(music, loop)
+	if loop == nil then loop = true end
 	if music == nil then
 		FHN.globalMusic = nil
-		S_ChangeMusic(mapheaderinfo[gamemap].musname, true)
+		S_ChangeMusic(mapheaderinfo[gamemap].musname, loop)
 		return
 	end
 
 	FHN.globalMusic = music
-	S_ChangeMusic(music, true)
+	S_ChangeMusic(music, loop)
 end
 
 --- Gets a variable from the passed map. If nil, uses the default one.
