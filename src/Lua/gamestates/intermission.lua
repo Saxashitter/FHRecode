@@ -41,7 +41,7 @@ function gamestate:init()
 
 		local inserted = false
 		for i = 1, #FHR.winningPlayers do
-			if entry.score > FHR.winningPlayers[i].score then
+			if entry.profit > FHR.winningPlayers[i].profit then
 				inserted = true
 				table.insert(FHR.winningPlayers, i, entry)
 
@@ -55,7 +55,6 @@ function gamestate:init()
 	end
 
 	FH:changeMusic("FH_END", false)
-	print(self.gameScreenEnd)
 end
 
 function gamestate:load()

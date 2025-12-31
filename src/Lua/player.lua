@@ -228,8 +228,6 @@ end)
 
 --- @param target mobj_t
 addHook("MobjDeath", function(target)
-	print("Player death.")
-
 	--- @type heistGametype_t|false
 	local gametype = FH:isMode()
 

@@ -23,6 +23,10 @@ function modifier:predictPlayerPosition(player)
 
 	local playerDistance = abs(z - mo.z)
 	local gravity = abs(P_GetMobjGravity(player.mo))
+	if playerDistance == 0 then
+		return false
+	end
+
 	local ticsUntilHit = FixedSqrt(FixedDiv(2 * playerDistance, gravity))
 
 	x = FixedMul(mo.momx, ticsUntilHit)
@@ -39,6 +43,7 @@ function modifier:update()
 	FHR.bombCooldown = $ - 1
 
 	if FHR.bombCooldown then return end
+	FHR.bombCooldown = self.spawnDelay
 
 	-- spawn bombs on top of all players
 
@@ -48,11 +53,10 @@ function modifier:update()
 		if player.heistRound.spectator then return end
 
 		local predictx, predicty, predictz = self:predictPlayerPosition(player)
+		if predictx == false then continue end
 
 		P_SpawnMobjFromMobj(player.mo, predictx, predicty, predictz, MT_FBOMB)
 	end
-
-	FHR.bombCooldown = self.spawnDelay
 end
 
 function modifier:finish()

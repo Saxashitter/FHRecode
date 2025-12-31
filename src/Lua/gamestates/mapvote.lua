@@ -24,7 +24,6 @@ function gamestate:init()
 	}
 
 	FH:changeMusic("FH_MPV", false)
-	print(self.gameScreenEnd)
 end
 
 function gamestate:load()
