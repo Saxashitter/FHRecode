@@ -23,11 +23,8 @@ function modifier:predictPlayerPosition(player)
 
 	local playerDistance = abs(z - mo.z)
 	local gravity = abs(P_GetMobjGravity(player.mo))
-	if playerDistance == 0 then
-		return false
-	end
 
-	local ticsUntilHit = FixedSqrt(FixedDiv(2 * playerDistance, gravity))
+	local ticsUntilHit = playerDistance > 0 and FixedSqrt(FixedDiv(2 * playerDistance, gravity)) or 0
 
 	x = FixedMul(mo.momx, ticsUntilHit)
 	y = FixedMul(mo.momy, ticsUntilHit)

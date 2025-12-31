@@ -120,6 +120,8 @@ addHook("PlayerThink", function(player)
 		end
 
 		if player.mo.fh_instashield then
+			P_MoveOrigin(player.mo.fh_instashield, player.mo.x + player.mo.momx, player.mo.y + player.mo.momy, player.mo.z + player.mo.momz + player.mo.height / 2)
+
 			local attacked, len = FH:instaShieldHitScan(player.mo, 150 * FU, 150 * FU)
 
 			if len then
