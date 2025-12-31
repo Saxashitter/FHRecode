@@ -179,7 +179,8 @@ addHook("MobjThinker", function(mobj)
 	if not mobj.target then return end
 	if not mobj.target.valid then return end
 
-	A_FH_Follow(mobj, 0, mobj.target.height / 2 + 4 * mobj.target.scale)
+	mobj.scale = mobj.target.scale
+	P_MoveOrigin(mobj, mobj.target.x, mobj.target.y, mobj.target.z + mobj.target.height + 4 * mobj.target.scale)
 end, MT_FH_ALERT)
 
 return FH:registerModifier(modifier)

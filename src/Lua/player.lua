@@ -71,6 +71,10 @@ end
 --- @field health fixed_t
 --- If this is set to a number, the player will be forced to that skin.
 --- @field skin number|nil
+--- The player's current map selected within the map vote. Defaults to 2 (in the middle)
+--- @field mapSelection number
+--- If this is true, the player has selected a map in the map vote.
+--- @field mapVote boolean
 
 setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
 	__index = function(self, key)
@@ -109,7 +113,9 @@ function FH:initPlayerRound(player)
 		blockStrength = FU,
 		blockChargeCooldown = 0,
 		blockCooldown = 0,
-		spectator = false
+		spectator = false,
+		mapSelection = 2,
+		mapVote = false
 	}
 	
 	player.heistRound = playerRound

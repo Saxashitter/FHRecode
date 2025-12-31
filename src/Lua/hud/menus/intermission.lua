@@ -26,10 +26,12 @@ function intermissionMenu:draw(v, player, camera)
 
 	local tics = leveltime - FHR.intermissionStartTime
 	local gamestate = FH.gamestates[FHR.currentState]
+
+	-- TODO: decide state from the intermission handling stuff idk
 	local state = "game"
 
 	if tics >= gamestate.gameScreenEnd then
-		state = "intermission"
+		state = "results"
 	end
 
 	states[state](v, player, camera)

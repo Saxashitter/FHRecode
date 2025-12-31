@@ -100,9 +100,10 @@ end
 --- require reusable hud objects and append them to FH
 FH.playerIconParallax = dofile("hud/reusable/playerIconParallax.lua")
 
+doUiFile("menus/titlecard")
 doUiFile("menus/pregame")
 doUiFile("menus/intermission")
-doUiFile("menus/titlecard")
+doUiFile("menus/mapvote")
 
 doUiFile("ingame/timer")
 doUiFile("ingame/health")

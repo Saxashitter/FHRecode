@@ -88,6 +88,74 @@ function A_FH_PlayerInstaShieldTicker(mobj, var1, var2)
 	-- player.momz = FixedMul(-speed, sin(zangle))
 end
 
+--- Runs the hit-scan for the insta-shield (per-player).
+--- Returns a table of mobjs hit and the count.
+--- @param mo mobj_t
+--- @param xyRange fixed_t
+--- @param zRange fixed_t
+--- @return table
+--- @return number
+function FH:instaShieldHitScan(mo, xyRange, zRange)
+	if not mo or not mo.valid then
+		return {}, 0
+	end
+
+	local attacked = {}
+
+	-- Scale ranges by player scale
+	xyRange = FixedMul(xyRange, mo.scale)
+	zRange  = FixedMul(zRange,  mo.scale)
+
+	local ox, oy, oz = mo.x, mo.y, mo.z
+
+	searchBlockmap(
+		"objects",
+		function(_, foundMobj)
+			if not foundMobj
+			or not foundMobj.valid
+			or not foundMobj.health then
+				return
+			end
+
+			if foundMobj == mo then
+				return
+			end
+
+			if foundMobj.flags & (MF_ENEMY|MF_MONITOR|MF_BOSS) == 0
+			and foundMobj.type ~= MT_PLAYER then
+				return
+			end
+
+			local horiz = xyRange + foundMobj.radius
+			local vert  = zRange  + foundMobj.height / 2
+
+			local d = R_PointToDist2(ox, oy, foundMobj.x, foundMobj.y)
+
+			local z1 = oz
+			local z2 = foundMobj.z + foundMobj.height / 2
+			local dz = z2 - z1
+
+			-- Normalize axes
+			local n  = FixedDiv(d,  horiz)
+			local nz = FixedDiv(dz, vert)
+
+			-- Ellipsoid distance check
+			if FixedMul(n, n) + FixedMul(nz, nz) > FRACUNIT then
+				return
+			end
+
+			if P_DamageMobj(foundMobj, mo, mo) then
+				attacked[#attacked + 1] = foundMobj
+			end
+		end,
+		mo,
+		ox - xyRange * 2, ox + xyRange * 2,
+		oy - xyRange * 2, oy + xyRange * 2
+	)
+
+	return attacked, #attacked
+end
+
 freeslot("SPR_INSH")
 freeslot("MT_FH_INSTASHIELD")
 
@@ -97,31 +165,15 @@ for i = A, G do
 end
 for i = A, G do
 	local state = _G["S_FH_INSTASHIELD"..i]
-	local action = A_FH_PlayerInstaShieldTicker
-
-	if i <= D then
-		action = A_FH_Follow
-	end
-	if i == D+1 then
-		action = function(mobj, var1, var2)
-			if not mobj.target then return end
-			if not mobj.target.valid then return end
-
-			S_StartSound(mobj.target, sfx_s3k9c)
-			S_StartSound(mobj.target, sfx_s3k42)
-
-			A_FH_PlayerInstaShieldTicker(mobj, var1, var2)
-		end
-	end
 	
 	states[state] = {
 		sprite = SPR_INSH,
 		---@diagnostic disable-next-line: assign-type-mismatch
 		frame = i, -- TODO: frame stuff
 		tics = 1,
-		action = action,
-		var1 = 150 * FU,
-		var2 = 150 * FU,
+		action = A_FH_Follow,
+		var1 = 0,
+		var2 = 0,
 		nextstate = S_NULL
 	}
 

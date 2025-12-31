@@ -13,7 +13,7 @@ function FH:setGamestate(stateName)
 	FHR.currentState = stateName
 end
 
---- Initalize the game round, ran inside MapChange. This does not reset the gametype!
+--- Initalize the game round, ran inside MapChange.
 --- @param gametype heistGametype_t
 --- @param gamemap number
 function FH:initRound(gametype, gamemap)
@@ -92,10 +92,12 @@ addHook("GameQuit", function()
 
 	FHN.retakes = 0 -- making sure
 	FHN.lastMap = nil
+	FHN.globalMusic = nil
 end)
 
 --- Get all gamestates within Fang's Heist.
 dofile("gamestates/pregame.lua")
+dofile("gamestates/titlecard.lua")
 dofile("gamestates/game.lua")
 dofile("gamestates/intermission.lua")
-dofile("gamestates/titlecard.lua")
+dofile("gamestates/mapvote.lua")

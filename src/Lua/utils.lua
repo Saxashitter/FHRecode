@@ -178,3 +178,27 @@ function FH:knockbackMobj(target, point, minSpeed)
 	---@diagnostic disable-next-line: assign-type-mismatch
 	target.momz = -FixedMul(speed, sin(aiming))
 end
+
+--- Normalized time value from 0 to FRACUNIT
+--- @param tics tic_t
+--- @param duration tic_t
+--- @param delay tic_t|nil
+--- @return fixed_t
+function FH:easeTime(tics, duration, delay)
+	delay = delay or 0
+
+	if duration <= 0 then
+		return FRACUNIT
+	end
+
+	local t = tics - delay
+	if t <= 0 then
+		return 0
+	end
+
+	if t >= duration then
+		return FRACUNIT
+	end
+
+	return FixedDiv(t, duration)
+end

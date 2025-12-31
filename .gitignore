@@ -1,1 +1,2 @@
-builds/*.pk3
+builds/previous/*.pk3
+builds/latest/*.pk3

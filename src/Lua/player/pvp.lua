@@ -118,6 +118,14 @@ addHook("PlayerThink", function(player)
 				S_StartSound(player.mo, sfx_3db06)
 			end
 		end
+
+		if player.mo.fh_instashield then
+			local attacked, len = FH:instaShieldHitScan(player.mo, 150 * FU, 150 * FU)
+
+			if len then
+				FH:knockbackMobj(player.mo, attacked[1])
+			end
+		end
 	end
 end)
 
