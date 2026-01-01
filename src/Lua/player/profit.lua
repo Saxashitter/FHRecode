@@ -22,6 +22,17 @@ FH.profitCVars = {
 	startedEscape = CV_RegisterVar{name = "fh_escapeprofit", defaultvalue = "500", flags = CV_FLOAT|CV_NETVAR};
 }
 
+--- @param mobj mobj_t
+--- @param var1 any
+--- @param var2 any
+function A_RingBox(mobj, var1, var2)
+	super(mobj, var1, var2)
+
+	if mobj.target and mobj.target.valid and mobj.target.player and mobj.target.player.heistRound then
+		FH:addProfit(mobj.target.player, FH.profitCVars.ring.value * 10, "Destroyed Ring Box (10 Rings)")
+	end
+end
+
 --- @param target mobj_t
 --- @param source mobj_t
 addHook("MobjDeath", function(target, _, source)

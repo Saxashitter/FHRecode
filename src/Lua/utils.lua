@@ -238,6 +238,10 @@ function FH:easeTime(tics, duration, delay)
 	return FixedDiv(t, duration)
 end
 
+--- Returns randomized items from a table.
+--- @param tbl table
+--- @param amount number
+--- @return table
 function FH:randomItems(tbl, amount)
 	local new = {}
 	local selected = {}
@@ -260,4 +264,11 @@ function FH:randomItems(tbl, amount)
 	end
 
 	return selected
+end
+
+--- Gets a fixed random number from range.
+--- @param start fixed_t
+--- @param finish fixed_t
+function FH:fixedRandom(start, finish)
+	return max(start, min(finish, P_RandomRange(start / FU, finish / FU) + P_RandomFixed()))
 end

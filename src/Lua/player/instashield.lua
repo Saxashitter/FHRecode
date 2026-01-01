@@ -120,23 +120,24 @@ freeslot("SPR_INSH")
 freeslot("MT_FH_INSTASHIELD")
 
 -- i dont see a reason to make 1000 manual states when for loops exist
+
+--- @type UINT32
 for i = A, G do
 	local state = freeslot("S_FH_INSTASHIELD"..i)
 end
+
+--- @type UINT32
 for i = A, G do
 	local state = _G["S_FH_INSTASHIELD"..i]
 	
 	---@diagnostic disable-next-line: missing-fields
-	states[state] = {
-		sprite = SPR_INSH,
-		---@diagnostic disable-next-line: assign-type-mismatch
-		frame = i, -- TODO: frame stuff
-		action = A_FH_PlayerInstaShieldTicker,
-		var1 = 128 * FU,
-		var2 = 128 * FU,
-		tics = 1,
-		nextstate = S_NULL
-	}
+	states[state].sprite = SPR_INSH
+	states[state].frame = i
+	states[state].action = A_FH_PlayerInstaShieldTicker
+	states[state].var1 = 128 * FU
+	states[state].var2 = 128 * FU
+	states[state].tics = 1
+	states[state].nextstate = S_NULL
 
 	if i >= G then break end
 

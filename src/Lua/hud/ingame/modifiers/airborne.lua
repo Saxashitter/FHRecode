@@ -16,7 +16,7 @@ function ui:draw(v, player, camera)
 	local y = self.y * FU
 
 	SSL.drawFixedString(v, x, y, FU, "STAY IN THE AIR!!", "TNYFN%03d", self.flags, 0, FU)
-	FH:drawSTT(v, x, y - 10 * FU, FU, player.heistRound.groundedTime, self.flags, 0, FU, FU)
+	FH:drawSTT(v, x, y - 10 * FU, FU, player.heistRound.groundedTime, self.flags, FU, FU)
 end
 
 return ui

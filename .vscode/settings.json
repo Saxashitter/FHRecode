@@ -15,6 +15,7 @@
 		"exp-in-action",
 		"inject-field",
 		"need-check-nil",
-		"param-type-mismatch"
+		"param-type-mismatch",
+		"undefined-field"
 	]
 }

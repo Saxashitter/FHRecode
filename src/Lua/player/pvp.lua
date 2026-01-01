@@ -164,69 +164,77 @@ addHook("ShouldDamage", function(targ, inf, source)
 	end
 end, MT_PLAYER)
 
----@param player mobj_t
+---@param victim mobj_t
 ---@param inflictor mobj_t
 ---@param source mobj_t
 ---@param damagetype integer
-addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
+addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 	if not FH:isMode() then return end
-	if not player.player then return end
-	if not player.player.heistRound then return end
+	if not victim.player then return end
+	if not victim.player.heistRound then return end
 
-	if player.player.powers[pw_shield] then return end
-	if player.player.powers[pw_flashing] then return end
-	if player.player.powers[pw_invulnerability] then return end
-	if player.player.powers[pw_super] then return end
+	if victim.player.powers[pw_shield] then return end
+	if victim.player.powers[pw_flashing] then return end
+	if victim.player.powers[pw_invulnerability] then return end
+	if victim.player.powers[pw_super] then return end
 
-	local health = max(0, player.player.heistRound.health - 25*FU)
+	local health = max(0, victim.player.heistRound.health - 25*FU)
 
 	if (damagetype & DMG_DEATHMASK) then
 		health = 0
-	elseif player.fh_block then
+	elseif victim.fh_block then
 		--- TODO: slap this in a function
 		--- @diagnostic disable-next-line: assign-type-mismatch
-		player.player.heistRound.blockStrength = max(0, $ - blockDamage)
+		victim.player.heistRound.blockStrength = max(0, $ - blockDamage)
 
-		if player.player.heistRound.blockStrength <= blockDamage then
-			S_StartSoundAtVolume(player, sfx_s258, 100)
+		if victim.player.heistRound.blockStrength <= blockDamage then
+			S_StartSoundAtVolume(victim, sfx_s258, 100)
 		end
 		
-		if player.player.heistRound.blockStrength > 0 then
-			player.player.powers[pw_flashing] = 16
-			S_StartSoundAtVolume(player, sfx_kc40, 60)
+		if victim.player.heistRound.blockStrength > 0 then
+			victim.player.powers[pw_flashing] = 16
+			S_StartSoundAtVolume(victim, sfx_kc40, 60)
 
 			if inflictor and inflictor.valid and inflictor.health and inflictor.flags & MF_MISSILE then
-				inflictor.target = player
+				inflictor.target = victim
 
-				FH:reflectMobj(inflictor, player)
+				FH:reflectMobj(inflictor, victim)
 			end
 
 			return true
 		end
 
-		FH:playerStopBlock(player.player, false)
-		health = max(0, player.player.heistRound.health - 50*FU)
+		FH:playerStopBlock(victim.player, false)
+		health = max(0, victim.player.heistRound.health - 50*FU)
 	end
 
-	if FH:setHealth(player.player, health) then
+	if FH:setHealth(victim.player, health) then
 		if source
 		and source.valid
 		and source.type == MT_PLAYER
 		and source.player
 		and source.player.heistRound then
-			FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Downed "..player.player.name)
+			FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Downed "..victim.player.name)
 		end
 
 		return true
 	else
-		P_DoPlayerPain(player.player, source, inflictor) -- this is all u need for no ring thingies right? we're not gonna have flags or match emeralds
+		if source
+		and source.valid
+		and source.type == MT_PLAYER
+		and source.player
+		and source.player.heistRound then
+			FH:addProfit(source.player, FH.profitCVars.playerHurt.value, "Damaged "..victim.player.name)
+		end
 
-		if player.player.rings then
-			local amount = min(player.player.rings, 25)
+		P_DoPlayerPain(victim.player, source, inflictor) -- this is all u need for no ring thingies right? we're not gonna have flags or match emeralds
 
-			P_PlayerRingBurst(player.player, amount)
-			S_StartSound(player, sfx_altow1)
-			player.player.rings = $ - amount
+		if victim.player.rings then
+			local amount = min(victim.player.rings, 25)
+
+			P_PlayerRingBurst(victim.player, amount)
+			S_StartSound(victim, sfx_altow1)
+			victim.player.rings = $ - amount
 		end
 		return true
 	end

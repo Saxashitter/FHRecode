@@ -2,7 +2,6 @@ local preGameMenu = {}
 
 preGameMenu.states = {
 	character = dofile("hud/menus/pregame/character.lua"),
-	team = dofile("hud/menus/pregame/team.lua"),
 	waiting = dofile("hud/menus/pregame/waiting.lua")
 }
 
