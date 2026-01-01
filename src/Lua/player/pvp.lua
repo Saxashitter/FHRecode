@@ -120,13 +120,7 @@ addHook("PlayerThink", function(player)
 		end
 
 		if player.mo.fh_instashield then
-			P_MoveOrigin(player.mo.fh_instashield, player.mo.x + player.mo.momx, player.mo.y + player.mo.momy, player.mo.z + player.mo.momz + player.mo.height / 2)
-
-			local attacked, len = FH:instaShieldHitScan(player.mo, 150 * FU, 150 * FU)
-
-			if len then
-				FH:knockbackMobj(player.mo, attacked[1])
-			end
+			A_FH_PlayerInstaShieldTicker(player.mo.fh_instashield, 150 * FU, 150 * FU)
 		end
 	end
 end)
@@ -208,7 +202,7 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 			if inflictor and inflictor.valid and inflictor.health and inflictor.flags & MF_MISSILE then
 				inflictor.target = player
 
-				FH:knockbackMobj(inflictor, player)
+				FH:reflectMobj(inflictor, player)
 			end
 
 			return true

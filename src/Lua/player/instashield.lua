@@ -2,25 +2,29 @@
 --- If this isn't nil, the mobj has an insta-shield active.
 --- @field fh_instashield mobj_t|nil
 
---- Runs the hit-scan for the insta-shield (per-player).
+--- Runs the hit-scan and follow logic for the insta-shield.
 --- Returns a table of mobjs hit and the count.
---- @param mo mobj_t
+--- @param mobj mobj_t
 --- @param xyRange fixed_t
 --- @param zRange fixed_t
 --- @return table
 --- @return number
-function FH:instaShieldHitScan(mo, xyRange, zRange)
-	if not mo or not mo.valid then
-		return {}, 0
-	end
+function A_FH_InstaShieldTicker(mobj, xyRange, zRange)
+	if not mobj.target then return {}, 0 end
+	if not mobj.target.valid then return {}, 0 end
+
+	print("A_FH_InstaShieldTicker: "..leveltime)
+	print("--------------------------------------------")
+
+	A_FH_Follow(mobj)
 
 	local attacked = {}
 
 	-- Scale ranges by player scale
-	xyRange = FixedMul(xyRange, mo.scale)
-	zRange  = FixedMul(zRange,  mo.scale)
+	xyRange = FixedMul(xyRange, mobj.target.scale)
+	zRange  = FixedMul(zRange,  mobj.target.scale)
 
-	local ox, oy, oz = mo.x, mo.y, mo.z
+	local ox, oy, oz = mobj.target.x, mobj.target.y, mobj.target.z + mobj.target.height / 2
 
 	searchBlockmap(
 		"objects",
@@ -31,7 +35,7 @@ function FH:instaShieldHitScan(mo, xyRange, zRange)
 				return
 			end
 
-			if foundMobj == mo then
+			if foundMobj == mobj.target then
 				return
 			end
 
@@ -40,34 +44,66 @@ function FH:instaShieldHitScan(mo, xyRange, zRange)
 				return
 			end
 
-			local horiz = xyRange + foundMobj.radius
-			local vert  = zRange  + foundMobj.height / 2
+			local xyDist = R_PointToDist2(ox, oy, foundMobj.x, foundMobj.y)
+			local zDist = abs(oz - (foundMobj.z + foundMobj.height / 2))
 
-			local d = R_PointToDist2(ox, oy, foundMobj.x, foundMobj.y)
-
-			local z1 = oz
-			local z2 = foundMobj.z + foundMobj.height / 2
-			local dz = z2 - z1
-
-			-- Normalize axes
-			local n  = FixedDiv(d,  horiz)
-			local nz = FixedDiv(dz, vert)
-
-			-- Ellipsoid distance check
-			if FixedMul(n, n) + FixedMul(nz, nz) > FRACUNIT then
+			print(("XY: %.2f"):format(xyDist))
+			print(("Z: %.2f"):format(zDist))
+			
+			-- Oval hit check
+			local nx = FixedDiv(xyDist, xyRange)
+			local nz = FixedDiv(zDist,  zRange)
+			
+			print(("NX: %.2f"):format(nx))
+			print(("NZ: %.2f"):format(nz))
+	
+			if FixedMul(nx, nx) + FixedMul(nz, nz) > FRACUNIT then
 				return
 			end
 
-			if P_DamageMobj(foundMobj, mo, mo) then
+			if P_DamageMobj(foundMobj, mobj, mobj.target) then
 				attacked[#attacked + 1] = foundMobj
 			end
 		end,
-		mo,
-		ox - xyRange * 2, ox + xyRange * 2,
-		oy - xyRange * 2, oy + xyRange * 2
+		mobj,
+		ox - (xyRange * 2), ox + (xyRange * 2),
+		oy - (xyRange * 2), oy + (xyRange * 2)
 	)
 
 	return attacked, #attacked
+end
+
+-- The insta-shield ticker, but with some extra knockback.
+--- @param mobj mobj_t
+--- @param xyRange fixed_t
+--- @param zRange fixed_t
+--- @return table
+--- @return number
+function A_FH_PlayerInstaShieldTicker(mobj, xyRange, zRange)
+	local attacked, len = A_FH_InstaShieldTicker(mobj, xyRange, zRange)
+
+	if len == 0 then
+		return {}, 0
+	end
+
+	FH:reflectMobj(mobj.target, attacked[1])
+
+	-- cap speed
+	local vx = mobj.target.momx
+	local vy = mobj.target.momy
+	local vz = mobj.target.momz
+	local spd = R_PointToDist2(0,0,R_PointToDist2(0,0,vx,vy),vz)
+	local cap = 20 * mobj.scale
+
+	if spd > cap then
+		local div = FixedDiv(cap, spd)
+
+		mobj.target.momx = FixedMul($, div)
+		mobj.target.momy = FixedMul($, div)
+		mobj.target.momz = FixedMul($, div)
+	end
+
+	return attacked, len
 end
 
 freeslot("SPR_INSH")
@@ -80,15 +116,12 @@ end
 for i = A, G do
 	local state = _G["S_FH_INSTASHIELD"..i]
 	
+	---@diagnostic disable-next-line: missing-fields
 	states[state] = {
 		sprite = SPR_INSH,
 		---@diagnostic disable-next-line: assign-type-mismatch
 		frame = i, -- TODO: frame stuff
 		tics = 1,
-		---@diagnostic disable-next-line: assign-type-mismatch
-		action = nil,
-		var1 = 0,
-		var2 = 0,
 		nextstate = S_NULL
 	}
 
