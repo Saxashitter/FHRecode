@@ -107,3 +107,5 @@ doUiFile("menus/mapvote")
 
 doUiFile("ingame/timer")
 doUiFile("ingame/health")
+
+doUiFile("ingame/modifiers/airborne")
