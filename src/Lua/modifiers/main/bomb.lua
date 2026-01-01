@@ -3,7 +3,7 @@ local modifier = setmetatable({}, FH:returnModifierMetatable())
 
 modifier.name = "Bombs"
 modifier.description = "You want it? It's your's my friend! As long as you have enough rupees!"
-modifier.difficulty = "main"
+modifier.type = "main"
 
 modifier.spawnDelay = TICRATE
 modifier.spawnHeight = 250 * FU

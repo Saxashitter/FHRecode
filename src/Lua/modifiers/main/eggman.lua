@@ -3,7 +3,7 @@ local modifier = setmetatable({}, FH:returnModifierMetatable())
 
 modifier.name = "Eggman"
 modifier.description = "He's had enough of you!"
-modifier.difficulty = "main"
+modifier.type = "main"
 
 modifier.chaseDelay = 5 * TICRATE
 

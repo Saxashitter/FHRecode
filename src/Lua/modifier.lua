@@ -108,5 +108,7 @@ COM_AddCommand("fh_stopmodifier", function(player, name)
 end, COM_ADMIN)
 
 -- get them modifiers
-dofile("modifiers/bomb.lua")
-dofile("modifiers/eggman.lua")
+dofile("modifiers/main/bomb.lua")
+dofile("modifiers/main/eggman.lua")
+
+dofile("modifiers/side/airborne.lua")

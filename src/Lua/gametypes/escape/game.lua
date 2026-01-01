@@ -124,16 +124,16 @@ function escape:startEscape(starter)
 
 	if FHN.retakes then
 		-- activate modifiers
-		for i = 1, FHN.retakes do
-			local type = i == 1 and "main" or "side"
+		local mainModifier = FH:randomItems(FH.modifiers.types.main, 1)[1]
+		local sideModifiers = {}
 
-			if not #FH.modifiers.types[type] then
-				break -- change this to continue once we actually get side modifiers
-			end
-	
-			local choice = P_RandomRange(1, #FH.modifiers.types[type])
+		if FHN.retakes > 1 then
+			sideModifiers = FH:randomItems(FH.modifiers.types.side, FHN.retakes - 1)
+		end
 
-			FH:activateModifier(FH.modifiers.types[type][choice])
+		FH:activateModifier(mainModifier)
+		for k, v in ipairs(sideModifiers) do
+			FH:activateModifier(v)
 		end
 
 		-- decide on retake song based on map

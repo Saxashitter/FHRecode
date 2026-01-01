@@ -98,7 +98,7 @@ function FH:drawSTT(v, x, y, scale, number, flags, align, valign)
 	local string = tostring(number)
 
 	x = $ - FixedMul((8 * scale) * #string, align)
-	y = $ - FixedMul((11 * scale) * #string, valign)
+	y = $ - FixedMul(11 * scale, valign)
 
 	for i = 1, #string do
 		local patch = v.cachePatch("STTNUM"..string:sub(i, i))
@@ -201,4 +201,28 @@ function FH:easeTime(tics, duration, delay)
 	end
 
 	return FixedDiv(t, duration)
+end
+
+function FH:randomItems(tbl, amount)
+	local new = {}
+	local selected = {}
+
+	if #tbl == 0 then
+		return selected
+	end
+
+	for i = 1, #tbl do
+		new[i] = tbl[i]
+	end
+
+	for i = 1, amount do
+		local item = P_RandomRange(1, #new)
+
+		table.insert(selected, new[item])
+		table.remove(new, item)
+
+		if #new == 0 then break end
+	end
+
+	return selected
 end
