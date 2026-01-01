@@ -34,20 +34,11 @@ FH.ringStates.goal = {
 	end
 }
 
-function escape:init(gamemap)
+function escape:init()
 	FHR.escape = false
 	FHR.escapeTime = 0
 	FHR.signPosts = {}
 	FHR.escapeRings = {}
-
-	if FHN.lastMap == gamemap then
-		FHN.retakes = $ + 1
-		print("Retake number #"..FHN.retakes)
-	else
-		FHN.retakes = 0
-	end
-
-	FHN.lastMap = gamemap
 end
 
 function escape:load()

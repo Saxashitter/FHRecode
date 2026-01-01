@@ -24,5 +24,7 @@ rawset(_G, "FH", {
 
     characterHealths = {}
 })
-rawset(_G, "FHN", {})
+rawset(_G, "FHN", {
+	retakes = 0
+})
 rawset(_G, "FHR", {})

@@ -10,11 +10,12 @@
 --- @return table
 --- @return number
 function A_FH_InstaShieldTicker(mobj, xyRange, zRange)
-	if not mobj.target then return {}, 0 end
-	if not mobj.target.valid then return {}, 0 end
-
-	print("A_FH_InstaShieldTicker: "..leveltime)
-	print("--------------------------------------------")
+	if not mobj.target then
+		return {}, 0
+	end
+	if not mobj.target.valid then
+		return {}, 0
+	end
 
 	A_FH_Follow(mobj)
 
@@ -25,16 +26,18 @@ function A_FH_InstaShieldTicker(mobj, xyRange, zRange)
 	zRange  = FixedMul(zRange,  mobj.target.scale)
 
 	local ox, oy, oz = mobj.target.x, mobj.target.y, mobj.target.z + mobj.target.height / 2
-
+	local count = 1
 	searchBlockmap(
 		"objects",
 		function(_, foundMobj)
+			count = $ + 1
+	
 			if not foundMobj
 			or not foundMobj.valid
 			or not foundMobj.health then
 				return
 			end
-
+			
 			if foundMobj == mobj.target then
 				return
 			end
@@ -46,21 +49,30 @@ function A_FH_InstaShieldTicker(mobj, xyRange, zRange)
 
 			local xyDist = R_PointToDist2(ox, oy, foundMobj.x, foundMobj.y)
 			local zDist = abs(oz - (foundMobj.z + foundMobj.height / 2))
-
-			print(("XY: %.2f"):format(xyDist))
-			print(("Z: %.2f"):format(zDist))
 			
 			-- Oval hit check
 			local nx = FixedDiv(xyDist, xyRange)
 			local nz = FixedDiv(zDist,  zRange)
 			
-			print(("NX: %.2f"):format(nx))
-			print(("NZ: %.2f"):format(nz))
-	
 			if FixedMul(nx, nx) + FixedMul(nz, nz) > FRACUNIT then
 				return
 			end
 
+			if foundMobj.fh_instashield then
+				FH:reflectMobj(foundMobj, mobj.target, FU * 3 / 2)
+				FH:reflectMobj(mobj.target, foundMobj, FU * 3 / 2)
+
+				S_StartSound(foundMobj,   sfx_dmpain)
+				S_StartSound(foundMobj,   sfx_mspogo)
+				S_StartSound(mobj.target, sfx_dmpain)
+				S_StartSound(mobj.target, sfx_mspogo)
+	
+				P_RemoveMobj(mobj)
+				P_RemoveMobj(foundMobj.fh_instashield)
+
+				return true
+			end
+	
 			if P_DamageMobj(foundMobj, mobj, mobj.target) then
 				attacked[#attacked + 1] = foundMobj
 			end
@@ -77,13 +89,11 @@ end
 --- @param mobj mobj_t
 --- @param xyRange fixed_t
 --- @param zRange fixed_t
---- @return table
---- @return number
 function A_FH_PlayerInstaShieldTicker(mobj, xyRange, zRange)
 	local attacked, len = A_FH_InstaShieldTicker(mobj, xyRange, zRange)
-
+	
 	if len == 0 then
-		return {}, 0
+		return
 	end
 
 	FH:reflectMobj(mobj.target, attacked[1])
@@ -103,7 +113,7 @@ function A_FH_PlayerInstaShieldTicker(mobj, xyRange, zRange)
 		mobj.target.momz = FixedMul($, div)
 	end
 
-	return attacked, len
+	P_RemoveMobj(mobj)
 end
 
 freeslot("SPR_INSH")
@@ -121,6 +131,9 @@ for i = A, G do
 		sprite = SPR_INSH,
 		---@diagnostic disable-next-line: assign-type-mismatch
 		frame = i, -- TODO: frame stuff
+		action = A_FH_PlayerInstaShieldTicker,
+		var1 = 128 * FU,
+		var2 = 128 * FU,
 		tics = 1,
 		nextstate = S_NULL
 	}

@@ -118,10 +118,6 @@ addHook("PlayerThink", function(player)
 				S_StartSound(player.mo, sfx_3db06)
 			end
 		end
-
-		if player.mo.fh_instashield then
-			A_FH_PlayerInstaShieldTicker(player.mo.fh_instashield, 150 * FU, 150 * FU)
-		end
 	end
 end)
 
@@ -228,11 +224,10 @@ addHook("MobjDamage", function(player, inflictor, source, _, damagetype)
 		if player.player.rings then
 			local amount = min(player.player.rings, 25)
 
-			P_PlayRinglossSound(player, player.player)
 			P_PlayerRingBurst(player.player, amount)
+			S_StartSound(player, sfx_altow1)
 			player.player.rings = $ - amount
 		end
-
 		return true
 	end
 end, MT_PLAYER)

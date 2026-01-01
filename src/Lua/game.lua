@@ -73,6 +73,10 @@ end)
 
 --- @param network function
 addHook("NetVars", function(network)
+	--[[for i = 1, 128 do
+		print("PAUSE THE GAME PAUSE THE GAME PAUSE THE GAME PAUSE THE GAME PAUSE THE GAME PAUSE THE GAME PAUSE THE GAME PAUSE THE GAME PAUSE THE GAME PAUSE THE GAME PAUSE THE GAME PAUSE THE GAME")
+	end]]
+
 	FHN = network($)
 	FHR = network($)
 end)

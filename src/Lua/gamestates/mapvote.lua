@@ -66,6 +66,13 @@ function gamestate:switch()
 
 	G_SetCustomExitVars(map, voteNum)
 	G_ExitLevel()
+
+	if map == gamemap then
+		FHN.retakes = $ + 1
+		print("Retake number #"..FHN.retakes)
+	else
+		FHN.retakes = 0
+	end
 end
 
 function gamestate:canSwitch()

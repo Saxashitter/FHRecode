@@ -34,6 +34,7 @@ function escape:playerUpdate(player, currentState)
 	end
 
 	if player.heistRound.escaped then
+		---@diagnostic disable-next-line: assign-type-mismatch
 		player.powers[pw_flashing] = TICRATE
 	end
 end
