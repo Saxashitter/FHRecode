@@ -9,7 +9,8 @@
 		"GTR_ENEMIES",
 		"GTR_SPAWNENEMIES",
 		"mobjs",
-		"ease"
+		"ease",
+		"tofixed"
 	],
 	"Lua.diagnostics.disable": [
 		"exp-in-action",

@@ -198,7 +198,7 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 			if inflictor and inflictor.valid and inflictor.health and inflictor.flags & MF_MISSILE then
 				inflictor.target = victim
 
-				FH:reflectMobj(inflictor, victim)
+				FH:knockbackMobj(inflictor, victim)
 			end
 
 			return true
@@ -216,7 +216,8 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 		and source.player.heistRound then
 			FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Downed "..victim.player.name)
 		end
-
+		
+		FH:addProfit(victim.player, -FH.profitCVars.playerDeath.value, "Got downed")
 		return true
 	else
 		if source
@@ -227,7 +228,8 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 			FH:addProfit(source.player, FH.profitCVars.playerHurt.value, "Damaged "..victim.player.name)
 		end
 
-		P_DoPlayerPain(victim.player, source, inflictor) -- this is all u need for no ring thingies right? we're not gonna have flags or match emeralds
+		FH:addProfit(victim.player, -FH.profitCVars.playerHurt.value, "Got hurt")
+		P_DoPlayerPain(victim.player, source, inflictor)
 
 		if victim.player.rings then
 			local amount = min(victim.player.rings, 25)

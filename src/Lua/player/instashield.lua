@@ -59,8 +59,8 @@ function A_FH_InstaShieldTicker(mobj, xyRange, zRange)
 			end
 
 			if foundMobj.fh_instashield then
-				FH:reflectMobj(foundMobj, mobj.target, FU * 3 / 2)
-				FH:reflectMobj(mobj.target, foundMobj, FU * 3 / 2)
+				FH:knockbackMobj(foundMobj, mobj.target)
+				FH:knockbackMobj(mobj.target, foundMobj)
 
 				S_StartSound(foundMobj,   sfx_dmpain)
 				S_StartSound(foundMobj,   sfx_mspogo)

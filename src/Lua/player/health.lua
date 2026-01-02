@@ -39,6 +39,10 @@ function FH:downPlayer(player, time)
 	player.heistRound.canUseInstaShield = false
 	player.heistRound.canUseBlock = false
 
+	for i = #player.heistRound.collectibles, 1, -1 do
+		FH:dropCollectible(player, player.heistRound.collectibles[i])
+	end
+
 	player.powers[pw_flashing] = 2
 	player.normalspeed = skins[player.skin].normalspeed / 5
 	player.acceleration = $ / 2
@@ -63,6 +67,7 @@ function FH:revivePlayer(player)
 	player.heistRound.downedTime = 0
 	player.heistRound.canUseInstaShield = true
 	player.heistRound.canUseBlock = true
+
 	FH:setHealth(player, FH.characterHealths[player.mo.skin])
 
 	player.normalspeed = skins[player.skin].normalspeed

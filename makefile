@@ -4,7 +4,6 @@ PYTHON := python
 # ----- Project paths (absolute) -----
 PROJECT_DIR := $(abspath .)
 BUILD_SCRIPT := $(PROJECT_DIR)/build.py
-BUILDS_DIR := $(PROJECT_DIR)/builds
 
 # ----- SRB2 paths (absolute) -----
 SRB2_DIR := D:/stuff/SRB2-v2215-Full
@@ -25,6 +24,5 @@ dual: build
 	cmd /c "cd /d $(SRB2_DIR) && start "" $(SRB2_EXE) -file "$(BUILD)" -windowed -console -server -gametype 8"
 	cmd /c "cd /d $(SRB2_DIR) && start "" $(SRB2_EXE) -file "$(BUILD)" -windowed -console -connect localhost"
 
-
-clean:
-	rm -f "$(BUILDS_DIR)"/*.pk3
+test: build
+	cd "$(SRB2_DIR)" && "$(SRB2_EXE)" -file "$(BUILD)" -windowed -console -server -gametype 8 -warp Z1

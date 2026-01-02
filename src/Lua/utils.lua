@@ -269,6 +269,12 @@ end
 --- Gets a fixed random number from range.
 --- @param start fixed_t
 --- @param finish fixed_t
+--- @return fixed_t
 function FH:fixedRandom(start, finish)
-	return max(start, min(finish, P_RandomRange(start / FU, finish / FU) + P_RandomFixed()))
+	if start > finish then
+		start, finish = finish, start
+	end
+
+	local range = finish - start
+	return start + FixedMul(range, P_RandomFixed())
 end

@@ -75,6 +75,8 @@ end
 --- @field mapSelection number
 --- If this is true, the player has selected a map in the map vote.
 --- @field mapVote boolean
+--- The current amount of collectibles the player has on their head.
+--- @field collectibles table
 
 setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
 	__index = function(self, key)
@@ -115,7 +117,8 @@ function FH:initPlayerRound(player)
 		blockCooldown = 0,
 		spectator = false,
 		mapSelection = 2,
-		mapVote = false
+		mapVote = false,
+		collectibles = {}
 	}
 	
 	player.heistRound = playerRound
