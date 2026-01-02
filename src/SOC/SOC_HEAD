@@ -48,7 +48,22 @@ Levelname = Frozen Hillside
 Act = 0
 Keywords = FHZ
 Music = FH_FHZ
-NextLevel = 1100
+NextLevel = 1
+RecordAttack = true
+TypeOfLevel = Escape
+SkyNum = 30
+LevelSelect = 2
+Weather = 2
+FlickyList = Penguin,Seal
+NoVisitNeeded = true
+Lua.FH_EscapeTheme = FH_FHE
+
+Level Z1
+Levelname = Test
+Act = 0
+Keywords = FHZ
+Music = GFZ1
+NextLevel = 1
 RecordAttack = true
 TypeOfLevel = Escape
 SkyNum = 30

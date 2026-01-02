@@ -1,0 +1,8 @@
+FH_AllWhite="0:255=0:0"
+FH_AllBlack="0:255=31:31"
+FH_AllRed="0:255=35:35"
+FH_AllCyan="0:255=255:255"
+FH_AllGreen="0:255=112:112"
+FH_AllBlue="0:255=151:151"
+FH_AllPurple="0:255=165:165"
+FH_AllYellow="0:255=73:73"

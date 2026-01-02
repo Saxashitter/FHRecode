@@ -3,6 +3,7 @@ dofile("lib/stringLibrary.lua")
 dofile("config.lua")
 
 dofile("mobjs/escape/specialring.lua")
+dofile("mobjs/effects/overlay.lua")
 
 dofile("actions.lua")
 dofile("gametype.lua")

@@ -1,5 +1,8 @@
 freeslot("MT_FH_SPARKLES")
 
+-- Sparkles
+-- Makes sparkles fly around the target mobj.
+
 mobjinfo[MT_FH_SPARKLES].spawnstate = S_INVISIBLE
 mobjinfo[MT_FH_SPARKLES].radius = FU
 mobjinfo[MT_FH_SPARKLES].height = FU

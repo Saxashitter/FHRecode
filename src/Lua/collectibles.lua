@@ -27,10 +27,31 @@ states[S_FH_COLLECTIBLE].tics = -1
 states[S_FH_COLLECTIBLE].action = function(mobj) mobj.frame = ($ & ~FF_FRAMEMASK)|P_RandomRange(A, J) end
 
 --- @param mobj mobj_t
-addHook("MobjThinker", function(mobj)
-	local variant = mobj.spawnpoint.args[0]
+addHook("MobjSpawn", function(mobj)
+	mobj.variant = 0
 
-	print(variant)
+	states[S_FH_COLLECTIBLE].action(mobj)
+end, MT_FH_COLLECTIBLE)
+
+--- @param mobj mobj_t
+addHook("MapThingSpawn", function(mobj, thing)
+	mobj.variant = thing.args[0] or 0
+
+	if mobj.variant == 1 then
+		print("rare. spawn sparkles and overlay slightly blue")
+
+		local overlay = P_SpawnMobjFromMobj(mobj, 0,0,0, MT_FH_OVERLAY)
+		overlay.alpha = FU / 3
+		overlay.translation = "FH_AllBlue"
+		overlay.target = mobj
+	elseif mobj.variant == 2 then
+		print("exclusive. overlay yellow over it")
+
+		local overlay = P_SpawnMobjFromMobj(mobj, 0,0,0, MT_FH_OVERLAY)
+		overlay.alpha = FU / 3
+		overlay.translation = "FH_AllYellow"
+		overlay.target = mobj
+	end
 end, MT_FH_COLLECTIBLE)
 
 --- @param mobj mobj_t
