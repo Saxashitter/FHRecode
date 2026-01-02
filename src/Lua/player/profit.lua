@@ -68,6 +68,9 @@ addHook("MobjDeath", function(target, _, source)
 
 	if target.flags & MF_MONITOR > 0 then
 		FH:addProfit(source.player, FH.profitCVars.monitor.value, "Destroyed Monitor")
+		-- heal hp
+
+		FH:setHealth(source.player, min(FH.characterHealths[source.skin], source.player.heistRound.health + 15 * FU))
 		return
 	end
 

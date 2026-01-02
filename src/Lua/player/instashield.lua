@@ -163,10 +163,11 @@ end, MT_FH_INSTASHIELD)
 function FH:useInstaShield(mobj)
 	local instaShield = P_SpawnMobjFromMobj(mobj, 0, 0, mobj.height/2, MT_FH_INSTASHIELD)
 
+	mobj.fh_instashield = instaShield
+
 	instaShield.target = mobj
 	instaShield.state = S_FH_INSTASHIELD0
 
-	mobj.fh_instashield = instaShield
 	S_StartSound(mobj, sfx_s3k64)
 
 	return instaShield

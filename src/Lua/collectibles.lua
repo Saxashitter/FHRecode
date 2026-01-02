@@ -31,7 +31,7 @@ states[S_FH_COLLECTIBLE].sprite = freeslot("SPR_TRES")
 states[S_FH_COLLECTIBLE].frame = 0
 states[S_FH_COLLECTIBLE].tics = -1
 states[S_FH_COLLECTIBLE].action = function(mobj)
-	mobj.frame = ($ & ~FF_FRAMEMASK) | P_RandomRange(A, J)
+	mobj.frame = ($ & ~FF_FRAMEMASK) | P_RandomRange(A, K)
 end
 
 --- @param player player_t
