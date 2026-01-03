@@ -1,8 +1,5 @@
--- local makeHook = MH._makeHook
--- local runHook = MH._runHook
+local MODNAME = "FH" -- unique identifier for customhud
 
--- makeHook("UI", "boolean")
--- makeHook("PostUI")
 
 local uiMT = {
 	x = 0,
@@ -10,102 +7,99 @@ local uiMT = {
 	flags = 0,
 	visible = true,
 	priority = 1,
-	draw = function() end
+	draw = function(self, v, player, camera) end
 }
 uiMT.__index = uiMT
 
 function FH:getUI(name)
-	for hudtype, uis in pairs(self.uiElements) do
-		for _, ui in ipairs(uis) do
-			if ui.name == name then
-				return ui
-			end
+	for _, ui in pairs(self._uiRegistry) do
+		if ui.name == name then
+			return ui
 		end
 	end
-
 	return false
 end
 
+FH._uiRegistry = {}
+
 function FH:addUI(ui, name, priority, hudtype)
-	priority = $ or 1
-	ui = setmetatable($, uiMT)
-	hudtype = $ or "game"
+	if type(ui) ~= "table" then return end
+	if type(name) ~= "string" then return end
 
-	local key = #self.uiElements[hudtype]+1
-	for i = 1, #self.uiElements[hudtype] do
-		local curUi = self.uiElements[hudtype][i]
+	priority = priority or 1
+	hudtype = hudtype or "game"
 
-		if priority < curUi.priority then
-			key = i
-			break
-		end
-	end
-
+	ui = setmetatable(ui, uiMT)
 	ui.name = name
 	ui.priority = priority
 
-	table.insert(self.uiElements[hudtype], key, ui)
+	-- Store reference
+	FH._uiRegistry[name] = ui
+
+	-- customhud: higher layer = drawn later
+	local drawlayer = priority
+
+	customhud.SetupItem(
+		name,               -- HUD item name
+		MODNAME,            -- mod identifier
+		function(v, player, camera)
+			-- gating logic stays intact
+			if not FH.uiEnabled then return end
+			if not ui.visible then return end
+
+			local gametype = FH:isMode()
+			if not gametype then return end
+
+			ui:draw(v, player, camera)
+		end,
+		hudtype,            -- game / scores / intermission / overlay
+		drawlayer,
+		2                   -- mod priority (simple replacement)
+	)
 end
-
-function FH:drawHUD(v, player, camera, hudtype)
-	for _, ui in ipairs(self.uiElements[hudtype]) do
-		if not ui.visible then
-			continue
-		end
-
-		-- if runHook(ui.name, "UI", v, player, camera, hudtype, ui) then
-		-- 	runHook(ui.name, "PostUI", v, player, camera, hudtype, ui, true)
-		-- 	continue
-		-- end
-
-		ui:draw(v, player, camera)
-		-- runHook(ui.name, "PostUI", v, player, camera, hudtype, ui, false)
-	end
-end
-
-addHook("HUD", function(v, player, camera)
-	--- @type heistGametype_t|false
-	local gametype = FH:isMode()
-	if not gametype then return end
-	if not FH.uiEnabled then return end
-
-	FH:drawHUD(v, player, camera, "game")
-	FH:drawHUD(v, player, camera, "global")
-end)
-
-addHook("HUD", function(v)
-	--- @type heistGametype_t|false
-	local gametype = FH:isMode()
-	if not gametype then return end
-	if not FH.uiEnabled then return end
-
-	local player = displayplayer
-
-	FH:drawHUD(v, player, camera, "scores")
-	FH:drawHUD(v, player, camera, "global")
-end, "scores")
 
 local function doUiFile(filePath)
-	local ui, name, priority, hudtype = dofile("hud/"..filePath..".lua")
+	local ui, name, priority, hudtype =
+		dofile("hud/" .. filePath .. ".lua")
 
 	if priority then
-		-- modders may wanna put ui elements behind built-in ones
-		-- allow them to do just that by making their priority 1
+		-- allow modders to go behind built-ins
 		priority = $ + 1
 	end
 
 	FH:addUI(ui, name, priority, hudtype)
 end
 
---- require reusable hud objects and append them to FH
-FH.playerIconParallax = dofile("hud/reusable/playerIconParallax.lua")
+function FH:setUIVisible(name, state)
+	if not FH._uiRegistry[name] then return end
 
+	FH._uiRegistry[name].visible = state
+
+	if state then
+		customhud.enable(name)
+	else
+		customhud.disable(name)
+	end
+end
+
+function FH:isUIVisible(name)
+	if not FH._uiRegistry[name] then return false end
+	return customhud.enabled(name)
+end
+
+FH.playerIconParallax =
+	dofile("hud/reusable/playerIconParallax.lua")
+
+-- menus
 doUiFile("menus/titlecard")
 doUiFile("menus/pregame")
 doUiFile("menus/intermission")
 doUiFile("menus/mapvote")
 
+-- ingame
+doUiFile("ingame/profit")
 doUiFile("ingame/timer")
 doUiFile("ingame/health")
 
+-- modifiers
 doUiFile("ingame/modifiers/airborne")

@@ -11,7 +11,15 @@ preGameMenu.states = {
 function preGameMenu:draw(v, player, camera)
 	if FHR.currentState ~= "pregame" then return end
 
+	-- TODO: actual handling of all this instead of, yknow, this
+	if not (player and player.valid) and (displayplayer and displayplayer.valid) then
+		player = displayplayer
+	elseif not (player and player.valid) then
+		return
+	end
+
 	local state = player.heistRound and player.heistRound.pregameState or "character"
+
 
 	self.states[state](v, player, camera)
 
@@ -35,4 +43,4 @@ function preGameMenu:draw(v, player, camera)
 	SSL.drawFixedString(v, 12 * FU + 18 * FU, 12 * FU, (FU/10) * 7, text, "STCFN%03d", V_SNAPTOTOP|V_SNAPTOLEFT, 0, 0)
 end
 
-return preGameMenu, "preGameMenu", 1, "global"
+return preGameMenu, "preGameMenu", 1, "menu"

@@ -1,4 +1,5 @@
 dofile("lib/stringLibrary.lua")
+dofile("lib/customhud.lua")
 
 dofile("config.lua")
 

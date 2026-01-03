@@ -1,14 +1,25 @@
 local escape = _FH_ESCAPE
 
-escape.timeLeft = 180 * TICRATE -- 3 minutes
+escape.timeLeft = 180 -- 3 minutes
 escape.signpostThing = 501
 escape.ringThing = 1
 
-FH.ringStates.goal = {
+freeslot("S_FH_ROUND2RING")
+
+states[S_FH_ROUND2RING].sprite = freeslot("SPR_R2RI")
+states[S_FH_ROUND2RING].tics = -1
+states[S_FH_ROUND2RING].frame = FF_ANIMATE
+states[S_FH_ROUND2RING].var1 = F
+states[S_FH_ROUND2RING].var2 = 2
+
+FH.ringStates["Goal"] = {
 	--- @type statenum_t
 	state = S_FH_GOALRING,
 	--- @type function
-	spawn = function(ring, ...)
+	spawn = function(ring)
+		ring.alpha = 0
+		ring.scale = $ * 3 / 2
+		table.insert(FHR.escapeRings, ring)
 	end,
 	--- @type function
 	touch = function(ring, player)
@@ -28,10 +39,64 @@ FH.ringStates.goal = {
 		player.heistRound.escaped = true
 		player.powers[pw_flashing] = 2 * TICRATE + 1 -- infinite invulnerability!!
 		player.mo.alpha = 0
+		S_StartSound(player.mo, sfx_s1c3)
+		S_StartSound(ring, sfx_s1c3)
 
 		---@diagnostic disable-next-line: undefined-field
 		if gametype.safeFinish then gametype:safeFinish() end
 	end
+}
+
+FH.ringStates["Round 2 Teleport From"] = {
+	--- @type statenum_t
+	state = S_FH_ROUND2RING,
+	--- @type function
+	spawn = function(ring)
+		ring.alpha = FU
+		ring.scale = $ * 3 / 2
+		ring.index = (ring.spawnpoint.args[0] or 0) + 1
+		FHR.round2StartRings[ring.index] = ring
+	end,
+	--- @type function
+	touch = function(ring, player)
+		local gametype = FH:isMode()
+		if not gametype then return end -- just here for formatting purposes
+
+		if not FHR.escape then return end
+		if player.heistRound.escaped then return end
+
+		-- find other link
+		local otherRing = FHR.round2FinishRings[ring.index]
+
+		if not otherRing and otherRing.valid then
+			return
+		end
+	
+		local speed = R_PointToDist2(0, 0, R_PointToDist2(0, 0, player.mo.momx, player.mo.momy), player.mo.momz)
+
+		P_SetOrigin(player.mo, otherRing.x, otherRing.y, otherRing.z)
+		P_InstaThrust(player.mo, otherRing.angle, speed)
+	
+		S_StartSound(player.mo, sfx_s1c3)
+		S_StartSound(ring, sfx_s1c3)
+		S_StartSound(otherRing, sfx_s1c3)
+	
+		player.mo.angle = otherRing.angle
+	end
+}
+
+FH.ringStates["Round 2 Teleport To"] = {
+	--- @type statenum_t
+	state = S_FH_ROUND2RING,
+	--- @type function
+	spawn = function(ring)
+		ring.alpha = FU
+		ring.scale = $ * 3 / 2
+		ring.index = (ring.spawnpoint.args[0] or 0) + 1
+		FHR.round2FinishRings[ring.index] = ring
+
+	end,
+	touch = function() end
 }
 
 function escape:init()
@@ -39,20 +104,14 @@ function escape:init()
 	FHR.escapeTime = 0
 	FHR.signPosts = {}
 	FHR.escapeRings = {}
+	FHR.round2StartRings = {}
+	FHR.round2FinishRings = {}
 end
 
 function escape:load()
 	for mapthing in mapthings.iterate do
 		if mapthing.type == self.signpostThing then
 			self:spawnSignpost(FH:getMapthingWorldPosition(mapthing))
-		end
-		if mapthing.type == self.ringThing then
-			local x, y, z = FH:getMapthingWorldPosition(mapthing)
-			local ring = FH:spawnRing(x, y, z + 96 * FU, "goal")
-
-			ring.alpha = 0
-			ring.scale = $ * 3 / 2
-			table.insert(FHR.escapeRings, ring)
 		end
 		if mapthing.type == 402 and mapthing.mobj and mapthing.mobj.valid then
 			P_RemoveMobj(mapthing.mobj)
@@ -83,7 +142,7 @@ end
 --- @param starter player_t
 function escape:startEscape(starter)
 	FHR.escape = true
-	FHR.escapeTime = FH:getMapVariable(nil, "fh_time", self.timeLeft) -- TODO: use cvars
+	FHR.escapeTime = FH:getMapVariable(nil, "fh_escapetime", self.timeLeft) * TICRATE -- TODO: use cvars
 	FHR.escapeStartTime = leveltime
 
 	if starter and starter.heistRound then
@@ -96,7 +155,7 @@ function escape:startEscape(starter)
 
 		sign.momz = 6 * FRACUNIT
 		sign.fuse = 5 * TICRATE
-		sign.flags = $|MF_NOGRAVITY
+		sign.flags = $|MF_NOGRAVITY|MF_NOCLIPHEIGHT
 		sign.state = S_SIGNSPIN1
 	end
 

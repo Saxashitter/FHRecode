@@ -11,6 +11,12 @@ local states = {
 function intermissionMenu:draw(v, player, camera)
 	if FHR.currentState ~= "intermission" then return end
 
+	if not (player and player.valid) and (displayplayer and displayplayer.valid) then
+		player = displayplayer
+	elseif not (player and player.valid) then
+		return
+	end
+
 	-- local winnerText = "The winner is..."
 
 	-- if FHR.winningPlayer then
@@ -40,4 +46,4 @@ function intermissionMenu:draw(v, player, camera)
 	-- SSL.drawString(v, 160, 100, "W.I.P", "STCFN%03d", 0, FU/2, FU/2)
 end
 
-return intermissionMenu, "intermissionMenu", 1, "global"
+return intermissionMenu, "intermissionMenu", 1, "menu"

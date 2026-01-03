@@ -22,4 +22,4 @@ function ui:draw(v, player, camera)
 	end
 end
 
-return ui
+return ui, "health", 1, "overlay"

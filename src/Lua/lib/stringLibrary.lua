@@ -84,7 +84,7 @@ local fonts = {
 	["LTFNT%03d"] = {
 		spacing = 8,
 		vspacing = 16,
-		height = 16
+		height = 24
 	}
 }
 local curWave = 0

@@ -20,7 +20,7 @@ function gamestate:init()
 	FHR.mapVoteMaps = {
 		1,
 		2,
-		30
+		34
 	}
 
 	FH:changeMusic("FH_MPV", false)

@@ -33,7 +33,7 @@ Act = 2
 Keywords = GFZ2
 Music = GFZ2
 TypeOfLevel = Escape
-NextLevel = 30
+NextLevel = 34
 SkyNum = 1
 RecordAttack = true
 LevelSelect = 1
@@ -43,20 +43,18 @@ FlickyList = Bluebird,Chipmunk
 NoVisitNeeded = true
 #see act 1
 
-Level 30
-Levelname = Frozen Hillside
-Act = 0
-Keywords = FHZ
-Music = FH_FHZ
-NextLevel = 1
-RecordAttack = true
+Level 34
+Levelname = FD Techno Hill
+Music = FDEMO3
 TypeOfLevel = Escape
-SkyNum = 30
+NextLevel = 1
+SkyNum = 2
 LevelSelect = 2
-Weather = 2
-FlickyList = Penguin,Seal
+SelectHeading = Bonus
 NoVisitNeeded = true
-Lua.FH_EscapeTheme = FH_FHE
+InterScreen = INTERSCR
+FlickyList = Demo
+Lua.FH_EscapeTime = 360
 
 Level Z1
 Levelname = Test

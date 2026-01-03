@@ -41,6 +41,18 @@ end
 --- @param player player_t
 --- @param camera camera_t
 function titleCardMenu:draw(v, player, camera)
+	local skincolor = SKINCOLOR_GREEN
+	local skin = "sonic"
+
+	if player and player.valid then
+		skincolor = player.skincolor
+		skin = skins[player.skin].name
+	end
+	if displayplayer and displayplayer.valid then
+		skincolor = displayplayer.skincolor
+		skin = skins[displayplayer.skin].name
+	end
+
 	local screenWidth = v.width() * FU / v.dupx()
 	local screenHeight = v.height() * FU / v.dupy()
 
@@ -63,22 +75,22 @@ function titleCardMenu:draw(v, player, camera)
 	local ditherLength = 2
 	local colors = {
 		31,
-		skincolors[player.skincolor].ramp[15],
-		skincolors[player.skincolor].ramp[14],
-		skincolors[player.skincolor].ramp[13],
-		skincolors[player.skincolor].ramp[12],
-		skincolors[player.skincolor].ramp[11],
-		skincolors[player.skincolor].ramp[10],
-		skincolors[player.skincolor].ramp[9],
-		skincolors[player.skincolor].ramp[8],
-		skincolors[player.skincolor].ramp[7],
-		skincolors[player.skincolor].ramp[6],
-		skincolors[player.skincolor].ramp[5],
-		skincolors[player.skincolor].ramp[4],
-		skincolors[player.skincolor].ramp[3],
-		skincolors[player.skincolor].ramp[2],
-		skincolors[player.skincolor].ramp[1],
-		skincolors[player.skincolor].ramp[0],
+		skincolors[skincolor].ramp[15],
+		skincolors[skincolor].ramp[14],
+		skincolors[skincolor].ramp[13],
+		skincolors[skincolor].ramp[12],
+		skincolors[skincolor].ramp[11],
+		skincolors[skincolor].ramp[10],
+		skincolors[skincolor].ramp[9],
+		skincolors[skincolor].ramp[8],
+		skincolors[skincolor].ramp[7],
+		skincolors[skincolor].ramp[6],
+		skincolors[skincolor].ramp[5],
+		skincolors[skincolor].ramp[4],
+		skincolors[skincolor].ramp[3],
+		skincolors[skincolor].ramp[2],
+		skincolors[skincolor].ramp[1],
+		skincolors[skincolor].ramp[0],
 	}
 
 	local backgroundHeight = screenHeight / #colors
@@ -137,10 +149,10 @@ function titleCardMenu:draw(v, player, camera)
 
 	local characterX = 160 * FU + distance
 	local character, flipCharacter = v.getSprite2Patch(
-		player.skin,
+		skin,
 		SPR2_RUN_,
 		false,
-		frameByTime(leveltime, skins[player.skin].sprites[SPR2_RUN_].numframes, 2),
+		frameByTime(leveltime, skins[skin].sprites[SPR2_RUN_].numframes, 2),
 		7
 	)
 	
@@ -156,4 +168,4 @@ function titleCardMenu:draw(v, player, camera)
 		FH:drawPaletteRect(v, 0, 0, screenWidth, screenHeight, 31, V_SNAPTOTOP|V_SNAPTOLEFT|(V_10TRANS * FHR.titleCardTime))
 	end
 end
-return titleCardMenu, "titleCardMenu", 1, "global"
+return titleCardMenu, "titleCardMenu", 1, "menu"

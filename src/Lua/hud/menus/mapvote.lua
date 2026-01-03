@@ -12,6 +12,12 @@ local borderColorConfirmed = 96
 function mapVoteMenu:draw(v, player)
 	if FHR.currentState ~= "mapvote" then return end
 
+	if not (player and player.valid) and (displayplayer and displayplayer.valid) then
+		player = displayplayer
+	elseif not (player and player.valid) then
+		return
+	end
+
 	local screenWidth = v.width() * FU / v.dupx()
 	local screenHeight = v.height() * FU / v.dupy()
 
@@ -88,4 +94,4 @@ function mapVoteMenu:draw(v, player)
 	end
 end
 
-return mapVoteMenu, "mapVoteMenu", 1, "global"
+return mapVoteMenu, "mapVoteMenu", 1, "menu"

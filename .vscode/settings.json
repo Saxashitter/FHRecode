@@ -17,6 +17,8 @@
 		"inject-field",
 		"need-check-nil",
 		"param-type-mismatch",
-		"undefined-field"
+		"undefined-field",
+		"assign-type-mismatch",
+		"deprecated"
 	]
 }

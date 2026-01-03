@@ -99,4 +99,4 @@ function timer:draw(v, player, camera)
 	end
 end
 
-return timer, "escapeTimer", 1, "game"
+return timer, "escapeTimer", 1, "overlay"

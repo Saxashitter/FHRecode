@@ -24,14 +24,14 @@ end
 
 ---@type heistProfitCVars_t
 FH.profitCVars = {
-	ring              = CV_RegisterVar{name = "fh_ringprofit",             defaultvalue = "8",   flags = CV_FLOAT|CV_NETVAR};
-	monitor           = CV_RegisterVar{name = "fh_monitorprofit",          defaultvalue = "25",  flags = CV_FLOAT|CV_NETVAR};
+	ring              = CV_RegisterVar{name = "fh_ringprofit",             defaultvalue = "8.25",   flags = CV_FLOAT|CV_NETVAR};
+	monitor           = CV_RegisterVar{name = "fh_monitorprofit",          defaultvalue = "25.7",  flags = CV_FLOAT|CV_NETVAR};
 	enemy             = CV_RegisterVar{name = "fh_enemyprofit",            defaultvalue = "50",  flags = CV_FLOAT|CV_NETVAR};
-	playerHurt        = CV_RegisterVar{name = "fh_playerhurtprofit",       defaultvalue = "100", flags = CV_FLOAT|CV_NETVAR};
-	playerDeath       = CV_RegisterVar{name = "fh_playerdeathprofit",      defaultvalue = "200", flags = CV_FLOAT|CV_NETVAR};
-	collectible       = CV_RegisterVar{name = "fh_collectibleprofit",      defaultvalue = "350", flags = CV_FLOAT|CV_NETVAR};
+	playerHurt        = CV_RegisterVar{name = "fh_playerhurtprofit",       defaultvalue = "100.5", flags = CV_FLOAT|CV_NETVAR};
+	playerDeath       = CV_RegisterVar{name = "fh_playerdeathprofit",      defaultvalue = "200.95", flags = CV_FLOAT|CV_NETVAR};
+	collectible       = CV_RegisterVar{name = "fh_collectibleprofit",      defaultvalue = "350.8", flags = CV_FLOAT|CV_NETVAR};
 	startedEscape     = CV_RegisterVar{name = "fh_escapeprofit",           defaultvalue = "500", flags = CV_FLOAT|CV_NETVAR};
-	collectibleExt    = CV_RegisterVar{name = "fh_collectibleextraprofit", defaultvalue = "125", flags = CV_FLOAT|CV_NETVAR};
+	collectibleExt    = CV_RegisterVar{name = "fh_collectibleextraprofit", defaultvalue = "125.12", flags = CV_FLOAT|CV_NETVAR};
 }
 
 --- @param mobj mobj_t

@@ -8,10 +8,15 @@ FH.ringStates = {}
 
 ---@diagnostic disable-next-line: missing-fields
 mobjinfo[MT_FH_RING] = {
+	--$Title Special Ring
+	--$Category Fang's Heist - Escape
+	--$StringArg0 Ring Type (Goal|Round 2 Teleport From|Round 2 Teleport To)
+	--$Sprite GORIA0
+	doomednum = 4098,
 	spawnstate = S_FH_GOALRING,
-	radius = 25 * FU,
+	radius = 35 * FU,
 	height = 105 * FU,
-	flags = MF_NOCLIP|MF_NOCLIPHEIGHT|MF_NOGRAVITY|MF_SPECIAL,
+	flags = MF_NOGRAVITY,
 	raisestate = S_NULL
 }
 
@@ -25,7 +30,7 @@ states[S_FH_GOALRING] = {
 	nextstate = S_FH_GOALRING
 }
 
---- Spawn a special ring, used mainly for escape modes.
+--[[--- Spawn a special ring, used mainly for escape modes.
 --- View mobjs/escape/specialring for different types of special rings. You can add one yourself as well while making a gamemode.
 --- @param x fixed_t
 --- @param y fixed_t
@@ -49,13 +54,53 @@ function FH:spawnRing(x, y, z, ringType, ...)
 	ringData.spawn(ring, ...)
 
 	return ring
-end
+end]]
 
-addHook("TouchSpecial", function(ring, player)
-	if not player.valid then return true end
+addHook("MobjSpawn", function(ring)
+	ring.ringState = S_FH_GOALRING
+	ring.ringType = "Goal"
+end, MT_FH_RING)
+
+--- @param ring mobj_t
+--- @param mapthing mapthing_t
+addHook("MapThingSpawn", function(ring, mapthing)
+	local ringType = mapthing.stringargs[0] or "Goal"
+	local ringData = FH.ringStates[ringType]
+
+	ring.ringState = ringData.state
+	ring.ringType = ringType
+	ring.state = ringData.state
+	ringData.spawn(ring)
+end, MT_FH_RING)
+
+
+addHook("MobjCollide", function(ring, source)
+	if not source then return end
+	if not source.valid then return end
+	if source.type ~= MT_PLAYER then return end
+	if source.z > ring.z + ring.height then return end
+	if ring.z > source.z + source.height then return end
+	if not source.health then return end
+	if not source.player then return end
+	if P_PlayerInPain(source.player) then return end
+	if not source.player.heistRound then return end
+	if source.player.heistRound.downed then return end
 
 	local ringData = FH.ringStates[ring.ringType]
-	ringData.touch(ring, player.player)
+	ringData.touch(ring, source.player)
+end, MT_FH_RING)
+addHook("MobjMoveCollide", function(ring, source)
+	if not source then return end
+	if not source.valid then return end
+	if source.type ~= MT_PLAYER then return end
+	if source.z > ring.z + ring.height then return end
+	if ring.z > source.z + source.height then return end
+	if not source.health then return end
+	if not source.player then return end
+	if P_PlayerInPain(source.player) then return end
+	if not source.player.heistRound then return end
+	if source.player.heistRound.downed then return end
 
-	return true
+	local ringData = FH.ringStates[ring.ringType]
+	ringData.touch(ring, source.player)
 end, MT_FH_RING)

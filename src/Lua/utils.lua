@@ -108,9 +108,61 @@ function FH:drawSTT(v, x, y, scale, number, flags, align, valign)
 	end
 end
 
+--- Draw numbers on the HUD using the STTNUM font, with decimals
+--- @param v videolib
+--- @param x fixed_t
+--- @param y fixed_t
+--- @param scale fixed_t
+--- @param number fixed_t
+--- @param flags UINT32|nil
+--- @param align fixed_t|nil
+--- @param valign fixed_t|nil
+function FH:drawDecimalSTT(v, x, y, scale, number, flags, align, valign)
+	flags  = flags  or 0
+	align  = align  or 0
+	valign = valign or 0
+
+	-- Extract integer + fractional parts
+	local intpart = number / FRACUNIT
+	local frac = abs(number % FRACUNIT)
+
+	-- Limit to 2 decimal places
+	local frac2 = (frac * 100) / FRACUNIT
+
+	-- Build string
+	local str
+	if frac2 > 0 then
+		str = string.format("%d.%02d", intpart, frac2)
+	else
+		str = tostring(intpart)
+	end
+
+	-- Alignment
+	local charw = 8 * scale
+	local totalw = charw * #str
+
+	x = $ - FixedMul(totalw, align)
+	y = $ - FixedMul(11 * scale, valign)
+
+	-- Draw
+	for i = 1, #str do
+		local c = str:sub(i, i)
+		local patch
+
+		if c == "." then
+			patch = v.cachePatch("STTPERIO")
+		else
+			patch = v.cachePatch("STTNUM"..c)
+		end
+
+		v.drawScaled(x, y, scale, patch, flags)
+		x = $ + charw
+	end
+end
+
+
 --- Changes the song used for the mod. Unlike S_ChangeMusic, this globally changes it, even for new players.
 --- Set this to nil to revert to the map's default music.
---- TODO: Actually make this true using MusicChange and NetVars.
 --- @param music string|nil
 function FH:changeMusic(music, loop)
 	if loop == nil then loop = true end
@@ -169,10 +221,12 @@ end
 --- @param point table
 --- @param minSpeed fixed_t|nil
 function FH:knockbackMobj(target, point, minSpeed)
+	local tz = target.z + target.height / 2
+	local pz = point.z + point.height / 2
 	local speed = max(R_PointToDist2(0, 0, R_PointToDist2(0, 0, target.momx, target.momy), target.momz), minSpeed or 0)
 	local dist = R_PointToDist2(target.x, target.y, point.x, point.y)
 	local angle = R_PointToAngle2(target.x, target.y, point.x, point.y)
-	local aiming = R_PointToAngle2(0, 0, dist, point.z - target.z)
+	local aiming = R_PointToAngle2(0, 0, dist, pz - tz)
 
 	P_InstaThrust(target, angle, -FixedMul(speed, cos(aiming)))
 	---@diagnostic disable-next-line: assign-type-mismatch
