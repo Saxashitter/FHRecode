@@ -53,6 +53,12 @@ function FH:downPlayer(player, time)
 	S_StartSound(player.mo, sfx_kc31)
 	S_StartSound(player.mo, sfx_nghurt)
 	S_StartSound(player.mo, sfx_s3k6d)
+
+	-- TODO: cheap check, add more functions to heistGametype_t to get when the player gets downed and put this in there
+	local gametype = FH:isMode()
+	if not gametype then return end
+
+	gametype:safeFinish()
 end
 
 ---@param player player_t

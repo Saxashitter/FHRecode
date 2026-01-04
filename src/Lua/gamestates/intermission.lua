@@ -32,11 +32,15 @@ function gamestate:init()
 		-- TODO: gametype-based way to see if player is eligible idk
 		if not player.heistRound.escaped then continue end
 
+		-- sort table
+		table.sort(player.heistRound.profitLog, function(a, b) return a.profit > b.profit end)
+
 		local entry = {
 			name = player.name,
 			profit = player.heistRound.profit,
 			skin = player.skin,
-			color = player.skincolor
+			color = player.skincolor,
+			log = player.heistRound.profitLog
 		}
 
 		local inserted = false

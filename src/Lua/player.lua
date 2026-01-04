@@ -76,9 +76,12 @@ end
 --- If this is true, the player has selected a map in the map vote.
 --- @field mapVote boolean
 --- The current amount of collectibles the player has on their head.
---- @field collectibles table
---- Logs how the player gains Profit, for use within intermission and UI.
+--- @field collectibles table<heistCollectible_t>
+--- Logs how the player gains Profit, for use within intermission.
 --- @field profitLog table<table>
+--- The last time the player gained profit, used for UI.
+--- @field profitUI table
+--- All of the player's current collectibles (mobj_t)
 
 setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
 	__index = function(self, key)
@@ -121,9 +124,10 @@ function FH:initPlayerRound(player)
 		mapSelection = 2,
 		mapVote = false,
 		collectibles = {},
-		profitLog = {}
+		profitLog = {},
+		profitUI = {time = -1}
 	}
-	
+
 	player.heistRound = playerRound
 	gametype:playerInit(player, FHR.currentState)
 
@@ -255,6 +259,7 @@ addHook("ThinkFrame", function()
 		initChecks(player, gametype)
  
 		-- TODO: make our own counter that accounts for fixed values.
+		-- UPD: this is half done, need to make the scoreboard
 		player.score = player.heistRound.profit/FU
 	end
 end)
@@ -265,3 +270,5 @@ dofile("player/instashield.lua")
 dofile("player/block.lua")
 dofile("player/pvp.lua")
 dofile("player/health.lua")
+
+dofile("player/tweaks/fangTweaks.lua")

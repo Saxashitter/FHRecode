@@ -42,7 +42,7 @@ addHook("MobjSpawn", function(mobj)
 	mobj.autoRemove = true
 
 	--- Starting alpha value (fixed-point), default 1/3.
-	mobj.alphaStart = FU / 3
+	mobj.alphaStart = FU
 
 	--- Ending alpha value (fixed-point), default fully transparent (0).
 	mobj.alphaEnd = 0
@@ -120,8 +120,8 @@ COM_AddCommand("fh_overlay", function(player, translation, alphaStart, alphaEnd,
 	end
 
 	overlay.translation = translation or nil
-	overlay.alphaStart = tofixed(alphaStart) or (FU / 3)
-	overlay.alphaEnd = tofixed(alphaEnd) or 0
+	overlay.alphaStart = FU
+	overlay.alphaEnd = 0
 	---@diagnostic disable-next-line: assign-type-mismatch
 	overlay.alphaFuse = tonumber(alphaFuse) or TICRATE
 	overlay.alpha = overlay.alphaStart

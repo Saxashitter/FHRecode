@@ -45,6 +45,7 @@ local sparkleAlpha    = (FU / 25) * 12
 ---@field sparkleFollowTarget boolean                        # If true, sparkles follow the target’s position.
 ---@field autoRemove boolean                                 # If true, controller removes itself when target invalid.
 ---@field stopSparkles boolean                               # When true, stops spawning new sparkles.
+---@field deleteSelf boolean                                 # If true, will delete itself if stopSparkles is true and no more sparkles were made.
 ---@field _sparkles heistSparkle_t[]                         # Table of active sparkle mobj references.
 
 ---@class heistSparkle_t : mobj_t
@@ -132,6 +133,7 @@ addHook("MobjSpawn", function(mobj)
 	mobj.sparkleFollowTarget = true
 	mobj.autoRemove = true
 	mobj.stopSparkles = false
+	mobj.deleteSelf = false
 
 	---@protected
 	---@type heistSparkle_t[]
@@ -177,6 +179,11 @@ addHook("MobjThinker", function(mobj)
 				mobj.stopSparkles = true
 			end
 		end
+	end
+
+	if #mobj._sparkles == 0 and mobj.deleteSelf and mobj.stopSparkles then
+		P_RemoveMobj(mobj)
+		return
 	end
 
 	-- Sparkle logic
@@ -226,13 +233,3 @@ addHook("MobjThinker", function(mobj)
 		end
 	end
 end, MT_FH_SPARKLES)
-
---------------------------------------------------------------------------------
--- Test command
---------------------------------------------------------------------------------
-
-COM_AddCommand("fh_sparkletest", function(player)
-	local sparkles = P_SpawnMobjFromMobj(player.mo, 0, 0, 0, MT_FH_SPARKLES)
-	sparkles.sparkleOrbitSpeed = FixedAngle(360 * FU / (5 * TICRATE))
-	sparkles.target = player.mo
-end)

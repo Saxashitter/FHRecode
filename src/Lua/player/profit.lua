@@ -10,7 +10,13 @@ function FH:addProfit(player, profit, tag)
 		player.heistRound.profit = 0
 	end
 
-	local found, key, value = FH:doesTableHave(player.heistRound.profitLog, function(log) return log.tag == tag end)
+	player.heistRound.profitUI = {
+		time = leveltime,
+		profit = profit,
+		tag = tag
+	}
+
+	local found, _, value = FH:doesTableHave(player.heistRound.profitLog, function(log) return log.tag == tag end)
 
 	if found then
 		value.timesRan = $ + 1
@@ -22,7 +28,7 @@ function FH:addProfit(player, profit, tag)
 	table.insert(player.heistRound.profitLog, {
 		tag = tag,
 		profit = profit,
-		timesRan = 0,
+		timesRan = 1,
 		lastCollected = leveltime
 	})
 end
@@ -85,6 +91,10 @@ addHook("MobjDeath", function(target, _, source)
 	if target.flags & MF_MONITOR > 0 then
 		FH:addProfit(source.player, FH.profitCVars.monitor.value, "Destroyed Monitor")
 		FH:setHealth(source.player, min(FH.characterHealths[source.skin], source.player.heistRound.health + 15 * FU))
+		local overlay = P_SpawnMobjFromMobj(source, 0,0,0, MT_FH_OVERLAY) --[[@as heistOverlay_t]]
+		overlay.target = source
+		overlay.translation = "FH_AllGreen"
+		overlay.alphaFuse = 15
 		return
 	end
 

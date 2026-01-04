@@ -4,6 +4,7 @@ dofile("lib/customhud.lua")
 dofile("config.lua")
 
 dofile("mobjs/escape/specialring.lua")
+dofile("mobjs/escape/eggman.lua")
 
 dofile("mobjs/effects/sparkles.lua")
 dofile("mobjs/effects/overlay.lua")

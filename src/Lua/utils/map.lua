@@ -27,9 +27,17 @@ end
 function FH:getMapVariable(map, key, default)
 	if map == nil then map = gamemap end
 
-	if mapheaderinfo[map][key] then
-		if type(default) == "number" and tonumber(mapheaderinfo[map][key]) ~= nil then
+	if mapheaderinfo[map][key] ~= nil then
+		if type(default) == "number" then
 			return tonumber(mapheaderinfo[map][key]) 
+		elseif type(default) == "boolean" then
+			local var = mapheaderinfo[map][key]
+
+			if var:lower() == "yes" or var:lower() == "true" or var:lower() == "on" or var:lower() == "enabled" then
+				return true
+			else
+				return false
+			end
 		else
 			return mapheaderinfo[map][key]
 		end

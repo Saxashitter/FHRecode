@@ -6,7 +6,7 @@ local instaShieldCooldown = 35
 local blockCooldown = 8
 local blockDrainTics = 4 * TICRATE
 local blockRegainStrengthTics = 6 * TICRATE
-local blockDamage = FU / 4
+local blockDamage = FU / 3
 local blockChargeCooldown = TICRATE
 
 --- @param player player_t
@@ -160,7 +160,7 @@ addHook("ShouldDamage", function(targ, inf, source)
 	end
 
 	if targ.fh_instashield then
-		return false -- TODO: make use of STR_GUARD
+		return false
 	end
 end, MT_PLAYER)
 
@@ -173,15 +173,13 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 	if not victim.player then return end
 	if not victim.player.heistRound then return end
 
-	if victim.player.powers[pw_shield] then return end
-	if victim.player.powers[pw_flashing] then return end
 	if victim.player.powers[pw_invulnerability] then return end
 	if victim.player.powers[pw_super] then return end
 
 	local health = max(0, victim.player.heistRound.health - 25*FU)
 
 	if (damagetype & DMG_DEATHMASK) then
-		health = 0
+		return
 	elseif victim.fh_block then
 		--- TODO: slap this in a function
 		--- @diagnostic disable-next-line: assign-type-mismatch
@@ -190,14 +188,18 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 		if victim.player.heistRound.blockStrength <= blockDamage then
 			S_StartSoundAtVolume(victim, sfx_s258, 100)
 		end
-		
+
+		local overlay = P_SpawnMobjFromMobj(victim, 0,0,0, MT_FH_OVERLAY) --[[@as heistOverlay_t]]
+		overlay.target = victim
+		overlay.translation = "FH_AllRed"
+		overlay.alphaFuse = 15
+
 		if victim.player.heistRound.blockStrength > 0 then
 			victim.player.powers[pw_flashing] = 16
 			S_StartSoundAtVolume(victim, sfx_kc40, 60)
 
 			if inflictor and inflictor.valid and inflictor.health and inflictor.flags & MF_MISSILE then
 				inflictor.target = victim
-
 				FH:knockbackMobj(inflictor, victim)
 			end
 
@@ -207,6 +209,14 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 		FH:playerStopBlock(victim.player, false)
 		health = max(0, victim.player.heistRound.health - 50*FU)
 	end
+
+	if victim.player.powers[pw_flashing] then return end
+	if victim.player.powers[pw_shield] then return end
+
+	local overlay = P_SpawnMobjFromMobj(victim, 0,0,0, MT_FH_OVERLAY) --[[@as heistOverlay_t]]
+	overlay.target = victim
+	overlay.translation = "FH_AllRed"
+	overlay.alphaFuse = 15
 
 	if FH:setHealth(victim.player, health) then
 		if source
@@ -240,4 +250,27 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 		end
 		return true
 	end
+end, MT_PLAYER)
+
+addHook("MobjDeath", function(victim)
+	if not FH:isMode() then return end
+	if not victim.player then return end
+	if not victim.player.heistRound then return end
+
+	local player = victim.player
+
+	for i = #player.heistRound.collectibles, 1, -1 do
+		FH:dropCollectible(player, player.heistRound.collectibles[i])
+	end
+	FH:playerStopBlock(player, false)
+end, MT_PLAYER)
+
+addHook("PlayerQuit", function(player)
+	if not FH:isMode() then return end
+	if not player.heistRound then return end
+
+	for i = #player.heistRound.collectibles, 1, -1 do
+		FH:dropCollectible(player, player.heistRound.collectibles[i])
+	end
+	FH:playerStopBlock(player, false)
 end, MT_PLAYER)

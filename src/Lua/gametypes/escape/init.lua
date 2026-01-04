@@ -8,7 +8,7 @@ escape.name = "Escape"
 escape.description = "Work in progress."
 escape.typeoflevel = freeslot("TOL_ESCAPE")
 
-escape.rules = GTR_SPAWNENEMIES
+escape.rules = GTR_SPAWNENEMIES|GTR_NOTITLECARD
 
 rawset(_G, "_FH_ESCAPE", escape)
 

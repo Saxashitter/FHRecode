@@ -16,12 +16,17 @@ function gamestate:init()
 	S_StartSound(nil, sfx_s24f)
 	FHR.mapVoteTime = leveltime
 
-	-- TODO: random maps based on gametype typeoflevel (and random modes once we get to that)
-	FHR.mapVoteMaps = {
-		1,
-		2,
-		34
-	}
+	local maps = {}
+	for map = 1, #mapheaderinfo do
+		local header = mapheaderinfo[map]
+		if not header then continue end
+
+		if header.typeoflevel & TOL_ESCAPE ~= 0 and FH:getMapVariable(map, "fh_votablemap", true) then
+			table.insert(maps, map)
+		end
+	end
+
+	FHR.mapVoteMaps = FH:randomItems(maps, 3)
 
 	FH:changeMusic("FH_MPV", false)
 end

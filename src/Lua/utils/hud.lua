@@ -15,7 +15,7 @@ function FH:getCharPortrait(v, skin, colorable)
 		return v.cachePatch(name..skin)
 	end
 
-	-- return the css portrait here
+	return v.getSprite2Patch(data.name, SPR2_XTRA, false, B, 0)
 end
 
 --- Draw numbers on the HUD using the STTNUM font.

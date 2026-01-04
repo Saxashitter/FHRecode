@@ -29,25 +29,13 @@ function ui:draw(v, player)
 	FH:drawDecimalSTT(v, (profitX + 8) * FU, self.y * FU, FU, profit, self.flags, 0, 0)
 
 	-- collected effect
-	local latestTime
-	local profitAmount
-	local profitColor = V_GREENMAP
-
-	for _, log in ipairs(player.heistRound.profitLog) do
-		if latestTime == nil or log.lastCollected > latestTime then
-			latestTime = log.lastCollected
-			profitAmount = log.profit
-			if profitAmount < 0 then
-				profitColor = V_REDMAP
-			end
-		end
-	end
-
-	if latestTime == nil then return end
 	
-	local progress = leveltime - latestTime
-
+	if player.heistRound.profitUI.time == -1 then return end
+	
+	local progress = leveltime - player.heistRound.profitUI.time
+	
 	if progress > self.animDuration then return end
+	local profitColor = player.heistRound.profitUI.profit > 0 and V_GREENMAP or V_REDMAP
 
 	local t = FH:easeTime(progress, self.animStart)
 	local t2 = FH:easeTime(progress, self.animFinish, self.animDuration - self.animFinish)
@@ -58,16 +46,16 @@ function ui:draw(v, player)
 	local endY = -8 * FU
 	local startY = self.y * FU
 
-	local alpha = ease.linear(t, 10, 0)
+	local alpha = 10 - min(progress, 10)
 	if progress >= self.animDuration - self.animFinish then
-		alpha = ease.linear(t2, 0, 10)
+		alpha = min(progress - (self.animDuration - 10), 10)
 	end
 
 	local x = ease.outback(t, startX, endX)
 	local y = ease.incubic(t2, startY, endY)
 
 	if alpha < 10 then
-		SSL.drawFixedString(v, x, y, FU, string.format("+ $%.2f", profitAmount), "STCFN%03d", self.flags|(V_10TRANS * alpha), 0, 0, profitColor, 0, 2 * FU)
+		SSL.drawFixedString(v, x, y, FU, string.format("+ $%.2f", player.heistRound.profitUI.profit), "STCFN%03d", self.flags|(V_10TRANS * alpha), 0, 0, profitColor, 0, 2 * FU)
 	end
 end
 

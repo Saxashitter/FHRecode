@@ -40,7 +40,6 @@ return function(v)
 		end
 	end
 
-
 	if not noContest then
 		local portrait = FH:getCharPortrait(v, winner.skin, true)
 		local portraitX = 220*FU
@@ -64,10 +63,16 @@ return function(v)
 		SSL.drawString(v, 8, textY, "Recoded your mom!", "TNYFN%03d", V_SNAPTOTOP|V_SNAPTOLEFT, 0, 0, skincolors[color].chatcolor)
 		textY = $ + 10
 
-		SSL.drawString(v, 8, textY, "Work in progress.", "TNYFN%03d", V_SNAPTOLEFT|V_SNAPTOTOP, 0, 0, V_REDMAP, FU)
-
-		if afterTics < 10 then
-			FH:drawPaletteRect(v, 0, 0, screenWidth, screenHeight, 0, (V_10TRANS * afterTics)|V_SNAPTOLEFT|V_SNAPTOTOP)
+		local format = "%s (x%d): $%.2f"
+		for k, log in ipairs(winner.log) do
+			local string = format:format(log.tag, log.timesRan, log.profit)
+			SSL.drawString(v, 8, textY, string, "TNYFN%03d", V_SNAPTOLEFT|V_SNAPTOTOP, 0, 0, V_GREENMAP, 0, 0)
+			textY = $ + 10
 		end
+
+		SSL.drawString(v, 8, textY, "Work in progress.", "TNYFN%03d", V_SNAPTOLEFT|V_SNAPTOTOP, 0, 0, V_REDMAP, FU)
+	end
+	if afterTics < 10 then
+		FH:drawPaletteRect(v, 0, 0, screenWidth, screenHeight, 0, (V_10TRANS * afterTics)|V_SNAPTOLEFT|V_SNAPTOTOP)
 	end
 end

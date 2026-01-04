@@ -121,7 +121,7 @@ addHook("MobjThinker", function(eggmanChaser)
 		local vz = FixedDiv(dz, totalDist)
 
 		local damp = FU / 12
-	
+
 		if eggmanChaser.tracer ~= target.mo then
 			-- warn the player
 			local alert = P_SpawnMobjFromMobj(target.mo, 0,0,0, MT_FH_ALERT)

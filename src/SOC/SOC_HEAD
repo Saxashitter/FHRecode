@@ -56,6 +56,42 @@ InterScreen = INTERSCR
 FlickyList = Demo
 Lua.FH_EscapeTime = 360
 
+Level P1
+Levelname = Acidic Overflux
+TypeOfLevel = Escape
+LevelFlags = 518
+FlickyList = BlueBird,Rabbit,Chipmunk,Penguin,Puffin,Rat,Cat,Spider,Bat
+NoReload = true
+Skynum = 86
+Weather = 5
+Music = BRCRPW
+SelectHeading = Bonus
+ForceResetMusic = 0
+MusicInterFadeOut = 3000
+TitleCardZigZag = ACIDZIGZAG
+TitleCardZigZagText = ACIDTEXT
+Lua.FH_EscapeHurryUp = false
+Lua.FH_EscapeTheme = OLNORE
+Lua.FH_EscapeTime = 177
+Lua.FH_EscapeLinedefTrigger = 9000
+
+Level 25
+Levelname = Black Core
+Act = 1
+Keywords = BCZ1
+Music = BCZ1
+NextLevel = 26
+TypeOfLevel = Escape
+SkyNum = 22
+RecordAttack = true
+LevelSelect = 1
+SaveGame = true
+FlickyList = All
+SaveGame = true
+ForceResetMusic = On
+WarningTitle = true
+SelectHeading = Bonus
+
 Level Z1
 Levelname = Test
 Act = 0
@@ -70,3 +106,4 @@ Weather = 2
 FlickyList = Penguin,Seal
 NoVisitNeeded = true
 Lua.FH_EscapeTheme = FH_FHE
+Lua.FH_VotableMap = false

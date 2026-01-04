@@ -1,5 +1,5 @@
 local gamestate = {}
-local skipTitlecard = true
+local skipTitlecard = false
 
 gamestate.timeLeft = 60 * TICRATE
 

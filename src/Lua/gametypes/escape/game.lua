@@ -12,6 +12,9 @@ states[S_FH_ROUND2RING].frame = FF_ANIMATE
 states[S_FH_ROUND2RING].var1 = F
 states[S_FH_ROUND2RING].var2 = 2
 
+sfxinfo[freeslot("sfx_fh_tck")].caption = "Click..."
+sfxinfo[freeslot("sfx_fh_ovr")].caption = "Uh oh."
+
 FH.ringStates["Goal"] = {
 	--- @type statenum_t
 	state = S_FH_GOALRING,
@@ -22,6 +25,8 @@ FH.ringStates["Goal"] = {
 		table.insert(FHR.escapeRings, ring)
 	end,
 	--- @type function
+	--- @param ring mobj_t
+	--- @param player player_t
 	touch = function(ring, player)
 		local gametype = FH:isMode()
 		if not gametype then return end -- just here for formatting purposes
@@ -39,6 +44,14 @@ FH.ringStates["Goal"] = {
 		player.heistRound.escaped = true
 		player.powers[pw_flashing] = 2 * TICRATE + 1 -- infinite invulnerability!!
 		player.mo.alpha = 0
+
+		for _, v in ipairs(player.heistRound.collectibles) do
+			if v and v.valid then
+				P_RemoveMobj(v)
+			end
+		end
+		player.heistRound.collectibles = {}
+
 		S_StartSound(player.mo, sfx_s1c3)
 		S_StartSound(ring, sfx_s1c3)
 
@@ -106,6 +119,7 @@ function escape:init()
 	FHR.escapeRings = {}
 	FHR.round2StartRings = {}
 	FHR.round2FinishRings = {}
+	FHR.endPosition = {x = 0, y = 0, z = 0, angle = 0}
 end
 
 function escape:load()
@@ -123,7 +137,23 @@ function escape:escapeUpdate()
 	if FHR.escapeTime then
 		FHR.escapeTime = $ - 1
 
+		if FHR.escapeTime == 10 * TICRATE then
+			S_FadeMusic(0, 10 * MUSICRATE)
+		end
+
+		if FHR.escapeTime <= 10 * TICRATE and FHR.escapeTime % TICRATE == 0 then
+			local sound = FHR.escapeTime == 0 and sfx_fh_ovr or sfx_fh_tck
+			local quake = FHR.escapeTime == 0 and 26 * FU or 8 * FU
+			local duration = FHR.escapeTime == 0 and 40 or 16
+			S_StartSound(nil, sound)
+			P_StartQuake(quake, duration)
+		end
+
 		if FHR.escapeTime == 0 then
+			-- eggman
+			-- print("Eggman has spawned! RUN!!")
+			-- P_SpawnMobj(FHR.endPosition.x, FHR.endPosition.y, FHR.endPosition.z, MT_FH_EGGMAN_TIMESUP)
+			-- FH:changeMusic("FH_OVT", true)
 			FH:endGame()
 		end
 	end
@@ -192,7 +222,21 @@ function escape:startEscape(starter)
 			escapeSong = $ or FH:getMapVariable(nil, "fh_retake"..i.."theme")
 		end
 	end
+
 	FH:changeMusic(escapeSong)
+
+	local linedef = FH:getMapVariable(nil, "fh_escapelinedeftrigger", nil)
+
+	if linedef ~= nil then
+		--- @type mobj_t|nil
+		local mo = starter.mo
+
+		if not starter.mo or not starter.mo.valid then
+			mo = nil
+		end
+	
+		P_LinedefExecute(linedef, mo)
+	end
 end
 
 function escape:safeFinish()
@@ -204,8 +248,14 @@ function escape:safeFinish()
 	local totalCount = 0
 
 	for player in players.iterate do
----@diagnostic disable-next-line: undefined-field
-		if (player.heistRound and player.heistRound.spectator) or not player.mo or not player.mo.health or player.hasLeftServer then continue end
+		---@diagnostic disable-next-line: undefined-field
+		-- if (player.heistRound and player.heistRound.spectator) or not player.mo or not player.mo.health or player.hasLeftServer then continue end
+		if not player.heistRound then continue end
+		if player.heistRound.spectator then continue end
+		if player.heistRound.downed then continue end
+		if not player.mo then continue end
+		if not player.mo.health then continue end
+		if player.hasLeftServer then continue end
 
 		totalCount = $ + 1
 
@@ -226,6 +276,12 @@ end
 --- @param z fixed_t
 --- @param angle angle_t
 function escape:spawnSignpost(x, y, z, angle)
+	FHR.endPosition = {
+		x = x,
+		y = y,
+		z = z
+	}
+
 	local sign = P_SpawnMobj(x, y, z, MT_SIGN)
 	sign.angle = angle
 	

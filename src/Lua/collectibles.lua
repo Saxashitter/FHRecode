@@ -42,8 +42,6 @@ end
 --- @param player player_t
 --- @param collectible heistCollectible_t
 function FH:playerHasCollectible(player, collectible)
-	player.heistRound.collectibles = player.heistRound.collectibles or {}
-
 	for i, cur in ipairs(player.heistRound.collectibles) do
 		if cur == collectible then
 			return true, i
@@ -60,7 +58,6 @@ function FH:giveCollectible(player, collectible)
 		return false
 	end
 
-	player.heistRound.collectibles = player.heistRound.collectibles or {}
 	table.insert(player.heistRound.collectibles, collectible)
 
 	collectible.target = player.mo
@@ -139,6 +136,19 @@ function FH:dropCollectible(player, collectible, launch)
 	end
 	return true
 end
+
+--- @param mobj heistCollectible_t
+addHook("MobjRemoved", function(mobj)
+	if mobj.overlay and mobj.overlay.valid then
+		P_RemoveMobj(mobj.overlay)
+	end
+	if mobj.sparkles and mobj.sparkles.valid then
+		mobj.sparkles.deleteSelf = true
+		mobj.sparkles.stopSparkles = true
+		mobj.sparkles.autoRemove = false
+		mobj.sparkles.target = nil
+	end
+end, MT_FH_COLLECTIBLE)
 
 --- @param mobj heistCollectible_t
 addHook("MobjSpawn", function(mobj)

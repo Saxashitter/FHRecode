@@ -96,7 +96,12 @@ function A_FH_PlayerInstaShieldTicker(mobj, xyRange, zRange)
 		return
 	end
 
-	FH:reflectMobj(mobj.target, attacked[1])
+	FH:knockbackMobj(mobj.target, attacked[1])
+
+	local overlay = P_SpawnMobjFromMobj(mobj.target, 0,0,0, MT_FH_OVERLAY) --[[@as heistOverlay_t]]
+	overlay.target = mobj.target
+	overlay.translation = "FH_AllWhite"
+	overlay.alphaFuse = 15
 
 	-- cap speed
 	local vx = mobj.target.momx
