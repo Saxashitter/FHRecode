@@ -1,5 +1,5 @@
 local MODNAME = "FH" -- unique identifier for customhud
-
+local uis = {}
 
 local uiMT = {
 	x = 0,
@@ -12,15 +12,13 @@ local uiMT = {
 uiMT.__index = uiMT
 
 function FH:getUI(name)
-	for _, ui in pairs(self._uiRegistry) do
+	for _, ui in pairs(uis) do
 		if ui.name == name then
 			return ui
 		end
 	end
 	return false
 end
-
-FH._uiRegistry = {}
 
 function FH:addUI(ui, name, priority, hudtype)
 	if type(ui) ~= "table" then return end
@@ -34,7 +32,7 @@ function FH:addUI(ui, name, priority, hudtype)
 	ui.priority = priority
 
 	-- Store reference
-	FH._uiRegistry[name] = ui
+	uis[name] = ui
 
 	-- customhud: higher layer = drawn later
 	local drawlayer = priority
@@ -71,9 +69,9 @@ local function doUiFile(filePath)
 end
 
 function FH:setUIVisible(name, state)
-	if not FH._uiRegistry[name] then return end
+	if not uis[name] then return end
 
-	FH._uiRegistry[name].visible = state
+	uis[name].visible = state
 
 	if state then
 		customhud.enable(name)
@@ -83,7 +81,7 @@ function FH:setUIVisible(name, state)
 end
 
 function FH:isUIVisible(name)
-	if not FH._uiRegistry[name] then return false end
+	if not uis[name] then return false end
 	return customhud.enabled(name)
 end
 
@@ -98,6 +96,7 @@ doUiFile("menus/mapvote")
 
 -- ingame
 doUiFile("ingame/profit")
+doUiFile("ingame/place")
 doUiFile("ingame/timer")
 doUiFile("ingame/health")
 

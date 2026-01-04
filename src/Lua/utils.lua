@@ -108,20 +108,7 @@ function FH:drawSTT(v, x, y, scale, number, flags, align, valign)
 	end
 end
 
---- Draw numbers on the HUD using the STTNUM font, with decimals
---- @param v videolib
---- @param x fixed_t
---- @param y fixed_t
---- @param scale fixed_t
---- @param number fixed_t
---- @param flags UINT32|nil
---- @param align fixed_t|nil
---- @param valign fixed_t|nil
-function FH:drawDecimalSTT(v, x, y, scale, number, flags, align, valign)
-	flags  = flags  or 0
-	align  = align  or 0
-	valign = valign or 0
-
+function FH:getDecimalNumber(number)
 	-- Extract integer + fractional parts
 	local intpart = number / FRACUNIT
 	local frac = abs(number % FRACUNIT)
@@ -136,6 +123,25 @@ function FH:drawDecimalSTT(v, x, y, scale, number, flags, align, valign)
 	else
 		str = tostring(intpart)
 	end
+
+	return str
+end
+
+--- Draw numbers on the HUD using the STTNUM font, with decimals
+--- @param v videolib
+--- @param x fixed_t
+--- @param y fixed_t
+--- @param scale fixed_t
+--- @param number fixed_t
+--- @param flags UINT32|nil
+--- @param align fixed_t|nil
+--- @param valign fixed_t|nil
+function FH:drawDecimalSTT(v, x, y, scale, number, flags, align, valign)
+	flags  = flags  or 0
+	align  = align  or 0
+	valign = valign or 0
+
+	local str = FH:getDecimalNumber(number)
 
 	-- Alignment
 	local charw = 8 * scale
