@@ -9,6 +9,22 @@ function FH:addProfit(player, profit, tag)
 	if player.heistRound.profit < 0 then
 		player.heistRound.profit = 0
 	end
+
+	local found, key, value = FH:doesTableHave(player.heistRound.profitLog, function(log) return log.tag == tag end)
+
+	if found then
+		value.timesRan = $ + 1
+		value.profit = $ + profit
+		value.lastCollected = leveltime
+		return
+	end
+	
+	table.insert(player.heistRound.profitLog, {
+		tag = tag,
+		profit = profit,
+		timesRan = 0,
+		lastCollected = leveltime
+	})
 end
 
 -- Manages how Profit is given
@@ -68,8 +84,6 @@ addHook("MobjDeath", function(target, _, source)
 
 	if target.flags & MF_MONITOR > 0 then
 		FH:addProfit(source.player, FH.profitCVars.monitor.value, "Destroyed Monitor")
-		-- heal hp
-
 		FH:setHealth(source.player, min(FH.characterHealths[source.skin], source.player.heistRound.health + 15 * FU))
 		return
 	end

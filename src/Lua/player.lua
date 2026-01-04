@@ -77,6 +77,8 @@ end
 --- @field mapVote boolean
 --- The current amount of collectibles the player has on their head.
 --- @field collectibles table
+--- Logs how the player gains Profit, for use within intermission and UI.
+--- @field profitLog table<table>
 
 setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
 	__index = function(self, key)
@@ -118,7 +120,8 @@ function FH:initPlayerRound(player)
 		spectator = false,
 		mapSelection = 2,
 		mapVote = false,
-		collectibles = {}
+		collectibles = {},
+		profitLog = {}
 	}
 	
 	player.heistRound = playerRound

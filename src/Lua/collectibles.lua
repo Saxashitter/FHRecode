@@ -5,12 +5,17 @@ local caughtFlags = MF_NOCLIP|MF_NOCLIPHEIGHT|MF_NOGRAVITY|MF_NOBLOCKMAP
 
 FH.collectibleCommon = 0
 FH.collectibleRare = 1
-FH.collectibleExclusive = 2
+FH.collectibleRelic = 2
+FH.collectibleNames = {
+	[FH.collectibleCommon] = "Common",
+	[FH.collectibleRare] = "Rare",
+	[FH.collectibleRelic] = "Relic"
+}
 
 ---@class heistCollectible_t : mobj_t
----@field variant number                        # The variant of this collectible. (FH.collectibleCommon|FH.collectibleRare|FH.collectibleExclusive)
----@field overlay heistOverlay_t|nil            # The overlay. Only made valid when this is a rare or exclusive.
----@field sparkles heistSparkleController_t|nil # The sparkle controller. Only made valid when this is a rare or exclusive.
+---@field variant number                        # The variant of this collectible. (FH.collectibleCommon|FH.collectibleRare|FH.collectibleRelic)
+---@field overlay heistOverlay_t|nil            # The overlay. Only made valid when this is a rare or a relic.
+---@field sparkles heistSparkleController_t|nil # The sparkle controller. Only made valid when this is a rare or a relic.
 ---@field target mobj_t|nil
 
 ---@diagnostic disable-next-line: missing-fields
@@ -87,7 +92,7 @@ function FH:giveCollectible(player, collectible)
 	S_StartSound(collectible, sfx_s3k68)
 	P_SetOrigin(collectible, player.mo.x, player.mo.y, player.mo.z + zoff)
 
-	FH:addProfit(player, FH.profitCVars.collectible.value + FH.profitCVars.collectibleExt.value * collectible.variant, "Collected Collectible")
+	FH:addProfit(player, FH.profitCVars.collectible.value + FH.profitCVars.collectibleExt.value * collectible.variant, "Collected "..self.collectibleNames[collectible.variant].." Collectible")
 	return true
 end
 
@@ -156,7 +161,7 @@ addHook("MapThingSpawn", function(mobj, thing)
 		local sparkles = P_SpawnMobjFromMobj(mobj, 0, 0, 0, MT_FH_SPARKLES) --[[@as heistSparkleController_t]]
 		sparkles.target = mobj
 		mobj.sparkles = sparkles
-	elseif mobj.variant == FH.collectibleExclusive then
+	elseif mobj.variant == FH.collectibleRelic then
 		local overlay = P_SpawnMobjFromMobj(mobj, 0, 0, 0, MT_FH_OVERLAY) --[[@as heistOverlay_t]]
 		overlay.alpha = FU / 3
 		overlay.translation = "FH_AllYellow"

@@ -43,6 +43,14 @@ end
 
 function gamestate:init()
 	FHR.gameCountdown = self.countdown
+	FHR.titleCardEndTime = leveltime
+
+	for mobj in mobjs.iterate() do
+		if not mobj.__hasNoThink then
+			mobj.flags = $ & ~MF_NOTHINK
+		end
+		mobj.__hasNoThink = nil
+	end
 
 	for player in players.iterate do
 		if not player.mo then continue end

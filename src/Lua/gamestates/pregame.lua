@@ -1,4 +1,5 @@
 local gamestate = {}
+local skipTitlecard = true
 
 gamestate.timeLeft = 60 * TICRATE
 
@@ -53,6 +54,12 @@ function gamestate:switch()
 
 		player.heistRound.skin = player.skin
 	end
+
+	if skipTitlecard then
+		FH:setGamestate("game")
+		return
+	end
+
 	FH:setGamestate("titlecard")
 end
 

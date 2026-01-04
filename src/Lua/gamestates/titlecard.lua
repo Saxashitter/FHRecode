@@ -10,10 +10,7 @@ function gamestate:init()
 end
 
 function gamestate:load()
-	-- apply MF_NOTHINK to all mobjs to ensure nothing moves. do this once as well so we dont gotta worry about lag
-	for mobj in mobjs.iterate() do
-		mobj.flags = $|MF_NOTHINK
-	end
+	
 end
 
 function gamestate:update()
@@ -21,13 +18,6 @@ function gamestate:update()
 	FHR.titleCardTime = $ - 1
 	
 	if not FHR.titleCardTime then
-		for mobj in mobjs.iterate() do
-			if not mobj.__hasNoThink then
-				mobj.flags = $ & ~MF_NOTHINK
-			end
-			mobj.__hasNoThink = nil
-		end
-
 		FHR.titleCardEndTime = leveltime
 		FH:setGamestate("game")
 		return
