@@ -3,8 +3,9 @@ local escape = _FH_ESCAPE
 escape.timeLeft = 180 -- 3 minutes
 escape.signpostThing = 501
 escape.ringThing = 1
+escape.timesUpStart = 2558 * TICRATE / MUSICRATE
 
-freeslot("S_FH_ROUND2RING")
+freeslot("S_FH_ROUND2RING") 
 
 states[S_FH_ROUND2RING].sprite = freeslot("SPR_R2RI")
 states[S_FH_ROUND2RING].tics = -1
@@ -47,6 +48,7 @@ FH.ringStates["Goal"] = {
 
 		for _, v in ipairs(player.heistRound.collectibles) do
 			if v and v.valid then
+				v.target = nil
 				P_RemoveMobj(v)
 			end
 		end
@@ -120,6 +122,7 @@ function escape:init()
 	FHR.round2StartRings = {}
 	FHR.round2FinishRings = {}
 	FHR.endPosition = {x = 0, y = 0, z = 0, angle = 0}
+	FHR.enemyRespawnQueue = {}
 end
 
 function escape:load()
@@ -137,24 +140,26 @@ function escape:escapeUpdate()
 	if FHR.escapeTime then
 		FHR.escapeTime = $ - 1
 
-		if FHR.escapeTime == 10 * TICRATE then
+		if FHR.escapeTime == 10 * TICRATE + self.timesUpStart then
 			S_FadeMusic(0, 10 * MUSICRATE)
 		end
 
 		if FHR.escapeTime <= 10 * TICRATE and FHR.escapeTime % TICRATE == 0 then
 			local sound = FHR.escapeTime == 0 and sfx_fh_ovr or sfx_fh_tck
 			local quake = FHR.escapeTime == 0 and 26 * FU or 8 * FU
-			local duration = FHR.escapeTime == 0 and 40 or 16
+			local duration = FHR.escapeTime == 0 and -1 or 16
+
 			S_StartSound(nil, sound)
 			P_StartQuake(quake, duration)
 		end
 
+		if FHR.escapeTime == self.timesUpStart then
+			FH:changeMusic("FH_OVT", true)
+		end
+
 		if FHR.escapeTime == 0 then
-			-- eggman
-			-- print("Eggman has spawned! RUN!!")
-			-- P_SpawnMobj(FHR.endPosition.x, FHR.endPosition.y, FHR.endPosition.z, MT_FH_EGGMAN_TIMESUP)
-			-- FH:changeMusic("FH_OVT", true)
-			FH:endGame()
+			print("Eggman has spawned! RUN!!")
+			P_SpawnMobj(FHR.endPosition.x, FHR.endPosition.y, FHR.endPosition.z, MT_FH_EGGMAN_TIMESUP)
 		end
 	end
 end
@@ -162,6 +167,26 @@ end
 --- @param currentState string
 function escape:update(currentState)
 	if currentState ~= "game" then return end
+
+	for i = #FHR.enemyRespawnQueue, 1, -1 do
+		local data = FHR.enemyRespawnQueue[i]
+
+		if data.time then
+			data.time = $ - 1
+			continue
+		end
+
+		local x, y, z, angle = FH:getMapthingWorldPosition(data.mapthing)
+
+		local enemy = P_SpawnMobj(x, y, z, data.type)
+		if enemy and enemy.valid then
+			enemy.angle = angle
+			enemy.spawnpoint = data.mapthing
+			data.mapthing.mobj = enemy
+		end
+
+		table.remove(FHR.enemyRespawnQueue, i)
+	end
 
 	if FHR.escape then
 		self:escapeUpdate()
@@ -288,10 +313,28 @@ function escape:spawnSignpost(x, y, z, angle)
 	table.insert(FHR.signPosts, sign)
 end
 
-COM_AddCommand("fh_endgame", function(player)
-	FH:endGame()
-end, COM_ADMIN)
+--- @param target mobj_t
+addHook("MobjDeath", function(target)
+	if not FH:isMode() then return end
+	if not target.valid then return end
+	if target.flags & MF_ENEMY == 0 then return end
+	if not target.spawnpoint then return end
+
+	-- queue enemy for respawn
+	table.insert(FHR.enemyRespawnQueue, {
+		mapthing = target.spawnpoint,
+		type = target.type,
+		time = 30 * TICRATE
+	})
+end)
 
 COM_AddCommand("fh_startescape", function(player)
 	escape:startEscape(player)
+end, COM_ADMIN)
+
+COM_AddCommand("fh_setretakes", function(player, amount)
+	amount = tonumber(amount)
+	if amount == nil then return end
+
+	FHN.retakes = amount
 end, COM_ADMIN)

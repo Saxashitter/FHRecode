@@ -63,10 +63,12 @@ return function(v)
 		SSL.drawString(v, 8, textY, "Recoded your mom!", "TNYFN%03d", V_SNAPTOTOP|V_SNAPTOLEFT, 0, 0, skincolors[color].chatcolor)
 		textY = $ + 10
 
-		local format = "%s (x%d): $%.2f"
+		local format = "%s (x%d): %s $%.2f"
 		for k, log in ipairs(winner.log) do
-			local string = format:format(log.tag, log.timesRan, log.profit)
-			SSL.drawString(v, 8, textY, string, "TNYFN%03d", V_SNAPTOLEFT|V_SNAPTOTOP, 0, 0, V_GREENMAP, 0, 0)
+			local string = format:format(log.tag, log.timesRan, log.profit > 0 and "+" or "-", abs(log.profit))
+			local color = log.profit > 0 and V_GREENMAP or V_REDMAP
+
+			SSL.drawString(v, 8, textY, string, "TNYFN%03d", V_SNAPTOLEFT|V_SNAPTOTOP, 0, 0, color, 0, 0)
 			textY = $ + 10
 		end
 

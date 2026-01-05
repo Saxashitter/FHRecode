@@ -1,10 +1,5 @@
 local preGameMenu = {}
 
-preGameMenu.states = {
-	character = dofile("hud/menus/pregame/character.lua"),
-	waiting = dofile("hud/menus/pregame/waiting.lua")
-}
-
 --- @param v videolib
 --- @param player player_t
 --- @param camera camera_t
@@ -20,8 +15,7 @@ function preGameMenu:draw(v, player, camera)
 
 	local state = player.heistRound and player.heistRound.pregameState or "character"
 
-
-	self.states[state](v, player, camera)
+	FH.gamestates.pregame.states[state]:draw(FH.gamestates.pregame, v, player, camera)
 
 	local text = "Players ready:\n"
 

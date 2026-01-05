@@ -92,6 +92,18 @@ ForceResetMusic = On
 WarningTitle = true
 SelectHeading = Bonus
 
+Level Z0
+Levelname = Tutorial
+NoVisitNeeded = true
+Act = 0
+LevelSelect = 1
+Music = MAMORU
+NextLevel = 1
+TypeOfLevel = Escape
+SelectHeading = Bonus
+SkyNum = 99
+Lua.FH_EscapeTheme = YOKADI
+
 Level Z1
 Levelname = Test
 Act = 0

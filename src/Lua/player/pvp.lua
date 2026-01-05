@@ -272,5 +272,8 @@ addHook("PlayerQuit", function(player)
 	for i = #player.heistRound.collectibles, 1, -1 do
 		FH:dropCollectible(player, player.heistRound.collectibles[i])
 	end
-	FH:playerStopBlock(player, false)
+
+	if player.mo and player.mo.valid then
+		FH:playerStopBlock(player, false)
+	end
 end, MT_PLAYER)

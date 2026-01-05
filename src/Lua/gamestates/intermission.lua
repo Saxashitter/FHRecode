@@ -1,7 +1,7 @@
 local gamestate = {}
 
 gamestate.timeLeft = 30 * TICRATE
-gamestate.gameScreenBeat = 74
+gamestate.gameScreenBeat = 2160 * TICRATE / MUSICRATE
 gamestate.gameScreenEnd = 7 * TICRATE
 gamestate.intermissionBeat = 63
 gamestate.resultsTime = 5 * TICRATE

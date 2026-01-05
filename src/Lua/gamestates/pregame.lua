@@ -1,6 +1,11 @@
 local gamestate = {}
-local skipTitlecard = false
+local skipTitlecard = true
 
+gamestate.states = {
+	character = dofile("gamestates/pregameStates/character.lua"),
+	menus = dofile("gamestates/pregameStates/menus.lua"),
+	waiting = dofile("gamestates/pregameStates/waiting.lua"),
+}
 gamestate.timeLeft = 60 * TICRATE
 
 -- view game.lua for gamestate documentation
@@ -92,49 +97,20 @@ function gamestate:playerUpdate(player)
 	local jump = FH:isButtonPressed(player, BT_JUMP)
 	local spin = FH:isButtonPressed(player, BT_SPIN)
 
-	-- TODO: actual states instead of if checks
-	if player.heistRound.pregameState == "character" then
-		if x ~= 0 then
-			local newSkin = player.skin + x
-			if newSkin < 0 then
-				newSkin = #skins - 1
+	-- TODO: actual states instead of if checks that are overly messy
+
+	local state = self.states[player.heistRound.pregameState]
+
+	if state then
+		local result = state:playerUpdate(self, player)
+
+		if result then
+			local newState = self.states[result]
+			player.heistRound.pregameState = result
+
+			if newState and newState.enter then
+				newState:enter(self, player)
 			end
-
-			if newSkin > #skins - 1 then
-				newSkin = 0
-			end
-
-			while not R_SkinUsable(player, newSkin) do
-				newSkin = $ + x
-				if newSkin < 0 then
-					newSkin = #skins - 1
-				end
-
-				if newSkin > #skins - 1 then
-					newSkin = 0
-				end
-			end
-
-			player.heistRound.lastSkin = player.skin
-			player.heistRound.lastSwap = x
-			player.heistRound.selectedSkinTime = leveltime
-			S_StartSound(nil, sfx_kc39, player)
-			R_SetPlayerSkin(player, newSkin)
-		end
-
-		if jump then
-			-- to waiting state you go
-			player.heistRound.pregameState = "waiting"
-			if self:canSwitch() then
-				self:switch()
-			else
-				S_StartSound(nil, sfx_kc5e, player)
-			end
-		end
-	elseif player.heistRound.pregameState == "waiting" then
-		if spin then
-			-- to character state you go
-			player.heistRound.pregameState = "character"
 		end
 	end
 end

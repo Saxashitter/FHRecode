@@ -81,7 +81,12 @@ end
 --- @field profitLog table<table>
 --- The last time the player gained profit, used for UI.
 --- @field profitUI table
---- All of the player's current collectibles (mobj_t)
+--- The current selected option for the Fang's Heist menu state within Pre-game.
+--- @field pregameMenuSelection integer
+--- How far down should the "camera" in the menu state be?
+--- @field pregameMenuLerp fixed_t
+--- The path for the player's current submenu with the Pre-game Menu state.
+--- @field pregameMenuPath table
 
 setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
 	__index = function(self, key)
@@ -125,7 +130,10 @@ function FH:initPlayerRound(player)
 		mapVote = false,
 		collectibles = {},
 		profitLog = {},
-		profitUI = {time = -1}
+		profitUI = {time = -1},
+		pregameMenuSelection = 1,
+		pregameMenuLerp = 0,
+		pregameMenuPath = {}
 	}
 
 	player.heistRound = playerRound

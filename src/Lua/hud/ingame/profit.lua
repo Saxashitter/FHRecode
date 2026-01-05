@@ -55,7 +55,8 @@ function ui:draw(v, player)
 	local y = ease.incubic(t2, startY, endY)
 
 	if alpha < 10 then
-		SSL.drawFixedString(v, x, y, FU, string.format("+ $%.2f", player.heistRound.profitUI.profit), "STCFN%03d", self.flags|(V_10TRANS * alpha), 0, 0, profitColor, 0, 2 * FU)
+		local profit = player.heistRound.profitUI.profit
+		SSL.drawFixedString(v, x, y, FU, string.format("%s $%.2f", profit > 0 and "+" or "-", abs(profit)), "STCFN%03d", self.flags|(V_10TRANS * alpha), 0, 0, profitColor, 0, 2 * FU)
 	end
 end
 

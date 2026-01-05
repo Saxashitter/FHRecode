@@ -3,7 +3,7 @@ local modifier = setmetatable({}, FH:returnModifierMetatable())
 
 modifier.name = "Bombs"
 modifier.description = "You want it? It's your's my friend! As long as you have enough rupees!"
-modifier.type = "main"
+modifier.type = "side"
 
 modifier.spawnDelay = TICRATE
 modifier.spawnHeight = 250 * FU
@@ -24,7 +24,11 @@ function modifier:predictPlayerPosition(player)
 	local playerDistance = abs(z - mo.z)
 	local gravity = abs(P_GetMobjGravity(player.mo))
 
-	local ticsUntilHit = playerDistance > 0 and FixedSqrt(FixedDiv(2 * playerDistance, gravity)) or 0
+	if gravity == 0 or playerDistance == 0 then
+		return x, y, z - mo.z -- bail early to prevent divide error
+	end
+
+	local ticsUntilHit = FixedSqrt(FixedDiv(2 * playerDistance, gravity)) or 0
 
 	x = FixedMul(mo.momx, ticsUntilHit)
 	y = FixedMul(mo.momy, ticsUntilHit)

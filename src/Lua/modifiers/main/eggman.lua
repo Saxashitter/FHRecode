@@ -7,10 +7,6 @@ modifier.type = "main"
 
 modifier.chaseDelay = 5 * TICRATE
 
--- yknow, we are probably better off making this a mobj
--- but for testing sake, lets just keep it going :P
--- TODO: convert eggman chaser to mobj
-
 freeslot("MT_FH_EGGMAN_CHASER", "S_FH_EGGMAN_CHASER", "MT_FH_ALERT")
 
 mobjinfo[MT_FH_EGGMAN_CHASER].radius = 48 * FU
@@ -71,6 +67,14 @@ end
 
 function modifier:update()
 	local eggmanChaser = FHR.eggmanChaser
+
+	if FHR.escapeTime == 0 then
+		if eggmanChaser and eggmanChaser.valid then
+			P_RemoveMobj(eggmanChaser)
+			FHR.eggmanChaser = nil
+		end
+		return
+	end
 
 	if not eggmanChaser
 	or not eggmanChaser.valid then

@@ -100,29 +100,3 @@ addHook("MobjThinker", function(mobj)
 
 	mobj.ticker = $ + 1
 end, MT_FH_OVERLAY)
-
---- Command to spawn an overlay on the player mobj, with optional customization parameters.
---- @param player player_t            # Player issuing the command.
---- @param translation string?        # Optional palette translation string.
---- @param alphaStart string?         # Optional start alpha (fixed-point or decimal string).
---- @param alphaEnd string?           # Optional end alpha (fixed-point or decimal string).
---- @param alphaFuse string?          # Optional fade duration in ticks.
-COM_AddCommand("fh_overlay", function(player, translation, alphaStart, alphaEnd, alphaFuse)
-	local target = player.mo
-	if not target then return end
-
-	local overlay = P_SpawnMobjFromMobj(target, 0, 0, 0, MT_FH_OVERLAY) --[[@as heistOverlay_t]]
-	overlay.target = target
-
-	-- Set overlay angle to player drawangle for players.
-	if player.drawangle then
-		overlay.angle = player.drawangle
-	end
-
-	overlay.translation = translation or nil
-	overlay.alphaStart = FU
-	overlay.alphaEnd = 0
-	---@diagnostic disable-next-line: assign-type-mismatch
-	overlay.alphaFuse = tonumber(alphaFuse) or TICRATE
-	overlay.alpha = overlay.alphaStart
-end)

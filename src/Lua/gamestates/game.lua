@@ -124,4 +124,8 @@ end
 
 function gamestate:playerQuit() end
 
+COM_AddCommand("fh_endgame", function(player)
+	FH:endGame()
+end, COM_ADMIN)
+
 FH.gamestates.game = gamestate

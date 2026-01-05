@@ -68,7 +68,7 @@ function FH:giveCollectible(player, collectible)
 
 	-- Position collectible on player's head, stacking multiple
 	local dontSparkle = false
-	local zoff = player.mo.height
+
 	for i, col in ipairs(player.heistRound.collectibles) do
 		if col == collectible then
 			break
@@ -76,9 +76,8 @@ function FH:giveCollectible(player, collectible)
 
 		if col.variant > FH.collectibleCommon then
 			dontSparkle = true
+			break
 		end
-
-		zoff = $ + col.height
 	end
 
 	if dontSparkle and collectible.sparkles and collectible.sparkles.valid then
@@ -87,7 +86,7 @@ function FH:giveCollectible(player, collectible)
 
 	S_StartSound(collectible, sfx_s3k9f)
 	S_StartSound(collectible, sfx_s3k68)
-	P_SetOrigin(collectible, player.mo.x, player.mo.y, player.mo.z + zoff)
+	P_SetOrigin(collectible, player.mo.x, player.mo.y, FH:getCollectibleZ(player, collectible))
 
 	FH:addProfit(player, FH.profitCVars.collectible.value + FH.profitCVars.collectibleExt.value * collectible.variant, "Collected "..self.collectibleNames[collectible.variant].." Collectible")
 	return true
@@ -95,8 +94,32 @@ end
 
 --- @param player player_t
 --- @param collectible heistCollectible_t
-function FH:dropCollectible(player, collectible, launch)
+function FH:getCollectibleZ(player, collectible)
+	local dir = P_MobjFlip(player.mo)
+
+	-- Origin point: head or feet
+	local zoff = dir == 1 and player.mo.height or -player.heistRound.collectibles[1].height
+
+	-- Direction collectibles are stacked
+
+	for _, col in ipairs(player.heistRound.collectibles) do
+		if col == collectible then
+			break
+		end
+		zoff = $ + dir * col.height
+	end
+
+	return player.mo.z + zoff
+end
+
+
+--- @param player player_t
+--- @param collectible heistCollectible_t
+--- @param launch boolean|nil
+--- @param sound boolean|nil
+function FH:dropCollectible(player, collectible, launch, sound)
 	if launch == nil then launch = true end
+	if sound == nil then sound = true end
 
 	if not self:playerHasCollectible(player, collectible) then
 		return false
@@ -115,14 +138,17 @@ function FH:dropCollectible(player, collectible, launch)
 		collectible.momy = 0
 		collectible.momz = 0
 	else
-		S_StartSound(collectible, sfx_cdfm67) -- SIX SEVEN SIX SEVENEENN SEINCIAIHLAFCHUAFHAFH RNO*WA WON EAHDSA S SIC XS ISVENVENUIAESALBFAUE NEUIANhio ueuiOAEHUIOVHAE UIODHSFUISDHF
-		S_StartSound(collectible, sfx_s3k51)
 		local angle = FixedAngle(FH:fixedRandom(0, 360*FU))
 		local launchSpeed = FH:fixedRandom(16 * player.mo.scale, 36 * player.mo.scale)
 		local launchZSpeed = FH:fixedRandom(0, 8 * player.mo.scale)
 
 		P_InstaThrust(collectible, angle, launchSpeed)
 		P_SetObjectMomZ(collectible, launchZSpeed)
+	end
+
+	if sound then
+		S_StartSound(collectible, sfx_cdfm67) -- SIX SEVEN SIX SEVENEENN SEINCIAIHLAFCHUAFHAFH RNO*WA WON EAHDSA S SIC XS ISVENVENUIAESALBFAUE NEUIANhio ueuiOAEHUIOVHAE UIODHSFUISDHF
+		S_StartSound(collectible, sfx_s3k51)
 	end
 
 	FH:addProfit(player, -(FH.profitCVars.collectible.value + FH.profitCVars.collectibleExt.value * collectible.variant), "Lost Collectible")
@@ -148,6 +174,16 @@ addHook("MobjRemoved", function(mobj)
 		mobj.sparkles.autoRemove = false
 		mobj.sparkles.target = nil
 	end
+
+	if not mobj.target then return end
+	if not mobj.target.player then return end
+	if not mobj.target.player.heistRound then return end
+
+	local collected = FH:playerHasCollectible(mobj.target.player, mobj)
+
+	if not collected then return end
+
+	FH:dropCollectible(mobj.target.player, mobj, false, false)
 end, MT_FH_COLLECTIBLE)
 
 --- @param mobj heistCollectible_t
@@ -187,6 +223,7 @@ end, MT_FH_COLLECTIBLE)
 --- @param collectible heistCollectible_t
 --- @param toucher mobj_t
 addHook("TouchSpecial", function(collectible, toucher)
+	if not collectible.valid then return true end
 	if collectible.target then return true end
 	if not toucher.player then return true end
 	if not toucher.health then return true end
@@ -212,14 +249,12 @@ addHook("MobjThinker", function(collectible)
 	local player = collectible.target.player
 	if not player then return end
 
-	local zoff = player.mo.height
-	for i, col in ipairs(player.heistRound.collectibles) do
-		if col == collectible then
-			break
-		end
-		zoff = $ + col.height
-	end
-
-	P_MoveOrigin(collectible, player.mo.x + player.mo.momx, player.mo.y + player.mo.momy, player.mo.z + zoff + player.mo.momz)
+	P_MoveOrigin(collectible, player.mo.x + player.mo.momx, player.mo.y + player.mo.momy, FH:getCollectibleZ(player, collectible) + player.mo.momz)
 	collectible.angle = player.drawangle
+
+	if collectible.target.eflags & MFE_VERTICALFLIP then
+		collectible.eflags = $|MFE_VERTICALFLIP
+	else
+		collectible.eflags = $ &~ MFE_VERTICALFLIP
+	end
 end, MT_FH_COLLECTIBLE)

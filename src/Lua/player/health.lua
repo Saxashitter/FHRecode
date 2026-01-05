@@ -20,7 +20,7 @@ function FH:setHealth(player, health)
 	player.heistRound.health = health
 
 	if player.heistRound.health == 0 then
-		FH:downPlayer(player, 17 * TICRATE)
+		FH:downPlayer(player, 10 * TICRATE)
 		return true
 	end
 
