@@ -195,7 +195,7 @@ end, MT_FH_COLLECTIBLE)
 --- @param mobj heistCollectible_t
 --- @param thing mapthing_t
 addHook("MapThingSpawn", function(mobj, thing)
-	mobj.variant = thing.args[0] or 0
+	mobj.variant = max(0, min(thing.args[0] or 0, 2)) -- TODO: warnings
 
 	if mobj.variant == FH.collectibleRare then
 		local overlay = P_SpawnMobjFromMobj(mobj, 0, 0, 0, MT_FH_OVERLAY) --[[@as heistOverlay_t]]

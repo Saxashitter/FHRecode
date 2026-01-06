@@ -4,13 +4,21 @@ local timer = {}
 --- @param player player_t
 --- @param camera camera_t
 function timer:draw(v, player, camera)
+	local gametype = FH:isMode()
+	if not gametype then return end
+
 	if FHR.currentState ~= "game" then return end
 	if not FHR.escape then return end
 
 	local escapeTime = FHR.escapeTime
 
+	if escapeTime <= gametype.timesUpStart then
+		return
+	end
+
 	-- Tween timing
 	local easeInTics = TICRATE
+	local easeOutTics = TICRATE
 
 	-- Time
 	local seconds   = escapeTime / 35
@@ -28,6 +36,14 @@ function timer:draw(v, player, camera)
 		320 * FU - bgPatch.width * FU - 12 * FU
 	)
 	local y = 12 * FU
+
+	local length = TICRATE
+	if escapeTime <= gametype.timesUpStart + length then
+		local progress = escapeTime
+		y = ease.inback(
+			FixedDiv(escapeTime)
+		)
+	end
 
 	-- "TIME" label
 	v.drawScaled(
@@ -65,15 +81,17 @@ function timer:draw(v, player, camera)
 	end
 
 	-- Ring indicator
-	local ringPatch = v.cachePatch("FH_TMR_RING" .. ringFrame)
-	v.drawScaled(
-		x,
-		y + 5 * FU,
-		FU,
-		ringPatch,
-		V_SNAPTORIGHT|V_SNAPTOTOP,
-		v.getColormap(nil, player.skincolor)
-	)
+	if seconds then
+		local ringPatch = v.cachePatch("FH_TMR_RING" .. ringFrame)
+		v.drawScaled(
+			x,
+			y + 5 * FU,
+			FU,
+			ringPatch,
+			V_SNAPTORIGHT|V_SNAPTOTOP,
+			v.getColormap(nil, player.skincolor)
+		)
+	end
 
 	y = $ + 43 * FU
 

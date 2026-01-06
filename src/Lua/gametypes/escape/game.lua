@@ -3,7 +3,7 @@ local escape = _FH_ESCAPE
 escape.timeLeft = 180 -- 3 minutes
 escape.signpostThing = 501
 escape.ringThing = 1
-escape.timesUpStart = 2558 * TICRATE / MUSICRATE
+escape.timesUpStart = 22591 * TICRATE / MUSICRATE
 
 freeslot("S_FH_ROUND2RING") 
 
@@ -117,6 +117,7 @@ FH.ringStates["Round 2 Teleport To"] = {
 function escape:init()
 	FHR.escape = false
 	FHR.escapeTime = 0
+	FHR.maxEscapeTime = 0
 	FHR.signPosts = {}
 	FHR.escapeRings = {}
 	FHR.round2StartRings = {}
@@ -140,8 +141,8 @@ function escape:escapeUpdate()
 	if FHR.escapeTime then
 		FHR.escapeTime = $ - 1
 
-		if FHR.escapeTime == 10 * TICRATE + self.timesUpStart then
-			S_FadeMusic(0, 10 * MUSICRATE)
+		if FHR.escapeTime == 2 * TICRATE + self.timesUpStart then
+			S_FadeMusic(0, 2 * MUSICRATE)
 		end
 
 		if FHR.escapeTime <= 10 * TICRATE and FHR.escapeTime % TICRATE == 0 then
@@ -198,6 +199,7 @@ end
 function escape:startEscape(starter)
 	FHR.escape = true
 	FHR.escapeTime = FH:getMapVariable(nil, "fh_escapetime", self.timeLeft) * TICRATE -- TODO: use cvars
+	FHR.maxEscapeTime = FHR.escapeTime
 	FHR.escapeStartTime = leveltime
 
 	if starter and starter.heistRound then
