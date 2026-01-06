@@ -1,5 +1,5 @@
 local gamestate = {}
-local skipTitlecard = true
+local skipTitlecard = false
 
 gamestate.states = {
 	character = dofile("gamestates/pregameStates/character.lua"),

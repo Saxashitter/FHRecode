@@ -30,6 +30,8 @@
 --- @field finish fun(self: heistGametype_t, currentState: string)
 --- Runs immediately after the finish function. Return a list of sorted players to determine their place on the leaderboard, or return nil to use the default profit-sorted list.
 --- @field declareWinner fun(self: heistGametype_t, players: player_t[]): player_t[]|nil
+--- Runs when a player collects profit.
+--- @field addProfit fun(self: heistGametype_t, player: player_t, profit: fixed_t, tag: string)
 --- @field __index heistGametype_t
 
 --- @type heistGametype_t
@@ -50,7 +52,8 @@ local heistGametype_t = {
 	playerQuit = function() end,
 	playerDeath = function() end,
 	finish = function() end,
-	declareWinner = function() end
+	declareWinner = function() end,
+	addProfit = function() end
 }
 heistGametype_t.__index = heistGametype_t
 

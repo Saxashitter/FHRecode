@@ -3,6 +3,9 @@
 --- @param profit fixed_t
 --- @param tag string
 function FH:addProfit(player, profit, tag)
+	local gametype = FH:isMode()
+	if not gametype then return end
+
 	--- @type fixed_t
 	player.heistRound.profit = $ + profit
 
@@ -10,12 +13,27 @@ function FH:addProfit(player, profit, tag)
 		player.heistRound.profit = 0
 	end
 
-	player.heistRound.profitUI = {
-		time = leveltime,
-		profit = profit,
-		tag = tag
-	}
+	-- player.heistRound.profitUI = {
+	-- 	lastTime = player.heistRound.profitUI.time,
+	-- 	lastProfit = player.heistRound.profitUI.profit or 0,
+	-- 	
+	-- }
 
+	-- local lastUI = player.heistRound.profitUI[#player.heistRound.profitUI]
+
+	-- if lastUI and lastUI.time < lastUI.animDuration - lastUI.animFinish then
+	-- 	lastUI.time = lastUI.animDuration - lastUI.animFinish
+	-- end
+
+	table.insert(player.heistRound.profitUI, {
+		time = 0,
+		profit = profit,
+		tag = tag,
+		animDuration = 2 * TICRATE,
+		animStart = 20,
+		animFinish = 10
+	})
+	gametype:addProfit(player, profit, tag)
 	local found, _, value = FH:doesTableHave(player.heistRound.profitLog, function(log) return log.tag == tag end)
 
 	if found then
@@ -47,12 +65,12 @@ end
 ---@type heistProfitCVars_t
 FH.profitCVars = {
 	ring              = CV_RegisterVar{name = "fh_ringprofit",             defaultvalue = "8.25",   flags = CV_FLOAT|CV_NETVAR};
-	monitor           = CV_RegisterVar{name = "fh_monitorprofit",          defaultvalue = "25.7",  flags = CV_FLOAT|CV_NETVAR};
-	enemy             = CV_RegisterVar{name = "fh_enemyprofit",            defaultvalue = "50",  flags = CV_FLOAT|CV_NETVAR};
-	playerHurt        = CV_RegisterVar{name = "fh_playerhurtprofit",       defaultvalue = "100.5", flags = CV_FLOAT|CV_NETVAR};
+	monitor           = CV_RegisterVar{name = "fh_monitorprofit",          defaultvalue = "25.7",   flags = CV_FLOAT|CV_NETVAR};
+	enemy             = CV_RegisterVar{name = "fh_enemyprofit",            defaultvalue = "50",     flags = CV_FLOAT|CV_NETVAR};
+	playerHurt        = CV_RegisterVar{name = "fh_playerhurtprofit",       defaultvalue = "100.5",  flags = CV_FLOAT|CV_NETVAR};
 	playerDeath       = CV_RegisterVar{name = "fh_playerdeathprofit",      defaultvalue = "200.95", flags = CV_FLOAT|CV_NETVAR};
-	collectible       = CV_RegisterVar{name = "fh_collectibleprofit",      defaultvalue = "350.8", flags = CV_FLOAT|CV_NETVAR};
-	startedEscape     = CV_RegisterVar{name = "fh_escapeprofit",           defaultvalue = "500", flags = CV_FLOAT|CV_NETVAR};
+	collectible       = CV_RegisterVar{name = "fh_collectibleprofit",      defaultvalue = "350.8",  flags = CV_FLOAT|CV_NETVAR};
+	startedEscape     = CV_RegisterVar{name = "fh_escapeprofit",           defaultvalue = "500",    flags = CV_FLOAT|CV_NETVAR};
 	collectibleExt    = CV_RegisterVar{name = "fh_collectibleextraprofit", defaultvalue = "125.12", flags = CV_FLOAT|CV_NETVAR};
 }
 
@@ -66,6 +84,21 @@ function A_RingBox(mobj, var1, var2)
 		FH:addProfit(mobj.target.player, FH.profitCVars.ring.value * 10, "Destroyed Ring Box (10 Rings)")
 	end
 end
+
+--- @param player player_t
+addHook("PlayerThink", function(player)
+	if not FH:isMode() then return end
+	if not player.heistRound then return end
+
+	for i = #player.heistRound.profitUI, 1, -1 do
+		local ui = player.heistRound.profitUI[i]
+		ui.time = $ + 1
+
+		if ui.time == ui.animDuration then
+			table.remove(player.heistRound.profitUI, i)
+		end
+	end
+end)
 
 --- @param target mobj_t
 --- @param source mobj_t

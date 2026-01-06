@@ -7,7 +7,7 @@
 --- @param mobj mobj_t
 --- @param xyRange fixed_t
 --- @param zRange fixed_t
---- @return table
+--- @return mobj_t[]
 --- @return number
 function A_FH_InstaShieldTicker(mobj, xyRange, zRange)
 	if not mobj.target then
@@ -94,6 +94,16 @@ function A_FH_PlayerInstaShieldTicker(mobj, xyRange, zRange)
 	
 	if len == 0 then
 		return
+	end
+
+	for k, v in ipairs(attacked) do
+		if v.valid and v.type == MT_PLAYER then
+			v.momx = mobj.target.momx
+			v.momy = mobj.target.momy
+			v.momz = mobj.target.momz
+			P_SetObjectMomZ(v, 8 * FU, true)
+			P_MovePlayer(v.player)
+		end
 	end
 
 	FH:knockbackMobj(mobj.target, attacked[1])

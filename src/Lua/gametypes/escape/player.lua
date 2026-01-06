@@ -65,3 +65,23 @@ function escape:playerQuit(player, currentState)
 
 	self:safeFinish()
 end
+
+--- @param player player_t
+--- @param profit fixed_t
+function escape:addProfit(player, profit)
+	if FHR.escape and FHR.escapeTime <= self.timesUpStart then return end
+	local place = FH:getPlayerPlace(player)
+
+	if place == 1 and not player.heistRound.expressionTics then
+		for otherPlayer in players.iterate do
+			if otherPlayer == player then continue end
+			if not otherPlayer.heistRound then continue end
+
+			if otherPlayer.heistRound.expression == "1st" or (otherPlayer.heistRound.expressionTics and otherPlayer.heistRound.lastExpression == "1st") then
+				FH:setPlayerExpression(otherPlayer, "default", 0)
+			end
+		end
+
+		FH:setPlayerExpression(player, "1st")
+	end
+end

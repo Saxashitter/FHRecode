@@ -4,12 +4,14 @@
 --- @field currentState string
 
 -- TODO: Allow modes to add their own states.
-function FH:setGamestate(stateName)
+function FH:setGamestate(stateName, dontInitalize)
 	if not self.gamestates[stateName] then return end
 
 	local state = self.gamestates[stateName]
 
-	state:init()
+	if not dontInitalize then
+		state:init()
+	end
 	FHR.currentState = stateName
 end
 
@@ -39,6 +41,23 @@ function FH:endGame()
 
 	self:setGamestate("intermission")
 	gametype:finish(FHR.currentState)
+
+	P_SwitchWeather(0)
+end
+
+function FH:getPlayerPlace(player)
+	local place = 1
+
+	for other in players.iterate do
+		if other == player then continue end
+		if not other.heistRound then continue end
+		if other.heistRound.spectator then continue end
+		if other.heistRound.profit <= player.heistRound.profit then continue end
+
+		place = place + 1
+	end
+
+	return place
 end
 
 addHook("MapChange", function(gamemap)
@@ -101,3 +120,4 @@ dofile("gamestates/titlecard.lua")
 dofile("gamestates/game.lua")
 dofile("gamestates/intermission.lua")
 dofile("gamestates/mapvote.lua")
+dofile("gamestates/rottenboy.lua")

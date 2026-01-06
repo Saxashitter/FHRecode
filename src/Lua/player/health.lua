@@ -49,6 +49,7 @@ function FH:downPlayer(player, time)
 	player.accelstart = $ / 2
 
 	FH:playerStopBlock(player)
+	FH:setPlayerExpression(player, "dead")
 
 	S_StartSound(player.mo, sfx_kc31)
 	S_StartSound(player.mo, sfx_nghurt)
@@ -75,6 +76,7 @@ function FH:revivePlayer(player)
 	player.heistRound.canUseBlock = true
 
 	FH:setHealth(player, FH.characterHealths[player.mo.skin])
+	FH:setPlayerExpression(player, "default")
 
 	player.normalspeed = skins[player.skin].normalspeed
 	player.acceleration = skins[player.skin].acceleration

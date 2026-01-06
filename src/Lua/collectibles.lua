@@ -36,7 +36,7 @@ states[S_FH_COLLECTIBLE].sprite = freeslot("SPR_TRES")
 states[S_FH_COLLECTIBLE].frame = 0
 states[S_FH_COLLECTIBLE].tics = -1
 states[S_FH_COLLECTIBLE].action = function(mobj)
-	mobj.frame = ($ & ~FF_FRAMEMASK) | P_RandomRange(A, K)
+	mobj.frame = ($ & ~FF_FRAMEMASK) | P_RandomRange(A, M)
 end
 
 --- @param player player_t
@@ -65,6 +65,8 @@ function FH:giveCollectible(player, collectible)
 	collectible.momx = 0
 	collectible.momy = 0
 	collectible.momz = 0
+
+	FH:setPlayerExpression(player, "treasure", 3 * TICRATE)
 
 	-- Position collectible on player's head, stacking multiple
 	local dontSparkle = false

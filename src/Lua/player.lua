@@ -36,23 +36,23 @@ end
 --- The player's profit counter. Gained from killing enemies, collecting rings, destroying monitors, and hurting players. This would normally be what determines if they win or not.
 --- @field profit fixed_t
 --- Tics until' the Insta-Shield can be used again for the player.
---- @field instaShieldCooldown number
+--- @field instaShieldCooldown tic_t
 --- If this is set to a table containing x, y, z and angle positions. The player will forcefully teleport here and be unable to move until' this is set to false.
 --- @field forcedPosition table?
 --- Set this to true to stop the player from pressing any inputs whatsoever. This should be used over PF_STASIS due to it resetting ALL the player's buttons, as well as ensuring compatibility with menus.
 --- @field stasis boolean
 --- Used during Pre-Game for animations in the UI.
---- @field selectedSkinTime number
+--- @field selectedSkinTime tic_t
 --- Decides the current state of the menu for Pre-Game.
 --- @field pregameState string
 --- The last skin the player had enabled before switching. It's only purpose is for the Pre-Game UI.
 --- @field lastSkin INT32|nil
 --- The last direction the player switched characters towards. It's only purpose is for the Pre-Game UI. Either -1 or 1.
---- @field lastSwap number|nil
+--- @field lastSwap integer|nil
 --- If this is true, the player is determined as downed. They will be forced into a crawling state, and can barely do anything. They will be revived once downedTime hits 0.
 --- @field downed boolean
 --- Set the timer for the player to be downed in tics. If set to 0, then the timer won't be active.
---- @field downedTime number
+--- @field downedTime tic_t
 --- Set this to false if you don't want the player to use the insta-shield. Defaults to true.
 --- @field canUseInstaShield boolean
 --- Set this to false if you don't want the player to use the block. Defaults to true.
@@ -62,9 +62,9 @@ end
 --- The block's current strength.
 --- @field blockStrength fixed_t
 --- The cooldown until' the block can start recharging.
---- @field blockChargeCooldown number
+--- @field blockChargeCooldown tic_t
 --- The cooldown until' the player can use the block again.
---- @field blockCooldown number
+--- @field blockCooldown tic_t
 --- If the player is spectator, this will be true. Used instead of player.spectator due to the chance that the player somehow stops being a spectator.
 --- @field spectator boolean
 --- The player's current health.
@@ -72,7 +72,7 @@ end
 --- If this is set to a number, the player will be forced to that skin.
 --- @field skin number|nil
 --- The player's current map selected within the map vote. Defaults to 2 (in the middle)
---- @field mapSelection number
+--- @field mapSelection integer
 --- If this is true, the player has selected a map in the map vote.
 --- @field mapVote boolean
 --- The current amount of collectibles the player has on their head.
@@ -87,6 +87,14 @@ end
 --- @field pregameMenuLerp fixed_t
 --- The path for the player's current submenu with the Pre-game Menu state.
 --- @field pregameMenuPath table
+--- The player's current expression on the hud. Defaults to ""
+--- @field expression string
+--- The player's last expression. If expressionTics is valid, then this will be the expression the player goes to after it hits 0.
+--- @field lastExpression string
+--- The tics untill the player switches to lastExpression.
+--- @field expressionTics tic_t
+--- The scale of the expression.
+--- @field expressionScale fixed_t
 
 setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
 	__index = function(self, key)
@@ -130,10 +138,14 @@ function FH:initPlayerRound(player)
 		mapVote = false,
 		collectibles = {},
 		profitLog = {},
-		profitUI = {time = -1},
+		profitUI = {time = -1, lastTime = -1},
 		pregameMenuSelection = 1,
 		pregameMenuLerp = 0,
-		pregameMenuPath = {}
+		pregameMenuPath = {},
+		expression = "default",
+		lastExpression = "",
+		expressionTics = 0,
+		expressionScale = FU
 	}
 
 	player.heistRound = playerRound
@@ -254,6 +266,7 @@ addHook("MobjDeath", function(target)
 
 	initChecks(target.player, gametype)
 
+	FH:setPlayerExpression(target.player, "dead", 5 * TICRATE)
 	gametype:playerDeath(target.player, FHR.currentState)
 end, MT_PLAYER)
 
@@ -278,5 +291,4 @@ dofile("player/instashield.lua")
 dofile("player/block.lua")
 dofile("player/pvp.lua")
 dofile("player/health.lua")
-
-dofile("player/tweaks/fangTweaks.lua")
+dofile("player/expression.lua")

@@ -1,9 +1,9 @@
 local escape = _FH_ESCAPE
 
-escape.timeLeft = 180 -- 3 minutes
 escape.signpostThing = 501
 escape.ringThing = 1
 escape.timesUpStart = 22591 * TICRATE / MUSICRATE
+escape.timeLeft = 180 -- 3 minutes
 
 freeslot("S_FH_ROUND2RING") 
 
@@ -15,6 +15,7 @@ states[S_FH_ROUND2RING].var2 = 2
 
 sfxinfo[freeslot("sfx_fh_tck")].caption = "Click..."
 sfxinfo[freeslot("sfx_fh_ovr")].caption = "Uh oh."
+sfxinfo[freeslot("sfx_fh_gog")].caption = "G-G-G-GO! GO! GO!"
 
 FH.ringStates["Goal"] = {
 	--- @type statenum_t
@@ -156,11 +157,33 @@ function escape:escapeUpdate()
 
 		if FHR.escapeTime == self.timesUpStart then
 			FH:changeMusic("FH_OVT", true)
-		end
+			
+			P_SetupLevelSky(56)
+			P_SwitchWeather(54)
+			for player in players.iterate do
+				P_SetSkyboxMobj(nil, player)
+				P_FlashPal(player, 0, 10)
 
+				if player.heistRound then
+					FH:setPlayerExpression(player, "hurt")
+				end
+			end
+		end
+		
 		if FHR.escapeTime == 0 then
 			print("Eggman has spawned! RUN!!")
 			P_SpawnMobj(FHR.endPosition.x, FHR.endPosition.y, FHR.endPosition.z, MT_FH_EGGMAN_TIMESUP)
+			
+			P_SwitchWeather(1)
+			P_SetupLevelSky(57)
+			for player in players.iterate do
+				P_SetSkyboxMobj(nil, player)
+				P_FlashPal(player, 0, 10)
+
+				if player.heistRound then
+					FH:setPlayerExpression(player, "dead")
+				end
+			end
 		end
 	end
 end
@@ -224,6 +247,7 @@ function escape:startEscape(starter)
 	end
 
 	S_StartSoundAtVolume(nil, sfx_kc42, 70)
+	S_StartSound(nil, sfx_fh_gog)
 
 	print(starter.name.." started the escape sequence!")
 
@@ -263,6 +287,12 @@ function escape:startEscape(starter)
 		end
 	
 		P_LinedefExecute(linedef, mo)
+	end
+
+	for player in players.iterate do
+		if not player.heistRound then continue end
+
+		FH:setPlayerExpression(player, "hurt", 5 * TICRATE)
 	end
 end
 

@@ -44,6 +44,7 @@ addHook("PlayerThink", function(player)
 	and not player.mo.fh_block then
 		FH:useInstaShield(player.mo)
 		player.heistRound.instaShieldCooldown = instaShieldCooldown
+		FH:setPlayerExpression(player, "pvp", 5 * TICRATE)
 	end
 
 	if FHR.currentState == "game"
@@ -240,6 +241,7 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 
 		FH:addProfit(victim.player, -FH.profitCVars.playerHurt.value, "Got hurt")
 		P_DoPlayerPain(victim.player, source, inflictor)
+		FH:setPlayerExpression(victim.player, "hurt", 2 * TICRATE)
 
 		if victim.player.rings then
 			local amount = min(victim.player.rings, 25)

@@ -93,6 +93,7 @@ doUiFile("menus/titlecard")
 doUiFile("menus/pregame")
 doUiFile("menus/intermission")
 doUiFile("menus/mapvote")
+doUiFile("menus/rottenboy")
 
 -- ingame
 doUiFile("ingame/profit")

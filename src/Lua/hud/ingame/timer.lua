@@ -15,7 +15,6 @@ function timer:draw(v, player, camera)
 	if escapeTime <= gametype.timesUpStart then
 		return
 	end
-
 	-- Tween timing
 	local easeInTics = TICRATE
 	local easeOutTics = TICRATE
@@ -37,12 +36,12 @@ function timer:draw(v, player, camera)
 	)
 	local y = 12 * FU
 
-	local length = TICRATE
+	local length = 17
 	if escapeTime <= gametype.timesUpStart + length then
-		local progress = escapeTime
-		y = ease.inback(
-			FixedDiv(escapeTime)
-		)
+		local t = FU - FixedDiv(escapeTime - gametype.timesUpStart, length)
+		-- make t from escapeTime + timesUpStart + length to escapeTime + timesUpStart + timesUpStart
+
+		y = ease.inback(t, $, -75 * FU, FU * 2)
 	end
 
 	-- "TIME" label
