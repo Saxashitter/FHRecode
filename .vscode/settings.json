@@ -20,6 +20,7 @@
 		"undefined-field",
 		"assign-type-mismatch",
 		"deprecated",
-		"missing-fields"
+		"missing-fields",
+		"empty-block"
 	]
 }

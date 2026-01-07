@@ -60,9 +60,6 @@ function ui:draw(v, player)
 			local newEndY = push * idx
 			local newY = ease.outcubic(FH:easeTime(latest.time, latest.animStart), newStartY, newEndY)
 	
-			print(FH:easeTime(latest.time, latest.animStart) * 100 / FU)
-
-			print(idx)
 			y = $ + newY
 		end
 

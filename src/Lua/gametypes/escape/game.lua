@@ -87,16 +87,16 @@ FH.ringStates["Round 2 Teleport From"] = {
 		if not otherRing and otherRing.valid then
 			return
 		end
-	
+
 		local speed = R_PointToDist2(0, 0, R_PointToDist2(0, 0, player.mo.momx, player.mo.momy), player.mo.momz)
 
 		P_SetOrigin(player.mo, otherRing.x, otherRing.y, otherRing.z)
 		P_InstaThrust(player.mo, otherRing.angle, speed)
-	
+
 		S_StartSound(player.mo, sfx_s1c3)
 		S_StartSound(ring, sfx_s1c3)
 		S_StartSound(otherRing, sfx_s1c3)
-	
+
 		player.mo.angle = otherRing.angle
 	end
 }
@@ -155,9 +155,11 @@ function escape:escapeUpdate()
 			P_StartQuake(quake, duration)
 		end
 
+		-- TODO: separate alot of these into their own functions
+
 		if FHR.escapeTime == self.timesUpStart then
 			FH:changeMusic("FH_OVT", true)
-			
+
 			P_SetupLevelSky(56)
 			P_SwitchWeather(54)
 			for player in players.iterate do
@@ -169,11 +171,11 @@ function escape:escapeUpdate()
 				end
 			end
 		end
-		
+
 		if FHR.escapeTime == 0 then
 			print("Eggman has spawned! RUN!!")
 			P_SpawnMobj(FHR.endPosition.x, FHR.endPosition.y, FHR.endPosition.z, MT_FH_EGGMAN_TIMESUP)
-			
+
 			P_SwitchWeather(1)
 			P_SetupLevelSky(57)
 			for player in players.iterate do

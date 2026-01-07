@@ -239,9 +239,11 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 			FH:addProfit(source.player, FH.profitCVars.playerHurt.value, "Damaged "..victim.player.name)
 		end
 
+		-- TODO: unhardcode
+
 		FH:addProfit(victim.player, -FH.profitCVars.playerHurt.value, "Got hurt")
-		P_DoPlayerPain(victim.player, source, inflictor)
 		FH:setPlayerExpression(victim.player, "hurt", 2 * TICRATE)
+		P_DoPlayerPain(victim.player, source, inflictor)
 
 		if victim.player.rings then
 			local amount = min(victim.player.rings, 25)
@@ -250,6 +252,13 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 			S_StartSound(victim, sfx_altow1)
 			victim.player.rings = $ - amount
 		end
+
+		for k, v in ipairs(FHR.modifiers) do
+			local modifier = FH.modifiers.all[v] --[[@as heistModifier_t]]
+	
+			modifier:playerDamage(victim.player, inflictor, source)
+		end
+
 		return true
 	end
 end, MT_PLAYER)

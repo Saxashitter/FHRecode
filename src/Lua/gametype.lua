@@ -32,6 +32,8 @@
 --- @field declareWinner fun(self: heistGametype_t, players: player_t[]): player_t[]|nil
 --- Runs when a player collects profit.
 --- @field addProfit fun(self: heistGametype_t, player: player_t, profit: fixed_t, tag: string)
+--- Runs when the player gets hurt.
+--- @field playerDamage fun(self: heistGametype_t, target: player_t, inflictor: mobj_t, source: mobj_t)
 --- @field __index heistGametype_t
 
 --- @type heistGametype_t
@@ -53,7 +55,8 @@ local heistGametype_t = {
 	playerDeath = function() end,
 	finish = function() end,
 	declareWinner = function() end,
-	addProfit = function() end
+	addProfit = function() end,
+	playerDamage = function() end
 }
 heistGametype_t.__index = heistGametype_t
 

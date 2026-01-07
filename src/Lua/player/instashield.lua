@@ -97,7 +97,7 @@ function A_FH_PlayerInstaShieldTicker(mobj, xyRange, zRange)
 	end
 
 	for k, v in ipairs(attacked) do
-		if v.valid and v.type == MT_PLAYER then
+		if v.valid and v.type == MT_PLAYER and v.state == S_PLAY_PAIN then
 			v.momx = mobj.target.momx
 			v.momy = mobj.target.momy
 			v.momz = mobj.target.momz

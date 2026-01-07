@@ -6,6 +6,7 @@
 --- @field update fun(self: heistModifier_t)
 --- @field finish fun(self: heistModifier_t)
 --- @field playerUpdate fun(self: heistModifier_t, player: player_t)
+--- @field playerDamage fun(self: heistModifier_t, player: player_t, inflictor: mobj_t, source: mobj_t)
 --- @field id number|nil
 
 --- @type heistModifier_t
@@ -19,7 +20,8 @@ local heistModifier_t = {
 	init = function() end,
 	update = function() end,
 	finish = function() end,
-	playerUpdate = function() end
+	playerUpdate = function() end,
+	playerDamage = function() end
 }
 heistModifier_t.__index = heistModifier_t
 
@@ -112,3 +114,5 @@ dofile("modifiers/main/eggman.lua")
 
 dofile("modifiers/side/bomb.lua")
 dofile("modifiers/side/ringDrain.lua")
+dofile("modifiers/side/explosion.lua")
+dofile("modifiers/side/jumpscare.lua")

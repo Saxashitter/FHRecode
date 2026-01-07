@@ -28,7 +28,7 @@ mobjinfo[MT_FH_COLLECTIBLE] = {
 	doomednum = 4097,
 	spawnstate = S_FH_COLLECTIBLE,
 	radius = 24 * FU / 2,
-	height = 24 * FU,
+	height = 32 * FU,
 	flags = uncaughtFlags
 }
 

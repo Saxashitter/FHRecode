@@ -5,6 +5,8 @@ local state = {}
 
 state.textSpacing = 8 * FU
 
+local discord = "https://discord.gg/SBcg7ZFBuQ"
+
 state.menus = {
 	{
 		name = "Ready?",
@@ -22,21 +24,12 @@ state.menus = {
 		}
 	},
 	{
-		name = "Sub-menu testing.",
-		submenu = {
-			{
-				name = "This is a test for sub-menus."
-			},
-			{
-				name = "These should work fine, but I'm worried about resyncs."
-			},
-			{
-				name = "What do you think, %s. Do they look good?",
-				format = function(self, gamestate, player)
-					return player.name
-				end
-			}
-		},
+		name = "Press this to get the Discord server!",
+		func = function(self, gamestate, player)
+			CONS_Printf(player, "DISCORD LINK: https://discord.gg/SBcg7ZFBuQ")
+			CONS_Printf(player, "Check your latest-log.txt to copy it!")
+			S_StartSound(nil, sfx_bnce1, player)
+		end
 	}
 }
 

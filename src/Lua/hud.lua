@@ -100,6 +100,7 @@ doUiFile("ingame/profit")
 doUiFile("ingame/place")
 doUiFile("ingame/timer")
 doUiFile("ingame/health")
+doUiFile("ingame/warning")
 
 -- modifiers
-doUiFile("ingame/modifiers/airborne")
+doUiFile("ingame/modifiers/jumpscare")

@@ -5,7 +5,7 @@ gamestate.gameScreenBeat = 2160 * TICRATE / MUSICRATE
 gamestate.gameScreenEnd = 7 * TICRATE
 gamestate.intermissionBeat = 63
 gamestate.resultsTime = 5 * TICRATE
-gamestate.mapVoteTime = 10 * TICRATE
+gamestate.mapVoteTime = 20 * TICRATE
 
 sfxinfo[freeslot("sfx_fh_gme")].caption = "GAME!!"
 sfxinfo[freeslot("sfx_fh_tgw")].caption = "This game's winner is..."
