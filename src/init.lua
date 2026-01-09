@@ -17,3 +17,5 @@ dofile("collectibles.lua")
 dofile("modifiers.lua")
 dofile("utils.lua")
 dofile("hud.lua")
+
+dofile("character/sonic.lua")

@@ -12,6 +12,8 @@
 --- @field lastForwardmove SINT8
 --- The last pressed buttons for the player. Useful for menus.
 --- @field lastButtons UINT16
+--- If the player should be forced to use Super sprites.
+--- @field useSuper boolean
 
 --- Initalizes the player's global variables. Should be called once per player initalization.
 --- @param player player_t
@@ -24,7 +26,8 @@ function FH:initPlayerGlobal(player)
 		buttons = player.cmd.buttons,
 		lastSidemove = player.cmd.sidemove,
 		lastForwardmove = player.cmd.forwardmove,
-		lastButtons = player.cmd.buttons
+		lastButtons = player.cmd.buttons,
+		useSuper = false
 	}
 	
 	player.heistGlobal = playerGlobal
@@ -145,7 +148,7 @@ function FH:initPlayerRound(player)
 		expression = "default",
 		lastExpression = "",
 		expressionTics = 0,
-		expressionScale = FU
+		expressionScale = FU,
 	}
 
 	player.heistRound = playerRound
@@ -217,6 +220,12 @@ addHook("PlayerThink", function(player)
 
 	if player.heistRound.spectator and player.mo and player.mo.health then
 		player.spectator = true
+	end
+
+	if player.heistGlobal.useSuper and player.mo then
+		player.mo.eflags = $|MFE_FORCESUPER
+	else
+		player.mo.eflags = $ & ~MFE_FORCESUPER
 	end
 
 	if player.heistRound.forcedPosition and player.mo and player.mo.health and not player.spectator then

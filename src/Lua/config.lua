@@ -3,6 +3,8 @@ rawset(_G, "FH", {
     gamestates = {},
     collectibles = {},
 
+	altSkins = {},
+
     --- @type heistGametype_t[]
     gametypes = {},
     gametypeByID = {},

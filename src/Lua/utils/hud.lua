@@ -103,3 +103,13 @@ function FH:drawPaletteRect(v, x, y, width, height, palette, flags)
 		flags or 0
 	)
 end
+
+--- Converts a boolean to string, for HUD purposes.
+--- @param boolean boolean
+function FH:boolToString(boolean)
+	if boolean then
+		return "On"
+	end
+
+	return "Off"
+end

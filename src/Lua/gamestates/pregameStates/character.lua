@@ -1,9 +1,10 @@
 local state = {}
 
 local RIBBON_Y = 110
-local RIBBON_HEIGHT = 20
+local RIBBON_HEIGHT = 5 * 8
 
-local CHAR_NAME_Y = RIBBON_Y + RIBBON_HEIGHT / 2
+local CHAR_NAME_Y = RIBBON_Y + 4
+local SKIN_TOGGLE_Y = RIBBON_Y + RIBBON_HEIGHT - 4
 
 local PORTRAIT_Y = 24
 local PORTRAIT_SCALE = (FU / 5) * 3
@@ -18,6 +19,7 @@ end
 function state:playerUpdate(gamestate, player)
 	local x, _ = FH:isMovePressed(player, 50/4)
 	local jump = FH:isButtonPressed(player, BT_JUMP)
+	local spin = FH:isButtonPressed(player, BT_SPIN)
 
 	if x ~= 0 then
 		local newSkin = player.skin + x
@@ -49,6 +51,10 @@ function state:playerUpdate(gamestate, player)
 
 	if jump then
 		return "menus"
+	end
+	if spin then
+		print "toggle"
+		player.heistGlobal.useSuper = not $
 	end
 end
 
@@ -96,11 +102,13 @@ function state:draw(gamestate, v, player)
 	v.drawScaled(portraitX, PORTRAIT_Y * FU, PORTRAIT_SCALE, portrait, 0)
 
 	FH:drawPaletteRect(v, 0, RIBBON_Y * FU, v.width() * FU / v.dupx(), RIBBON_HEIGHT * FU, palette, V_SNAPTOLEFT)
-	SSL.drawString(v, 160, CHAR_NAME_Y, skin.realname, "STCFN%03d", 0, FU/2, FU/2, textmap, 0, 0)
-
+	SSL.drawString(v, 160, CHAR_NAME_Y, skin.realname, "STCFN%03d", 0, FU/2, 0, textmap, 0, 0)
+	if FH.altSkins[skin.name] then
+		SSL.drawString(v, 160, SKIN_TOGGLE_Y, "[SPIN] Alt. Skin: "..FH:boolToString(player.heistGlobal.useSuper), "TNYFN%03d", 0, FU/2, FU, V_YELLOWMAP, 0, 0)
+	end
 	-- arrows
-	v.drawScaled(160 * FU - stringWidth * FU / 2 - leftArrow.width * FU, RIBBON_Y * FU + RIBBON_HEIGHT * FU / 2 - SSL.getFont("STCFN%03d").height * FU / 2, FU, leftArrow,  0, v.getStringColormap(V_YELLOWMAP))
-	v.drawScaled(160 * FU + stringWidth * FU / 2,                        RIBBON_Y * FU + RIBBON_HEIGHT * FU / 2 - SSL.getFont("STCFN%03d").height * FU / 2, FU, rightArrow, 0, v.getStringColormap(V_YELLOWMAP))
+	v.drawScaled(160 * FU - stringWidth * FU / 2 - leftArrow.width * FU, CHAR_NAME_Y * FU, FU, leftArrow,  0, v.getStringColormap(V_YELLOWMAP))
+	v.drawScaled(160 * FU + stringWidth * FU / 2,                        CHAR_NAME_Y * FU, FU, rightArrow, 0, v.getStringColormap(V_YELLOWMAP))
 
 	SSL.drawFixedString(v, 12 * FU, (200 - 8 * 4) * FU, FU/2, "Work in progress.\n    "..string.char(30).." Stay tuned! This is a recode/rework of Fang's Heist!", "STCFN%03d", V_SNAPTOLEFT|V_SNAPTOBOTTOM)
 end
