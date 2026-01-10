@@ -10,7 +10,8 @@
 		"GTR_SPAWNENEMIES",
 		"mobjs",
 		"ease",
-		"tofixed"
+		"tofixed",
+		"gametype"
 	],
 	"Lua.diagnostics.disable": [
 		"exp-in-action",

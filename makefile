@@ -6,8 +6,8 @@ PROJECT_DIR := $(abspath .)
 BUILD_SCRIPT := $(PROJECT_DIR)/build.py
 
 # ----- SRB2 paths (absolute) -----
-SRB2_DIR := D:/stuff/SRB2-v2215-Full
-SRB2_EXE := $(SRB2_DIR)/srb2win.exe
+-include paths.mk
+BUILD_DIR := $(PROJECT_DIR)/_build
 
 # ----- Run python and capture absolute build filename -----
 BUILD := $(shell $(PYTHON) "$(BUILD_SCRIPT)")

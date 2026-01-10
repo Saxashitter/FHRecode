@@ -12,8 +12,10 @@
 --- @field lastForwardmove SINT8
 --- The last pressed buttons for the player. Useful for menus.
 --- @field lastButtons UINT16
---- If the player should be forced to use Super sprites.
---- @field useSuper boolean
+--- If this is true, the player will be in spectator mode when the round starts.
+--- @field spectatorMode boolean
+--- The team that this player is on.
+--- @field team heistTeam_t
 
 --- Initalizes the player's global variables. Should be called once per player initalization.
 --- @param player player_t
@@ -27,7 +29,10 @@ function FH:initPlayerGlobal(player)
 		lastSidemove = player.cmd.sidemove,
 		lastForwardmove = player.cmd.forwardmove,
 		lastButtons = player.cmd.buttons,
-		useSuper = false
+		spectatorMode = false,
+		team = {
+			players = {player}
+		}
 	}
 	
 	player.heistGlobal = playerGlobal
@@ -98,6 +103,16 @@ end
 --- @field expressionTics tic_t
 --- The scale of the expression.
 --- @field expressionScale fixed_t
+--- If the player should be forced to use Super sprites.
+--- @field useSuper boolean
+--- If this is valid, the player is requesting to team. Anyone can press Toss Flag by them to accept it, and kill off this mobj if it doesn't die within 30 seconds.
+--- @field teamMobj mobj_t|nil
+--- The current selected player for pre-game team management.
+--- @field selectedTeamPlayer integer
+--- The current selected question for Quiz Time.
+--- @field quizTimeSelection integer
+--- If this is true, the player has selected their selection for Quiz Time.
+--- @field quizTimeSelected boolean
 
 setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
 	__index = function(self, key)
@@ -149,12 +164,33 @@ function FH:initPlayerRound(player)
 		lastExpression = "",
 		expressionTics = 0,
 		expressionScale = FU,
+		useSuper = false,
+		selectedTeamPlayer = 1,
+		quizTimeSelection = 1,
+		quizTimeSelected = false
 	}
 
 	player.heistRound = playerRound
 	gametype:playerInit(player, FHR.currentState)
 
 	return playerRound
+end
+
+--- The teaming data for the player.
+--- @class heistTeam_t
+--- The players within the team. [1] is the team leader.
+--- @field players player_t[]
+
+--- Only initalizes the team, but doesn't set it as heistGlobal.team, unlike the other functions. This can be used for re-initalization when necessary.
+--- @param player player_t
+--- @return heistTeam_t
+function FH:initTeam(player)
+	--- @type heistTeam_t
+	local heistTeam_t = {
+		players = {player}
+	}
+
+	return heistTeam_t
 end
 
 --- Add fields to player_t
@@ -222,9 +258,9 @@ addHook("PlayerThink", function(player)
 		player.spectator = true
 	end
 
-	if player.heistGlobal.useSuper and player.mo then
+	if player.heistRound.useSuper and player.mo then
 		player.mo.eflags = $|MFE_FORCESUPER
-	else
+	elseif player.mo then
 		player.mo.eflags = $ & ~MFE_FORCESUPER
 	end
 
@@ -257,6 +293,11 @@ addHook("PlayerQuit", function(player)
 	if not gametype then return end
 
 	initChecks(player, gametype)
+
+	if player.heistGlobal then
+		FH:finishTeam(player)
+	end
+
 	player.hasLeftServer = true -- used internally, lets face it the players quitting anyway this doesnt matter a single bit LOL
 
 	local state = FH.gamestates[FHR.currentState]
@@ -301,3 +342,4 @@ dofile("player/block.lua")
 dofile("player/pvp.lua")
 dofile("player/health.lua")
 dofile("player/expression.lua")
+dofile("player/teaming.lua")

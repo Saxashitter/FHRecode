@@ -11,8 +11,8 @@ local ui = {
 function ui:draw(v, player)
 	local profit = 0
 
-	if player and player.heistRound then
-		profit = player.heistRound.profit
+	if player and player.heistGlobal then
+		profit = player.heistGlobal.team.players[1].heistRound.profit
 	end
 
 	local stt = v.cachePatch("FH_PROFIT_STT")

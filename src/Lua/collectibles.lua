@@ -90,7 +90,7 @@ function FH:giveCollectible(player, collectible)
 	S_StartSound(collectible, sfx_s3k68)
 	P_SetOrigin(collectible, player.mo.x, player.mo.y, FH:getCollectibleZ(player, collectible))
 
-	FH:addProfit(player, FH.profitCVars.collectible.value + FH.profitCVars.collectibleExt.value * collectible.variant, "Collected "..self.collectibleNames[collectible.variant].." Collectible")
+	FH:addProfit(player, FH.profitCVars.collectible.value + FH.profitCVars.collectibleExt.value * collectible.variant, "Collected "..self.collectibleNames[collectible.variant].." Collectible", 0)
 	return true
 end
 
@@ -153,7 +153,7 @@ function FH:dropCollectible(player, collectible, launch, sound)
 		S_StartSound(collectible, sfx_s3k51)
 	end
 
-	FH:addProfit(player, -(FH.profitCVars.collectible.value + FH.profitCVars.collectibleExt.value * collectible.variant), "Lost Collectible")
+	FH:addProfit(player, -(FH.profitCVars.collectible.value + FH.profitCVars.collectibleExt.value * collectible.variant), "Lost Collectible", 0)
 
 	-- Remove from player list
 	for i, cur in ipairs(player.heistRound.collectibles) do

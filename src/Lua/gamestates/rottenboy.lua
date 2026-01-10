@@ -102,7 +102,6 @@ function gamestate:update()
 			player.mo.momx = 0
 			player.mo.momy = 0
 			player.mo.momz = 0
-			player.mo.tics = -1
 		end
 	end
 

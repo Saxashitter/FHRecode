@@ -53,6 +53,10 @@ function ui:draw(v)
 
 		v.drawScaled(sparkle.x, sparkle.y, FU / 4, sprite, V_SNAPTOLEFT|V_SNAPTOTOP|V_ADD|V_40TRANS)
 	end
+
+	if progress < 10 then
+		FH:drawPaletteRect(v, 0, 0, v.width() * FU / v.dupx(), v.height() * FU / v.dupy(), 0, V_SNAPTOTOP|V_SNAPTOLEFT|(V_10TRANS * progress))
+	end
 end
 
 return ui, "secondsLeft", 1, "overlay"

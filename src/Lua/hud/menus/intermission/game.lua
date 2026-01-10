@@ -10,7 +10,7 @@ local gameLetterRiseDelay = 12
 local gameLetterRiseOffset = 7
 local gameLetterRiseTics = 35
 
-local gameScaleUpDelay = 60
+local gameScaleUpDelay = 2751 * TICRATE / MUSICRATE
 
 local gameScaleDownTics = 15
 

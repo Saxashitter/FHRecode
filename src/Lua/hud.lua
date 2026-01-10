@@ -94,12 +94,14 @@ doUiFile("menus/pregame")
 doUiFile("menus/intermission")
 doUiFile("menus/mapvote")
 doUiFile("menus/rottenboy")
+doUiFile("menus/quiztime")
 
 -- ingame
 doUiFile("ingame/profit")
 doUiFile("ingame/place")
 doUiFile("ingame/timer")
 doUiFile("ingame/health")
+doUiFile("ingame/team")
 doUiFile("ingame/warning")
 
 -- modifiers

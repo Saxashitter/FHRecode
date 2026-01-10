@@ -1,6 +1,6 @@
 local gamestate = {}
 
-gamestate.timeLeft = 10 * TICRATE
+gamestate.timeLeft = 20 * TICRATE
 
 sfxinfo[freeslot("sfx_fh_gme")].caption = "GAME!!"
 sfxinfo[freeslot("sfx_fh_tgw")].caption = "This game's winner is..."

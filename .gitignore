@@ -1,2 +1,3 @@
 builds/previous/*.pk3
 builds/latest/*.pk3
+paths.mk

@@ -25,6 +25,7 @@ SaveGame = true
 SkyboxScale = 64
 FlickyList = Bluebird,Chipmunk
 NoVisitNeeded = true
+Lua.FH_SkipStartingCutscene = true
 #Flicky selection is final.
 
 Level 2

@@ -105,6 +105,24 @@ addHook("PlayerThink", function(player)
 
 		if player.heistRound.downedTime == 0 then
 			FH:revivePlayer(player)
+			return
+		end
+	end
+
+	for _, member in ipairs(player.heistGlobal.team.players) do
+		if member == player then continue end
+		if not member.mo then continue end
+		if not member.mo.health then continue end
+		if member.heistRound.downed then continue end
+		if member.heistRound.escaped then continue end
+		if member.heistRound.spectator then continue end
+
+		local distance = R_PointToDist2(0, member.mo.z, R_PointToDist2(member.mo.x, member.mo.y, player.mo.x, player.mo.y), player.mo.z)
+
+		if distance <= player.mo.radius + member.mo.radius then
+			S_StartSound(member.mo, sfx_s3k4a)
+			FH:revivePlayer(player)
+			break
 		end
 	end
 end)

@@ -2,15 +2,34 @@
 --- @param player player_t
 --- @param profit fixed_t
 --- @param tag string
-function FH:addProfit(player, profit, tag)
+--- @param division fixed_t|nil
+function FH:addProfit(player, profit, tag, division)
+	if division == nil then division = FU end
 	local gametype = FH:isMode()
 	if not gametype then return end
 
-	--- @type fixed_t
-	player.heistRound.profit = $ + profit
+	-- divide profit based on division scale
+	if division > 0 then
+		local alivePlayers = 0
 
-	if player.heistRound.profit < 0 then
-		player.heistRound.profit = 0
+		for _, member in ipairs(player.heistGlobal.team.players) do
+			if member.heistRound.escaped then continue end
+			if member.heistRound.spectator then continue end
+
+			alivePlayers = $ + 1
+		end
+
+		if alivePlayers > 0 then -- sanity check
+			profit = FixedDiv(profit, division * alivePlayers)
+		end
+	end
+
+	--- @type fixed_t
+	local profitGainer = player.heistGlobal.team.players[1]
+	profitGainer.heistRound.profit = $ + profit
+
+	if profitGainer.heistRound.profit < 0 then
+		profitGainer.heistRound.profit = 0
 	end
 
 	-- player.heistRound.profitUI = {

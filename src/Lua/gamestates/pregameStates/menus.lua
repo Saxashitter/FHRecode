@@ -16,19 +16,67 @@ state.menus = {
 		}
 	},
 	{
-		name = "Form Teams",
+		name = "Team Management",
 		submenu = {
 			{
-				name = "Teams are not in yet... Check back later!"
+				name = "Selected Player: %s",
+				--- @param player player_t
+				format = function(self, gamestate, player)
+					if player.heistGlobal.team.players[player.heistRound.selectedTeamPlayer] then
+						local targetPlayer = player.heistGlobal.team.players[player.heistRound.selectedTeamPlayer]
+						if targetPlayer == player then
+							return "Yourself"
+						end
+						return targetPlayer.name
+					end
+
+					return "Nobody (They probably quit...?)"
+				end,
+				func = function(self, gamestate, player)
+					player.heistRound.selectedTeamPlayer = $ + 1
+
+					if player.heistRound.selectedTeamPlayer > #player.heistGlobal.team.players then
+						player.heistRound.selectedTeamPlayer = 1
+					end
+				end
+			},
+			{
+				name = "Kick Player/Leave Team",
+				--- @param player player_t
+				func = function(self, gamestate, player)
+					local targetPlayer = player.heistGlobal.team.players[player.heistRound.selectedTeamPlayer]
+					if not targetPlayer then return end
+
+					if player == targetPlayer or FH:isTeamLeader(player) then
+						FH:finishTeam(player)
+						S_StartSound(nil, sfx_adderr, player)
+						if player == targetPlayer then
+							player.heistRound.selectedTeamPlayer = 1
+						end
+					elseif not FH:isTeamLeader(player) then
+						CONS_Printf(player, "You can't kick this player, you're not the team leader!")
+						CONS_Printf(player, "If you are trying to leave, please select yourself.")
+					end
+				end
 			}
 		}
+	},
+	{
+		name = "Spectator Mode: %s",
+		format = function(self, gamestate, player)
+			return FH:boolToString(player.heistGlobal and player.heistGlobal.spectatorMode)
+		end,
+		func = function(self, gamestate, player)
+			player.heistGlobal.spectatorMode = not $
+			S_StartSound(nil, sfx_kc5e, player)
+		end
 	},
 	{
 		name = "Press this to get the Discord server!",
 		func = function(self, gamestate, player)
 			CONS_Printf(player, "DISCORD LINK: https://discord.gg/SBcg7ZFBuQ")
 			CONS_Printf(player, "Check your latest-log.txt to copy it!")
-			S_StartSound(nil, sfx_bnce1, player)
+			S_StartSound(nil, sfx_kc5e, player)
 		end
 	}
 }

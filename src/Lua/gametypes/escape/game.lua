@@ -5,6 +5,16 @@ escape.ringThing = 1
 escape.timesUpStart = 22591 * TICRATE / MUSICRATE
 escape.timeLeft = 180 -- 3 minutes
 
+local tickSounds = {}
+for i = 0, 9 do
+	--- @type soundnum_t
+	local sound = freeslot("sfx_fh_tc"..i)
+	sfxinfo[sound].caption = i > 0 and "Tick..." or 'Uh oh.'
+
+	tickSounds[i] = sound
+end
+tickSounds[10] = tickSounds[9]
+
 freeslot("S_FH_ROUND2RING") 
 
 states[S_FH_ROUND2RING].sprite = freeslot("SPR_R2RI")
@@ -146,8 +156,8 @@ function escape:escapeUpdate()
 			S_FadeMusic(0, 2 * MUSICRATE)
 		end
 
-		if FHR.escapeTime <= 10 * TICRATE and FHR.escapeTime % TICRATE == 0 then
-			local sound = FHR.escapeTime == 0 and sfx_fh_ovr or sfx_fh_tck
+		if FHR.escapeTime <= #tickSounds * TICRATE and FHR.escapeTime % TICRATE == 0 then
+			local sound = tickSounds[FHR.escapeTime / TICRATE]
 			local quake = FHR.escapeTime == 0 and 26 * FU or 8 * FU
 			local duration = FHR.escapeTime == 0 and -1 or 16
 
@@ -164,7 +174,6 @@ function escape:escapeUpdate()
 			P_SwitchWeather(54)
 			for player in players.iterate do
 				P_SetSkyboxMobj(nil, player)
-				P_FlashPal(player, 0, 10)
 
 				if player.heistRound then
 					FH:setPlayerExpression(player, "hurt")
@@ -228,7 +237,7 @@ function escape:startEscape(starter)
 	FHR.escapeStartTime = leveltime
 
 	if starter and starter.heistRound then
-		FH:addProfit(starter, FH.profitCVars.startedEscape.value, "Started the Escape Sequence")
+		FH:addProfit(starter, FH.profitCVars.startedEscape.value, "Started the Escape Sequence", 0)
 	end
 
 	-- make signs fly into air then disappear lol

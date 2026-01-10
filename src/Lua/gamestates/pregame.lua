@@ -1,10 +1,10 @@
 local gamestate = {}
-local skipTitlecard = false
+local skipTitlecard = true
 
 gamestate.states = {
 	character = dofile("gamestates/pregameStates/character.lua"),
 	menus = dofile("gamestates/pregameStates/menus.lua"),
-	waiting = dofile("gamestates/pregameStates/waiting.lua"),
+	waiting = dofile("gamestates/pregameStates/waiting.lua")
 }
 gamestate.timeLeft = 60 * TICRATE
 

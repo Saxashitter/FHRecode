@@ -13,6 +13,7 @@ local function unstasisPlayers()
 	-- TODO: take advantage of PlayerSpawn so this doesn't run every tic
 	for player in players.iterate do
 		if not player.heistRound then continue end
+		if player.heistRound.spectator then continue end
 
 		player.heistRound.stasis = false
 		player.cmd.sidemove = player.heistGlobal.sidemove
@@ -30,13 +31,15 @@ local function unstasisPlayers()
 		if not player.mo then continue end
 		if not player.mo.spawnpoint then continue end
 
-		player.mo.tics = states[player.mo.state].tics
 		player.mo.alpha = FU
-		player.mo.state = S_PLAY_ROLL
-		player.pflags = $|PF_SPINNING
+		player.mo.tics = states[player.mo.state].tics
 		player.powers[pw_flashing] = 2 * TICRATE
-		P_InstaThrust(player.mo, FixedAngle(player.mo.spawnpoint.angle * FU), player.normalspeed)
-		P_SetObjectMomZ(player.mo, 12 * player.mo.scale)
+		if not FH:getMapVariable(nil, "fh_skipstartingcutscene", false) then
+			player.mo.state = S_PLAY_ROLL
+			player.pflags = $|PF_SPINNING
+			P_InstaThrust(player.mo, FixedAngle(player.mo.spawnpoint.angle * FU), player.normalspeed)
+			P_SetObjectMomZ(player.mo, 12 * player.mo.scale)
+		end
 	end
 end
 
@@ -57,6 +60,17 @@ function gamestate:init()
 
 		local fallback
 		local found = false
+
+		if player.heistGlobal.spectatorMode then
+			player.spectator = true
+			player.heistRound.spectator = true
+			player.heistRound.stasis = false
+			continue
+		elseif FH:getMapVariable(nil, "fh_skipstartingcutscene", false) then
+			player.mo.alpha = FU
+			player.mo.tics = states[player.mo.state].tics
+			player.powers[pw_flashing] = 2 * TICRATE
+		end
 
 		for mapthing in mapthings.iterate do
 			if mapthing.type == 1 then

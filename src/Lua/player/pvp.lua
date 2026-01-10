@@ -140,6 +140,9 @@ addHook("SpinSpecial", function(player)
 	end
 end)
 
+--- @param targ mobj_t
+--- @param inf mobj_t
+--- @param source mobj_t
 addHook("ShouldDamage", function(targ, inf, source)
 	--- @type heistGametype_t|false
 	local gametype = FH:isMode()
@@ -148,9 +151,15 @@ addHook("ShouldDamage", function(targ, inf, source)
 	if FHR.currentState ~= "game" then return false end
 
 	-- TODO: friendlyfire checks from the gamemode and the cvar
-	if source and source.valid and source.type == MT_PLAYER then
+	-- UPD: teaming added so this is easy
+	if source and source.valid and source.type == MT_PLAYER and source.player and source.player.heistRound then
 		if not targ.player then return end
 		if not targ.player.heistRound then return end
+		if FH:isInTeam(targ.player, source.player) then
+			if CV_FindVar("friendlyfire").value == 0 then
+				return false
+			end
+		end
 		if targ.player.powers[pw_flashing] then return false end
 		if targ.player.powers[pw_invulnerability] then return false end
 		if targ.player.powers[pw_super] then return false end

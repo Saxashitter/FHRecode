@@ -47,12 +47,14 @@ end
 
 function FH:getPlayerPlace(player)
 	local place = 1
+	local leader = player.heistGlobal.team.players[1]
 
 	for other in players.iterate do
-		if other == player then continue end
+		if not FH:isTeamLeader(other) then continue end
+		if other == leader then continue end
 		if not other.heistRound then continue end
 		if other.heistRound.spectator then continue end
-		if other.heistRound.profit <= player.heistRound.profit then continue end
+		if other.heistRound.profit <= leader.heistRound.profit then continue end
 
 		place = place + 1
 	end
@@ -121,3 +123,4 @@ dofile("gamestates/game.lua")
 dofile("gamestates/intermission.lua")
 dofile("gamestates/mapvote.lua")
 dofile("gamestates/rottenboy.lua")
+dofile("gamestates/quiztime.lua")
