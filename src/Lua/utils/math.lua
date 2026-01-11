@@ -57,3 +57,7 @@ function FH:fixedRandom(start, finish)
 	local range = finish - start
 	return start + FixedMul(range, P_RandomFixed())
 end
+
+function FH:pointTo3DDist(x1, y1, z1, x2, y2, z2)
+	return R_PointToDist2(0, z1, R_PointToDist2(x1, y1, x2, y2), z2)
+end

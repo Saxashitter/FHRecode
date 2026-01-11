@@ -10,7 +10,7 @@ local ui = {
 function ui:draw(v, player)
 	local place = 0
 
-	if player and player.heistRound and not player.heistRound.spectator then
+	if player and player.hr and not player.hr.spectator then
 		place = FH:getPlayerPlace(player)
 	end
 

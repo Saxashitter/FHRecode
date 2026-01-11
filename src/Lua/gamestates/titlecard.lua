@@ -24,9 +24,9 @@ function gamestate:update()
 	end
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 
-		player.heistRound.stasis = true
+		player.hr.stasis = true
 
 		if player.mo then
 			player.mo.momx = 0

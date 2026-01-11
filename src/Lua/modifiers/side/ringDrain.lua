@@ -11,7 +11,7 @@ function modifier:init()
 	for player in players.iterate do
 		if not player.mo then continue end
 		if not player.mo.health then continue end
-		if player.heistRound.spectator then continue end
+		if player.hr.spectator then continue end
 
 		player.rings = max($, 50)
 	end
@@ -27,10 +27,10 @@ end
 
 --- @param player player_t
 function modifier:playerUpdate(player)
-	if player.heistRound.downed then return end
+	if player.hr.downed then return end
 	if not player.mo then return end
 	if not player.mo.health then return end
-	if player.heistRound.spectator then return end
+	if player.hr.spectator then return end
 
 	if not FHR.ringDrainTics then
 		player.rings = $ - 1

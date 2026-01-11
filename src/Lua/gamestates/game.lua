@@ -12,14 +12,14 @@ local function unstasisPlayers()
 	-- constantly set stasis to true even for new players
 	-- TODO: take advantage of PlayerSpawn so this doesn't run every tic
 	for player in players.iterate do
-		if not player.heistRound then continue end
-		if player.heistRound.spectator then continue end
+		if not player.hr then continue end
+		if player.hr.spectator then continue end
 
-		player.heistRound.stasis = false
-		player.cmd.sidemove = player.heistGlobal.sidemove
-		player.cmd.forwardmove = player.heistGlobal.forwardmove
-		player.cmd.buttons = player.heistGlobal.buttons
-		player.lastbuttons = player.heistGlobal.buttons
+		player.hr.stasis = false
+		player.cmd.sidemove = player.hg.sidemove
+		player.cmd.forwardmove = player.hg.forwardmove
+		player.cmd.buttons = player.hg.buttons
+		player.lastbuttons = player.hg.buttons
 
 		if player.cmd.buttons & BT_JUMP then
 			player.pflags = $|PF_JUMPDOWN
@@ -61,10 +61,10 @@ function gamestate:init()
 		local fallback
 		local found = false
 
-		if player.heistGlobal.spectatorMode then
+		if player.hg.spectatorMode then
 			player.spectator = true
-			player.heistRound.spectator = true
-			player.heistRound.stasis = false
+			player.hr.spectator = true
+			player.hr.stasis = false
 			continue
 		elseif FH:getMapVariable(nil, "fh_skipstartingcutscene", false) then
 			player.mo.alpha = FU
@@ -124,8 +124,8 @@ end
 
 --- @param player player_t
 function gamestate:playerUpdate(player)
-	if player.heistRound.skin and player.skin ~= player.heistRound.skin then
-		R_SetPlayerSkin(player, player.heistRound.skin)
+	if player.hr.skin and player.skin ~= player.hr.skin then
+		R_SetPlayerSkin(player, player.hr.skin)
 	end
 
 	-- update modifiers

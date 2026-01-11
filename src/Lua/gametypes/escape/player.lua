@@ -33,7 +33,7 @@ function escape:playerUpdate(player, currentState)
 		escape:startEscape(player)
 	end
 
-	if player.heistRound.escaped then
+	if player.hr.escaped then
 		---@diagnostic disable-next-line: assign-type-mismatch
 		player.powers[pw_flashing] = TICRATE
 	end
@@ -45,7 +45,7 @@ function escape:playerDeath(player, currentState)
 	if currentState ~= "game" then return end
 	if not FHR.escape then return end
 
-	player.heistRound.spectator = true
+	player.hr.spectator = true
 	self:safeFinish()
 end
 
@@ -55,7 +55,7 @@ function escape:playerInit(player, currentState)
 	if currentState ~= "game" then return end
 	if not FHR.escape then return end
 
-	player.heistRound.spectator = true
+	player.hr.spectator = true
 end
 
 --- @param player player_t
@@ -72,12 +72,12 @@ function escape:addProfit(player, profit)
 	if FHR.escape and FHR.escapeTime <= self.timesUpStart then return end
 	local place = FH:getPlayerPlace(player)
 
-	if place == 1 and not player.heistRound.expressionTics then
+	if place == 1 and not player.hr.expressionTics then
 		for otherPlayer in players.iterate do
 			if otherPlayer == player then continue end
-			if not otherPlayer.heistRound then continue end
+			if not otherPlayer.hr then continue end
 
-			if otherPlayer.heistRound.expression == "1st" or (otherPlayer.heistRound.expressionTics and otherPlayer.heistRound.lastExpression == "1st") then
+			if otherPlayer.hr.expression == "1st" or (otherPlayer.hr.expressionTics and otherPlayer.hr.lastExpression == "1st") then
 				FH:setPlayerExpression(otherPlayer, "default", 0)
 			end
 		end

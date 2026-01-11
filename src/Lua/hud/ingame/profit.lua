@@ -11,8 +11,8 @@ local ui = {
 function ui:draw(v, player)
 	local profit = 0
 
-	if player and player.heistGlobal then
-		profit = player.heistGlobal.team.players[1].heistRound.profit
+	if player and player.hg then
+		profit = player.hg.team.players[1].hr.profit
 	end
 
 	local stt = v.cachePatch("FH_PROFIT_STT")
@@ -25,7 +25,7 @@ function ui:draw(v, player)
 	v.draw(profitX, self.y, dsign, self.flags)
 	FH:drawDecimalSTT(v, (profitX + 8) * FU, self.y * FU, FU, profit, self.flags, 0, 0)
 
-	local uis = player.heistRound.profitUI
+	local uis = player.hr.profitUI
 
 	local count = #uis
 	local latest = uis[count]

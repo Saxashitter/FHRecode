@@ -12,9 +12,9 @@ function FH:addProfit(player, profit, tag, division)
 	if division > 0 then
 		local alivePlayers = 0
 
-		for _, member in ipairs(player.heistGlobal.team.players) do
-			if member.heistRound.escaped then continue end
-			if member.heistRound.spectator then continue end
+		for _, member in ipairs(player.hg.team.players) do
+			if member.hr.escaped then continue end
+			if member.hr.spectator then continue end
 
 			alivePlayers = $ + 1
 		end
@@ -25,26 +25,26 @@ function FH:addProfit(player, profit, tag, division)
 	end
 
 	--- @type fixed_t
-	local profitGainer = player.heistGlobal.team.players[1]
-	profitGainer.heistRound.profit = $ + profit
+	local profitGainer = player.hg.team.players[1]
+	profitGainer.hr.profit = $ + profit
 
-	if profitGainer.heistRound.profit < 0 then
-		profitGainer.heistRound.profit = 0
+	if profitGainer.hr.profit < 0 then
+		profitGainer.hr.profit = 0
 	end
 
-	-- player.heistRound.profitUI = {
-	-- 	lastTime = player.heistRound.profitUI.time,
-	-- 	lastProfit = player.heistRound.profitUI.profit or 0,
+	-- player.hr.profitUI = {
+	-- 	lastTime = player.hr.profitUI.time,
+	-- 	lastProfit = player.hr.profitUI.profit or 0,
 	-- 	
 	-- }
 
-	-- local lastUI = player.heistRound.profitUI[#player.heistRound.profitUI]
+	-- local lastUI = player.hr.profitUI[#player.hr.profitUI]
 
 	-- if lastUI and lastUI.time < lastUI.animDuration - lastUI.animFinish then
 	-- 	lastUI.time = lastUI.animDuration - lastUI.animFinish
 	-- end
 
-	table.insert(player.heistRound.profitUI, {
+	table.insert(player.hr.profitUI, {
 		time = 0,
 		profit = profit,
 		tag = tag,
@@ -53,7 +53,7 @@ function FH:addProfit(player, profit, tag, division)
 		animFinish = 10
 	})
 	gametype:addProfit(player, profit, tag)
-	local found, _, value = FH:doesTableHave(player.heistRound.profitLog, function(log) return log.tag == tag end)
+	local found, _, value = FH:doesTableHave(player.hr.profitLog, function(log) return log.tag == tag end)
 
 	if found then
 		value.timesRan = $ + 1
@@ -62,7 +62,7 @@ function FH:addProfit(player, profit, tag, division)
 		return
 	end
 	
-	table.insert(player.heistRound.profitLog, {
+	table.insert(player.hr.profitLog, {
 		tag = tag,
 		profit = profit,
 		timesRan = 1,
@@ -99,7 +99,7 @@ FH.profitCVars = {
 function A_RingBox(mobj, var1, var2)
 	super(mobj, var1, var2)
 
-	if mobj.target and mobj.target.valid and mobj.target.player and mobj.target.player.heistRound then
+	if mobj.target and mobj.target.valid and mobj.target.player and mobj.target.player.hr then
 		FH:addProfit(mobj.target.player, FH.profitCVars.ring.value * 10, "Destroyed Ring Box (10 Rings)")
 	end
 end
@@ -107,14 +107,14 @@ end
 --- @param player player_t
 addHook("PlayerThink", function(player)
 	if not FH:isMode() then return end
-	if not player.heistRound then return end
+	if not player.hr then return end
 
-	for i = #player.heistRound.profitUI, 1, -1 do
-		local ui = player.heistRound.profitUI[i]
+	for i = #player.hr.profitUI, 1, -1 do
+		local ui = player.hr.profitUI[i]
 		ui.time = $ + 1
 
 		if ui.time == ui.animDuration then
-			table.remove(player.heistRound.profitUI, i)
+			table.remove(player.hr.profitUI, i)
 		end
 	end
 end)
@@ -128,7 +128,7 @@ addHook("MobjDeath", function(target, _, source)
 	if not source.valid then return end
 	if source.type ~= MT_PLAYER then return end
 	if not source.player then return end
-	if not source.player.heistRound then return end
+	if not source.player.hr then return end
 	
 	if target.type == MT_RING then
 		FH:addProfit(source.player, FH.profitCVars.ring.value, "Collected Ring")
@@ -142,7 +142,7 @@ addHook("MobjDeath", function(target, _, source)
 
 	if target.flags & MF_MONITOR > 0 then
 		FH:addProfit(source.player, FH.profitCVars.monitor.value, "Destroyed Monitor")
-		FH:setHealth(source.player, min(FH.characterHealths[source.skin], source.player.heistRound.health + 15 * FU))
+		FH:setHealth(source.player, min(FH.characterHealths[source.skin], source.player.hr.health + 15 * FU))
 		local overlay = P_SpawnMobjFromMobj(source, 0,0,0, MT_FH_OVERLAY) --[[@as heistOverlay_t]]
 		overlay.target = source
 		overlay.translation = "FH_AllGreen"

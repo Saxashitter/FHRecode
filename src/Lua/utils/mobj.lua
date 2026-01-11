@@ -4,7 +4,7 @@
 function FH:knockbackMobj(target, point, minSpeed)
 	local tz = target.z + target.height / 2
 	local pz = point.z + point.height / 2
-	local speed = max(R_PointToDist2(0, 0, R_PointToDist2(0, 0, target.momx, target.momy), target.momz), minSpeed or 0)
+	local speed = max(FH:pointTo3DDist(0,0,0, target.momx, target.momy, target.momz), minSpeed or 0)
 	local dist = R_PointToDist2(target.x, target.y, point.x, point.y)
 	local angle = R_PointToAngle2(target.x, target.y, point.x, point.y)
 	local aiming = R_PointToAngle2(0, 0, dist, pz - tz)
@@ -29,7 +29,7 @@ function FH:reflectMobj(target, point, speedScale)
 	local ny = target.y - point.y
 	local nz = target.z + target.height / 2 - point.z + (point.height or 0) / 2
 
-	local nlen = R_PointToDist2(0, 0, R_PointToDist2(0, 0, nx, ny), nz)
+	local nlen = FH:pointTo3DDist(0,0,0, nx, ny, nz)
 	if nlen == 0 then return end
 
 	-- Normalize normal

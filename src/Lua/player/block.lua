@@ -25,7 +25,7 @@ for i = A, H do
 		if not mobj.target.valid then P_RemoveMobj(mobj) return end
 
 		if not S_SoundPlaying(mobj.target, sfx_s25d) then
-			S_StartSoundAtVolume(mobj.target, sfx_s25d, 25)
+			S_StartSoundAtVolume(mobj.target, sfx_s25d, 55)
 		end
 
 		P_SpawnGhostMobj(mobj)
@@ -47,7 +47,7 @@ addHook("MobjRemoved", function(mobj)
 end, MT_FH_BLOCK)
 
 function FH:useBlock(mobj)
-	local block = P_SpawnMobjFromMobj(mobj, 0,0,0, MT_FH_BLOCK)
+	local block = P_SpawnMobjFromMobj(mobj, 0,0,mobj.height / 2, MT_FH_BLOCK)
 
 	block.target = mobj
 	---@diagnostic disable-next-line: assign-type-mismatch

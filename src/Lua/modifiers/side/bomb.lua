@@ -51,7 +51,7 @@ function modifier:update()
 	for player in players.iterate do
 		if not player.mo then return end
 		if not player.mo.health then return end
-		if player.heistRound.spectator then return end
+		if player.hr.spectator then return end
 
 		local predictx, predicty, predictz = self:predictPlayerPosition(player)
 		if predictx == false then continue end

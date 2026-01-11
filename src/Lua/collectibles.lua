@@ -42,7 +42,7 @@ end
 --- @param player player_t
 --- @param collectible heistCollectible_t
 function FH:playerHasCollectible(player, collectible)
-	for i, cur in ipairs(player.heistRound.collectibles) do
+	for i, cur in ipairs(player.hr.collectibles) do
 		if cur == collectible then
 			return true, i
 		end
@@ -58,7 +58,7 @@ function FH:giveCollectible(player, collectible)
 		return false
 	end
 
-	table.insert(player.heistRound.collectibles, collectible)
+	table.insert(player.hr.collectibles, collectible)
 
 	collectible.target = player.mo
 	collectible.flags = caughtFlags
@@ -71,7 +71,7 @@ function FH:giveCollectible(player, collectible)
 	-- Position collectible on player's head, stacking multiple
 	local dontSparkle = false
 
-	for i, col in ipairs(player.heistRound.collectibles) do
+	for i, col in ipairs(player.hr.collectibles) do
 		if col == collectible then
 			break
 		end
@@ -100,11 +100,11 @@ function FH:getCollectibleZ(player, collectible)
 	local dir = P_MobjFlip(player.mo)
 
 	-- Origin point: head or feet
-	local zoff = dir == 1 and player.mo.height or -player.heistRound.collectibles[1].height
+	local zoff = dir == 1 and player.mo.height or -player.hr.collectibles[1].height
 
 	-- Direction collectibles are stacked
 
-	for _, col in ipairs(player.heistRound.collectibles) do
+	for _, col in ipairs(player.hr.collectibles) do
 		if col == collectible then
 			break
 		end
@@ -156,9 +156,9 @@ function FH:dropCollectible(player, collectible, launch, sound)
 	FH:addProfit(player, -(FH.profitCVars.collectible.value + FH.profitCVars.collectibleExt.value * collectible.variant), "Lost Collectible", 0)
 
 	-- Remove from player list
-	for i, cur in ipairs(player.heistRound.collectibles) do
+	for i, cur in ipairs(player.hr.collectibles) do
 		if cur == collectible then
-			table.remove(player.heistRound.collectibles, i)
+			table.remove(player.hr.collectibles, i)
 			break
 		end
 	end
@@ -179,7 +179,7 @@ addHook("MobjRemoved", function(mobj)
 
 	if not mobj.target then return end
 	if not mobj.target.player then return end
-	if not mobj.target.player.heistRound then return end
+	if not mobj.target.player.hr then return end
 
 	local collected = FH:playerHasCollectible(mobj.target.player, mobj)
 
@@ -231,9 +231,9 @@ addHook("TouchSpecial", function(collectible, toucher)
 	if not toucher.health then return true end
 	if P_PlayerInPain(toucher.player) then return true end
 	if not FH:isMode() then return true end
-	if not toucher.player.heistRound then return true end
-	if toucher.player.heistRound.downed then return true end
-	if toucher.player.heistRound.escaped then return true end -- TODO: gametype-based way to stop carriables from being carried instead of hardcoded bullshit
+	if not toucher.player.hr then return true end
+	if toucher.player.hr.downed then return true end
+	if toucher.player.hr.escaped then return true end -- TODO: gametype-based way to stop carriables from being carried instead of hardcoded bullshit
 
 	FH:giveCollectible(toucher.player, collectible)
 	return true

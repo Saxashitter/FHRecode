@@ -12,7 +12,7 @@ local blockChargeCooldown = TICRATE
 --- @param player player_t
 function FH:playerUseBlock(player)
 	FH:useBlock(player.mo)
-	player.heistRound.blockCooldown = blockCooldown
+	player.hr.blockCooldown = blockCooldown
 end
 
 --- @param player player_t
@@ -22,8 +22,8 @@ function FH:playerStopBlock(player, startCooldowns)
 
 	if startCooldowns == false then return end
 
-	player.heistRound.blockCooldown = blockCooldown
-	player.heistRound.blockChargeCooldown = blockChargeCooldown
+	player.hr.blockCooldown = blockCooldown
+	player.hr.blockChargeCooldown = blockChargeCooldown
 end
 
 --- @param player player_t
@@ -31,7 +31,7 @@ addHook("PlayerThink", function(player)
 	local gametype = FH:isMode()
 
 	if not gametype then return end
-	if not player.heistRound then return end
+	if not player.hr then return end
 
 	if FHR.currentState == "game"
 	and player.mo
@@ -39,11 +39,11 @@ addHook("PlayerThink", function(player)
 	and not P_PlayerInPain(player)
 	and player.cmd.buttons & BT_ATTACK > 0
 	and player.lastbuttons & BT_ATTACK == 0
-	and not player.heistRound.instaShieldCooldown
-	and player.heistRound.canUseInstaShield
+	and not player.hr.instaShieldCooldown
+	and player.hr.canUseInstaShield
 	and not player.mo.fh_block then
 		FH:useInstaShield(player.mo)
-		player.heistRound.instaShieldCooldown = instaShieldCooldown
+		player.hr.instaShieldCooldown = instaShieldCooldown
 		FH:setPlayerExpression(player, "pvp", 5 * TICRATE)
 	end
 
@@ -53,8 +53,8 @@ addHook("PlayerThink", function(player)
 	and not P_PlayerInPain(player)
 	and player.cmd.buttons & BT_FIRENORMAL > 0
 	and player.lastbuttons & BT_FIRENORMAL == 0
-	and not player.heistRound.blockCooldown
-	and player.heistRound.canUseBlock
+	and not player.hr.blockCooldown
+	and player.hr.canUseBlock
 	and not player.mo.fh_block
 	and not player.mo.fh_instashield then
 		FH:playerUseBlock(player)
@@ -65,15 +65,15 @@ addHook("PlayerThink", function(player)
 	and player.mo.health
 	and not P_PlayerInPain(player)
 	and player.cmd.buttons & BT_FIRENORMAL == 0
-	and not player.heistRound.blockCooldown
+	and not player.hr.blockCooldown
 	and player.mo.fh_block then
 		FH:playerStopBlock(player)
 	end
 
-	if player.heistRound.instaShieldCooldown then
-		player.heistRound.instaShieldCooldown = $ - 1
+	if player.hr.instaShieldCooldown then
+		player.hr.instaShieldCooldown = $ - 1
 
-		if not player.heistRound.instaShieldCooldown and player.mo then
+		if not player.hr.instaShieldCooldown and player.mo then
 			S_StartSoundAtVolume(player.mo, sfx_s3k41, 55)
 			S_StartSoundAtVolume(player.mo, sfx_s3k44, 55)
 
@@ -83,39 +83,39 @@ addHook("PlayerThink", function(player)
 		end
 	end
 
-	if player.heistRound.blockCooldown then
-		player.heistRound.blockCooldown = $ - 1
+	if player.hr.blockCooldown then
+		player.hr.blockCooldown = $ - 1
 	end
 
 	if player.mo then
 		if player.mo.fh_block then
-			local t = FixedDiv(player.heistRound.blockStrength, player.heistRound.blockMaxStrength)
+			local t = FixedDiv(player.hr.blockStrength, player.hr.blockMaxStrength)
 			local scale = ease.linear(t, player.mo.scale / 2, player.mo.scale * 3 / 2)
 			local block = player.mo.fh_block
 
 			block.scale = scale
 
 			---@diagnostic disable-next-line: assign-type-mismatch
-			if player.heistRound.blockStrength > blockDamage
-			and player.heistRound.blockStrength - FU / blockDrainTics <= blockDamage then
+			if player.hr.blockStrength > blockDamage
+			and player.hr.blockStrength - FU / blockDrainTics <= blockDamage then
 				-- hey, if you get hit, you are FUCKED
 				S_StartSoundAtVolume(player.mo, sfx_s258, 100)
 			end
 			---@diagnostic disable-next-line: assign-type-mismatch
-			player.heistRound.blockStrength = max(0, $ - FU / blockDrainTics)
+			player.hr.blockStrength = max(0, $ - FU / blockDrainTics)
 
-		elseif player.heistRound.blockChargeCooldown then
-			player.heistRound.blockChargeCooldown = $ - 1
+		elseif player.hr.blockChargeCooldown then
+			player.hr.blockChargeCooldown = $ - 1
 
-			if player.heistRound.blockChargeCooldown == 0 then
+			if player.hr.blockChargeCooldown == 0 then
 				S_StartSound(player.mo, sfx_3db16)
 			end
 
-		elseif player.heistRound.blockStrength < player.heistRound.blockMaxStrength then
+		elseif player.hr.blockStrength < player.hr.blockMaxStrength then
 			---@diagnostic disable-next-line: assign-type-mismatch
-			player.heistRound.blockStrength = min(player.heistRound.blockMaxStrength, $ + FU / blockRegainStrengthTics)
+			player.hr.blockStrength = min(player.hr.blockMaxStrength, $ + FU / blockRegainStrengthTics)
 
-			if player.heistRound.blockStrength == player.heistRound.blockMaxStrength then
+			if player.hr.blockStrength == player.hr.blockMaxStrength then
 				S_StartSound(player.mo, sfx_3db06)
 			end
 		end
@@ -124,18 +124,18 @@ end)
 
 addHook("JumpSpecial", function(player)
 	if not FH:isMode() then return end
-	if not player.heistRound then return end
+	if not player.hr then return end
 	if not player.mo then return end
-	if player.heistRound.downed then
+	if player.hr.downed then
 		return true
 	end
 end)
 
 addHook("SpinSpecial", function(player)
 	if not FH:isMode() then return end
-	if not player.heistRound then return end
+	if not player.hr then return end
 	if not player.mo then return end
-	if player.heistRound.downed then
+	if player.hr.downed then
 		return true
 	end
 end)
@@ -152,9 +152,9 @@ addHook("ShouldDamage", function(targ, inf, source)
 
 	-- TODO: friendlyfire checks from the gamemode and the cvar
 	-- UPD: teaming added so this is easy
-	if source and source.valid and source.type == MT_PLAYER and source.player and source.player.heistRound then
+	if source and source.valid and source.type == MT_PLAYER and source.player and source.player.hr then
 		if not targ.player then return end
-		if not targ.player.heistRound then return end
+		if not targ.player.hr then return end
 		if FH:isInTeam(targ.player, source.player) then
 			if CV_FindVar("friendlyfire").value == 0 then
 				return false
@@ -164,7 +164,7 @@ addHook("ShouldDamage", function(targ, inf, source)
 		if targ.player.powers[pw_invulnerability] then return false end
 		if targ.player.powers[pw_super] then return false end
 		if targ.player.powers[pw_strong] & STR_GUARD then return false end
-		if targ.player.heistRound.downed then return false end
+		if targ.player.hr.downed then return false end
 
 		return true
 	end
@@ -181,21 +181,21 @@ end, MT_PLAYER)
 addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 	if not FH:isMode() then return end
 	if not victim.player then return end
-	if not victim.player.heistRound then return end
+	if not victim.player.hr then return end
 
 	if victim.player.powers[pw_invulnerability] then return end
 	if victim.player.powers[pw_super] then return end
 
-	local health = max(0, victim.player.heistRound.health - 25*FU)
+	local health = max(0, victim.player.hr.health - 25*FU)
 
 	if (damagetype & DMG_DEATHMASK) then
 		return
 	elseif victim.fh_block then
 		--- TODO: slap this in a function
 		--- @diagnostic disable-next-line: assign-type-mismatch
-		victim.player.heistRound.blockStrength = max(0, $ - blockDamage)
+		victim.player.hr.blockStrength = max(0, $ - blockDamage)
 
-		if victim.player.heistRound.blockStrength <= blockDamage then
+		if victim.player.hr.blockStrength <= blockDamage then
 			S_StartSoundAtVolume(victim, sfx_s258, 100)
 		end
 
@@ -204,7 +204,7 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 		overlay.translation = "FH_AllRed"
 		overlay.alphaFuse = 15
 
-		if victim.player.heistRound.blockStrength > 0 then
+		if victim.player.hr.blockStrength > 0 then
 			victim.player.powers[pw_flashing] = 16
 			S_StartSoundAtVolume(victim, sfx_kc40, 60)
 
@@ -217,7 +217,7 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 		end
 
 		FH:playerStopBlock(victim.player, false)
-		health = max(0, victim.player.heistRound.health - 50*FU)
+		health = max(0, victim.player.hr.health - 50*FU)
 	end
 
 	if victim.player.powers[pw_flashing] then return end
@@ -233,7 +233,7 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 		and source.valid
 		and source.type == MT_PLAYER
 		and source.player
-		and source.player.heistRound then
+		and source.player.hr then
 			FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Downed "..victim.player.name)
 		end
 		
@@ -244,7 +244,7 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 		and source.valid
 		and source.type == MT_PLAYER
 		and source.player
-		and source.player.heistRound then
+		and source.player.hr then
 			FH:addProfit(source.player, FH.profitCVars.playerHurt.value, "Damaged "..victim.player.name)
 		end
 
@@ -275,22 +275,22 @@ end, MT_PLAYER)
 addHook("MobjDeath", function(victim)
 	if not FH:isMode() then return end
 	if not victim.player then return end
-	if not victim.player.heistRound then return end
+	if not victim.player.hr then return end
 
 	local player = victim.player
 
-	for i = #player.heistRound.collectibles, 1, -1 do
-		FH:dropCollectible(player, player.heistRound.collectibles[i])
+	for i = #player.hr.collectibles, 1, -1 do
+		FH:dropCollectible(player, player.hr.collectibles[i])
 	end
 	FH:playerStopBlock(player, false)
 end, MT_PLAYER)
 
 addHook("PlayerQuit", function(player)
 	if not FH:isMode() then return end
-	if not player.heistRound then return end
+	if not player.hr then return end
 
-	for i = #player.heistRound.collectibles, 1, -1 do
-		FH:dropCollectible(player, player.heistRound.collectibles[i])
+	for i = #player.hr.collectibles, 1, -1 do
+		FH:dropCollectible(player, player.hr.collectibles[i])
 	end
 
 	if player.mo and player.mo.valid then

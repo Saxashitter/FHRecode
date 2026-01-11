@@ -83,8 +83,8 @@ addHook("MobjCollide", function(ring, source)
 	if not source.health then return end
 	if not source.player then return end
 	if P_PlayerInPain(source.player) then return end
-	if not source.player.heistRound then return end
-	if source.player.heistRound.downed then return end
+	if not source.player.hr then return end
+	if source.player.hr.downed then return end
 
 	local ringData = FH.ringStates[ring.ringType]
 	ringData.touch(ring, source.player)
@@ -98,8 +98,8 @@ addHook("MobjMoveCollide", function(ring, source)
 	if not source.health then return end
 	if not source.player then return end
 	if P_PlayerInPain(source.player) then return end
-	if not source.player.heistRound then return end
-	if source.player.heistRound.downed then return end
+	if not source.player.hr then return end
+	if source.player.hr.downed then return end
 
 	local ringData = FH.ringStates[ring.ringType]
 	ringData.touch(ring, source.player)

@@ -24,10 +24,10 @@ addHook("ThinkFrame", function()
 	if not FH:isMode() then return end
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 		if not player.mo then continue end
 		if player.mo.skin ~= "sonic" then continue end
-		if not player.heistRound.useSuper then continue end
+		if not player.hr.useSuper then continue end
 
 		local curSpr = player.mo.sprite2 & FF_FRAMEMASK
 

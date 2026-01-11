@@ -229,11 +229,11 @@ function gamestate:init()
 	end
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 
-		player.heistRound.stasis = true
-		player.heistRound.quizTimeSelection = P_RandomRange(1, #FHR.quizQuestion.answers)
-		player.heistRound.quizTimeSelected = false
+		player.hr.stasis = true
+		player.hr.quizTimeSelection = P_RandomRange(1, #FHR.quizQuestion.answers)
+		player.hr.quizTimeSelected = false
 	end
 end
 
@@ -249,9 +249,9 @@ function gamestate:update()
 	end
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 
-		player.heistRound.stasis = true
+		player.hr.stasis = true
 
 		if player.mo then
 			player.mo.momx = 0
@@ -279,13 +279,13 @@ function gamestate:switch()
 		end
 	end
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 
-		player.heistRound.stasis = false
-		player.cmd.sidemove = player.heistGlobal.sidemove
-		player.cmd.forwardmove = player.heistGlobal.forwardmove
-		player.cmd.buttons = player.heistGlobal.buttons
-		player.lastbuttons = player.heistGlobal.buttons
+		player.hr.stasis = false
+		player.cmd.sidemove = player.hg.sidemove
+		player.cmd.forwardmove = player.hg.forwardmove
+		player.cmd.buttons = player.hg.buttons
+		player.lastbuttons = player.hg.buttons
 
 		if player.cmd.buttons & BT_JUMP then
 			player.pflags = $|PF_JUMPDOWN
@@ -307,12 +307,12 @@ function gamestate:switch()
 	FH:setGamestate("game", true)
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
-		if player.heistRound.spectator then continue end
-		if player.heistRound.escaped then continue end
+		if not player.hr then continue end
+		if player.hr.spectator then continue end
+		if player.hr.escaped then continue end
 		if not player.mo then continue end
 
-		if player.heistRound.quizTimeSelection ~= FHR.quizQuestion.correct or player.heistRound.quizTimeSelected == false then
+		if player.hr.quizTimeSelection ~= FHR.quizQuestion.correct or player.hr.quizTimeSelected == false then
 			P_DamageMobj(player.mo, nil, nil, 100, DMG_INSTAKILL)
 		end
 	end
@@ -323,13 +323,13 @@ function gamestate:safeSwitch()
 	local selectedCount = 0
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
-		if player.heistRound.spectator then continue end
-		if player.heistRound.escaped then continue end
+		if not player.hr then continue end
+		if player.hr.spectator then continue end
+		if player.hr.escaped then continue end
 		if player.hasLeftServer then continue end
 
 		count = $ + 1
-		if player.heistRound.quizTimeSelected then
+		if player.hr.quizTimeSelected then
 			selectedCount = $ + 1
 		end
 	end
@@ -350,21 +350,21 @@ function gamestate:playerUpdate(player)
 	local selected = FH:isButtonPressed(player, BT_JUMP)
 	local unselected = FH:isButtonPressed(player, BT_SPIN)
 
-	if x ~= 0 and not player.heistRound.quizTimeSelected then
-		player.heistRound.quizTimeSelection = $ + x
+	if x ~= 0 and not player.hr.quizTimeSelected then
+		player.hr.quizTimeSelection = $ + x
 
-		if player.heistRound.quizTimeSelection < 1 then
-			player.heistRound.quizTimeSelection = #FHR.quizQuestion.answers
+		if player.hr.quizTimeSelection < 1 then
+			player.hr.quizTimeSelection = #FHR.quizQuestion.answers
 		end
-		if player.heistRound.quizTimeSelection > #FHR.quizQuestion.answers then
-			player.heistRound.quizTimeSelection = 1
+		if player.hr.quizTimeSelection > #FHR.quizQuestion.answers then
+			player.hr.quizTimeSelection = 1
 		end
 
 		S_StartSound(nil, sfx_kc39, player)
 	end
 
-	if selected and not player.heistRound.quizTimeSelected then
-		player.heistRound.quizTimeSelected = true
+	if selected and not player.hr.quizTimeSelected then
+		player.hr.quizTimeSelected = true
 		S_StartSound(nil, sfx_kc5e, player)
 		-- self:safeSwitch()
 	end

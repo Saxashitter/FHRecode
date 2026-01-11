@@ -111,6 +111,7 @@ end, COM_ADMIN)
 
 -- get them modifiers
 dofile("modifiers/main/eggman.lua")
+dofile("modifiers/main/remilia.lua")
 
 dofile("modifiers/side/bomb.lua")
 dofile("modifiers/side/ringDrain.lua")

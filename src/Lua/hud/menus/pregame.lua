@@ -13,7 +13,7 @@ function preGameMenu:draw(v, player, camera)
 		return
 	end
 
-	local state = player.heistRound and player.heistRound.pregameState or "character"
+	local state = player.hr and player.hr.pregameState or "character"
 
 	FH.gamestates.pregame.states[state]:draw(FH.gamestates.pregame, v, player, camera)
 
@@ -23,11 +23,11 @@ function preGameMenu:draw(v, player, camera)
 	local readyCount = 0
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 
 		count = $+1
 
-		if player.heistRound.pregameState == "waiting" then
+		if player.hr.pregameState == "waiting" then
 			readyCount = $+1
 		end
 	end

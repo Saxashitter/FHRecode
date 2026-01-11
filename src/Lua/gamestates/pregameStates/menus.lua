@@ -22,8 +22,8 @@ state.menus = {
 				name = "Selected Player: %s",
 				--- @param player player_t
 				format = function(self, gamestate, player)
-					if player.heistGlobal.team.players[player.heistRound.selectedTeamPlayer] then
-						local targetPlayer = player.heistGlobal.team.players[player.heistRound.selectedTeamPlayer]
+					if player.hg.team.players[player.hr.selectedTeamPlayer] then
+						local targetPlayer = player.hg.team.players[player.hr.selectedTeamPlayer]
 						if targetPlayer == player then
 							return "Yourself"
 						end
@@ -33,10 +33,10 @@ state.menus = {
 					return "Nobody (They probably quit...?)"
 				end,
 				func = function(self, gamestate, player)
-					player.heistRound.selectedTeamPlayer = $ + 1
+					player.hr.selectedTeamPlayer = $ + 1
 
-					if player.heistRound.selectedTeamPlayer > #player.heistGlobal.team.players then
-						player.heistRound.selectedTeamPlayer = 1
+					if player.hr.selectedTeamPlayer > #player.hg.team.players then
+						player.hr.selectedTeamPlayer = 1
 					end
 				end
 			},
@@ -44,14 +44,14 @@ state.menus = {
 				name = "Kick Player/Leave Team",
 				--- @param player player_t
 				func = function(self, gamestate, player)
-					local targetPlayer = player.heistGlobal.team.players[player.heistRound.selectedTeamPlayer]
+					local targetPlayer = player.hg.team.players[player.hr.selectedTeamPlayer]
 					if not targetPlayer then return end
 
 					if player == targetPlayer or FH:isTeamLeader(player) then
 						FH:finishTeam(player)
 						S_StartSound(nil, sfx_adderr, player)
 						if player == targetPlayer then
-							player.heistRound.selectedTeamPlayer = 1
+							player.hr.selectedTeamPlayer = 1
 						end
 					elseif not FH:isTeamLeader(player) then
 						CONS_Printf(player, "You can't kick this player, you're not the team leader!")
@@ -64,10 +64,10 @@ state.menus = {
 	{
 		name = "Spectator Mode: %s",
 		format = function(self, gamestate, player)
-			return FH:boolToString(player.heistGlobal and player.heistGlobal.spectatorMode)
+			return FH:boolToString(player.hg and player.hg.spectatorMode)
 		end,
 		func = function(self, gamestate, player)
-			player.heistGlobal.spectatorMode = not $
+			player.hg.spectatorMode = not $
 			S_StartSound(nil, sfx_kc5e, player)
 		end
 	},
@@ -84,7 +84,7 @@ state.menus = {
 --- @param player player_t
 function state:getCurrentMenu(player)
     local menu = self.menus
-    local path = player.heistRound.pregameMenuPath
+    local path = player.hr.pregameMenuPath
 
     for i = 1, #path do
         menu = menu[path[i]].submenu
@@ -97,7 +97,7 @@ end
 --- @param gamestate table
 --- @param player player_t
 function state:enter(gamestate, player)
-	player.heistRound.pregameMenuLerp = (player.heistRound.pregameMenuSelection - 1) * self.textSpacing
+	player.hr.pregameMenuLerp = (player.hr.pregameMenuSelection - 1) * self.textSpacing
 end
 
 --- @param gamestate table
@@ -109,24 +109,24 @@ function state:playerUpdate(gamestate, player)
 	local currentMenu = self:getCurrentMenu(player)
 
 	if y ~= 0 then
-		player.heistRound.pregameMenuSelection = $ - y
+		player.hr.pregameMenuSelection = $ - y
 
-		if player.heistRound.pregameMenuSelection < 1 then
-			player.heistRound.pregameMenuSelection = #currentMenu
+		if player.hr.pregameMenuSelection < 1 then
+			player.hr.pregameMenuSelection = #currentMenu
 		end
-		if player.heistRound.pregameMenuSelection > #currentMenu then
-			player.heistRound.pregameMenuSelection = 1
+		if player.hr.pregameMenuSelection > #currentMenu then
+			player.hr.pregameMenuSelection = 1
 		end
 	end
 
 	if jump then
-		 local item = currentMenu[player.heistRound.pregameMenuSelection]
+		 local item = currentMenu[player.hr.pregameMenuSelection]
 
         if item.submenu then
-            table.insert(player.heistRound.pregameMenuPath, player.heistRound.pregameMenuSelection)
+            table.insert(player.hr.pregameMenuPath, player.hr.pregameMenuSelection)
 
-            player.heistRound.pregameMenuSelection = 1
-			player.heistRound.pregameMenuLerp = (player.heistRound.pregameMenuSelection - 1) * self.textSpacing
+            player.hr.pregameMenuSelection = 1
+			player.hr.pregameMenuLerp = (player.hr.pregameMenuSelection - 1) * self.textSpacing
         elseif item.func then
             item:func(gamestate, player)
 		elseif item.state then
@@ -135,15 +135,15 @@ function state:playerUpdate(gamestate, player)
 	end
 
 	if spin then
-		if #player.heistRound.pregameMenuPath then
-			table.remove(player.heistRound.pregameMenuPath, #player.heistRound.pregameMenuPath)
+		if #player.hr.pregameMenuPath then
+			table.remove(player.hr.pregameMenuPath, #player.hr.pregameMenuPath)
 		else
 			return "character"
 		end
 	end
 
-	local targetY = (player.heistRound.pregameMenuSelection - 1) * self.textSpacing
-	player.heistRound.pregameMenuLerp = ease.linear(FU / 3, player.heistRound.pregameMenuLerp, targetY)
+	local targetY = (player.hr.pregameMenuSelection - 1) * self.textSpacing
+	player.hr.pregameMenuLerp = ease.linear(FU / 3, player.hr.pregameMenuLerp, targetY)
 end
 
 --- @param v videolib
@@ -152,7 +152,7 @@ function state:draw(gamestate, v, player)
 	local menus = self:getCurrentMenu(player)
 	local gamestate = FH.gamestates[FHR.currentState]
 
-	local index = player.heistRound.pregameMenuSelection
+	local index = player.hr.pregameMenuSelection
 
 	local startX = 160 * FU
 	local startY = 110 * FU
@@ -166,7 +166,7 @@ function state:draw(gamestate, v, player)
 
 	for i, menu in ipairs(menus) do
 		local logicalY = (i - 1) * spacing
-		local drawY = startY + logicalY - player.heistRound.pregameMenuLerp
+		local drawY = startY + logicalY - player.hr.pregameMenuLerp
 		local selected = (i == index)
 
 		local name = menu.name

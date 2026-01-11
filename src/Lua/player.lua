@@ -35,7 +35,7 @@ function FH:initPlayerGlobal(player)
 		}
 	}
 	
-	player.heistGlobal = playerGlobal
+	player.hg = playerGlobal
 	return playerGlobal
 end
 
@@ -170,7 +170,7 @@ function FH:initPlayerRound(player)
 		quizTimeSelected = false
 	}
 
-	player.heistRound = playerRound
+	player.hr = playerRound
 	gametype:playerInit(player, FHR.currentState)
 
 	return playerRound
@@ -201,10 +201,10 @@ end
 --- @param player player_t
 --- @param gametype heistGametype_t
 local function initChecks(player, gametype)
-	if not player.heistGlobal then
+	if not player.hg then
 		FH:initPlayerGlobal(player)
 	end
-	if not player.heistRound then
+	if not player.hr then
 		FH:initPlayerRound(player)
 	end
 end
@@ -228,15 +228,15 @@ addHook("PreThinkFrame", function()
 	for player in players.iterate do
 		initChecks(player, gametype)
 
-		player.heistGlobal.lastSidemove = player.heistGlobal.sidemove
-		player.heistGlobal.lastForwardmove = player.heistGlobal.forwardmove
-		player.heistGlobal.lastButtons = player.heistGlobal.buttons
+		player.hg.lastSidemove = player.hg.sidemove
+		player.hg.lastForwardmove = player.hg.forwardmove
+		player.hg.lastButtons = player.hg.buttons
 
-		player.heistGlobal.sidemove = player.cmd.sidemove
-		player.heistGlobal.forwardmove = player.cmd.forwardmove
-		player.heistGlobal.buttons = player.cmd.buttons
+		player.hg.sidemove = player.cmd.sidemove
+		player.hg.forwardmove = player.cmd.forwardmove
+		player.hg.buttons = player.cmd.buttons
 
-		if player.heistRound.stasis then
+		if player.hr.stasis then
 			player.cmd.sidemove = 0
 			player.cmd.forwardmove = 0
 			player.cmd.buttons = 0
@@ -254,23 +254,23 @@ addHook("PlayerThink", function(player)
 
 	initChecks(player, gametype)
 
-	if player.heistRound.spectator and player.mo and player.mo.health then
+	if player.hr.spectator and player.mo and player.mo.health then
 		player.spectator = true
 	end
 
-	if player.heistRound.useSuper and player.mo then
+	if player.hr.useSuper and player.mo then
 		player.mo.eflags = $|MFE_FORCESUPER
 	elseif player.mo then
 		player.mo.eflags = $ & ~MFE_FORCESUPER
 	end
 
-	if player.heistRound.forcedPosition and player.mo and player.mo.health and not player.spectator then
+	if player.hr.forcedPosition and player.mo and player.mo.health and not player.spectator then
 		P_SetOrigin(player.mo,
-			player.heistRound.forcedPosition.x,
-			player.heistRound.forcedPosition.y,
-			player.heistRound.forcedPosition.z
+			player.hr.forcedPosition.x,
+			player.hr.forcedPosition.y,
+			player.hr.forcedPosition.z
 		)
-		player.drawangle = player.heistRound.forcedPosition.angle
+		player.drawangle = player.hr.forcedPosition.angle
 		player.mo.momx = 0
 		player.mo.momy = 0
 		player.mo.momz = 0
@@ -294,7 +294,7 @@ addHook("PlayerQuit", function(player)
 
 	initChecks(player, gametype)
 
-	if player.heistGlobal then
+	if player.hg then
 		FH:finishTeam(player)
 	end
 
@@ -331,7 +331,7 @@ addHook("ThinkFrame", function()
  
 		-- TODO: make our own counter that accounts for fixed values.
 		-- UPD: this is half done, need to make the scoreboard
-		player.score = player.heistRound.profit/FU
+		player.score = player.hr.profit/FU
 	end
 end)
 

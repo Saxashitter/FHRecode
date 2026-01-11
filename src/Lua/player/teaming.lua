@@ -51,9 +51,9 @@ addHook("MobjRemoved", function(mobj)
 	if mobj.target
 	and mobj.target.valid
 	and mobj.target.player
-	and mobj.target.player.heistRound
-	and mobj.target.player.heistRound.teamMobj == mobj then
-		mobj.target.player.heistRound.teamMobj = nil
+	and mobj.target.player.hr
+	and mobj.target.player.hr.teamMobj == mobj then
+		mobj.target.player.hr.teamMobj = nil
 	end
 end, MT_FH_TEAM)
 
@@ -66,7 +66,7 @@ end, MT_FH_TEAM)
 function FH:canUseTeamInput(player)
 	if not FH:isMode() then return false end
 	if FHR.currentState ~= "game" then return false end
-	if not player.heistRound then return false end
+	if not player.hr then return false end
 	if not (player.mo and player.mo.health) then return false end
 	if P_PlayerInPain(player) then return false end
 	return true
@@ -77,10 +77,10 @@ end
 --- @return player_t|nil
 function FH:getJoinableLeader(player)
 	for leader in players.iterate do
-		if not leader.heistGlobal then continue end
+		if not leader.hg then continue end
 		if not FH:isTeamLeader(leader) then continue end
-		if not leader.heistRound.teamMobj then continue end
-		if #leader.heistGlobal.team.players >= FH.teamLimit then continue end
+		if not leader.hr.teamMobj then continue end
+		if #leader.hg.team.players >= FH.teamLimit then continue end
 		if FH:isInTeam(leader, player) then continue end
 
 		if FH:isPlayerInTeamingRange(leader, player) then
@@ -95,8 +95,8 @@ end
 --- @return boolean
 function FH:canCreateTeamRequest(player)
 	if not FH:isTeamLeader(player) then return false end
-	if player.heistRound.teamMobj then return false end
-	if #player.heistGlobal.team.players >= FH.teamLimit then return false end
+	if player.hr.teamMobj then return false end
+	if #player.hg.team.players >= FH.teamLimit then return false end
 	return true
 end
 
@@ -122,7 +122,7 @@ addHook("PlayerThink", function(player)
 
 	if leader then
 		FH:startTeam(leader, player)
-		P_RemoveMobj(leader.heistRound.teamMobj)
+		P_RemoveMobj(leader.hr.teamMobj)
 		S_StartSound(player.mo, sfx_itemup)
 		return
 	end
@@ -156,7 +156,7 @@ function FH:teamRequest(player)
 	team.scale = $ * 2
 	team.destscale = team.scale
 
-	player.heistRound.teamMobj = team
+	player.hr.teamMobj = team
 
 	S_StartSound(player.mo, sfx_hidden)
 end
@@ -178,13 +178,13 @@ end
 --- Removes player from their current team and reinitializes solo
 --- @param player player_t
 function FH:finishTeam(player)
-	local curTeam = player.heistGlobal.team.players
+	local curTeam = player.hg.team.players
 
 	for k, v in ipairs(curTeam) do
 		if v == player then
 			if k == 1 and curTeam[2] then
-				curTeam[2].heistRound.profit = player.heistRound.profit
-				curTeam[2].heistRound.profitLog = player.heistRound.profitLog
+				curTeam[2].hr.profit = player.hr.profit
+				curTeam[2].hr.profitLog = player.hr.profitLog
 			end
 
 			table.remove(curTeam, k)
@@ -192,10 +192,10 @@ function FH:finishTeam(player)
 		end
 	end
 
-	player.heistRound.profit = 0
-	player.heistRound.profitLog = {}
+	player.hr.profit = 0
+	player.hr.profitLog = {}
 
-	player.heistGlobal.team = FH:initTeam(player)
+	player.hg.team = FH:initTeam(player)
 end
 
 --- Adds target to leader's team
@@ -204,11 +204,11 @@ end
 function FH:startTeam(player, target)
 	FH:finishTeam(target)
 
-	table.insert(player.heistGlobal.team.players, target)
-	target.heistGlobal.team = player.heistGlobal.team
+	table.insert(player.hg.team.players, target)
+	target.hg.team = player.hg.team
 
 	-- iterate thru collectibles
-	for _, collectible in ipairs(target.heistRound.collectibles) do
+	for _, collectible in ipairs(target.hr.collectibles) do
 		FH:addProfit(player, FH.profitCVars.collectible.value + FH.profitCVars.collectibleExt.value * collectible.variant, "Collected "..self.collectibleNames[collectible.variant].." Collectible", 0)
 	end
 
@@ -220,7 +220,7 @@ end
 --- @return boolean
 --- @return integer
 function FH:isInTeam(player, target)
-	for k, v in ipairs(player.heistGlobal.team.players) do
+	for k, v in ipairs(player.hg.team.players) do
 		if v == target then
 			return true, k
 		end
@@ -232,7 +232,7 @@ end
 --- @param player player_t
 --- @return boolean
 function FH:isTeamLeader(player)
-	return player.heistGlobal.team.players[1] == player
+	return player.hg.team.players[1] == player
 end
 
 -- =====================

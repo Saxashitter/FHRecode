@@ -45,10 +45,10 @@ function mapVoteMenu:draw(v, player)
 	end
 
 	for otherPlayer in players.iterate do
-		if not otherPlayer.heistRound then continue end
-		if not otherPlayer.heistRound.mapVote then continue end
+		if not otherPlayer.hr then continue end
+		if not otherPlayer.hr.mapVote then continue end
 
-		maps[otherPlayer.heistRound.mapSelection].votes = $ + 1
+		maps[otherPlayer.hr.mapSelection].votes = $ + 1
 	end
 
 	if #maps == 0 then return end
@@ -71,10 +71,10 @@ function mapVoteMenu:draw(v, player)
 		local borderColor = borderColorUnselected
 		local colorMap = 0
 
-		if player and player.heistRound and player.heistRound.mapSelection == i then
+		if player and player.hr and player.hr.mapSelection == i then
 			borderColor = borderColorSelected
 
-			if player.heistRound.mapVote then
+			if player.hr.mapVote then
 				borderColor = borderColorConfirmed
 				colorMap = V_GREENMAP
 			end

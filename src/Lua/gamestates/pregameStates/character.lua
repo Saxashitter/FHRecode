@@ -13,7 +13,7 @@ local SWITCH_ANIM_DURATION = 25
 
 --- @param player player_t
 local function getTic(player)
-	return leveltime - player.heistRound.selectedSkinTime
+	return leveltime - player.hr.selectedSkinTime
 end
 
 function state:playerUpdate(gamestate, player)
@@ -42,10 +42,10 @@ function state:playerUpdate(gamestate, player)
 			end
 		end
 
-		player.heistRound.lastSkin = player.skin
-		player.heistRound.lastSwap = x
-		player.heistRound.selectedSkinTime = leveltime
-		player.heistRound.useSuper = false
+		player.hr.lastSkin = player.skin
+		player.hr.lastSwap = x
+		player.hr.selectedSkinTime = leveltime
+		player.hr.useSuper = false
 
 		S_StartSound(nil, sfx_kc39, player)
 		R_SetPlayerSkin(player, newSkin)
@@ -56,7 +56,7 @@ function state:playerUpdate(gamestate, player)
 	end
 	if spin and FH.altSkins[skins[player.skin].name] then
 		S_StartSound(nil, sfx_kc5e, player)
-		player.heistRound.useSuper = not $
+		player.hr.useSuper = not $
 	end
 end
 
@@ -83,19 +83,19 @@ function state:draw(gamestate, v, player)
 	local portrait = FH:getCharPortrait(v, player and player.skin or 0)
 	local portraitX = 160 * FU - portrait.width * PORTRAIT_SCALE / 2
 
-	if player and player.heistRound.lastSkin ~= nil and getTic(player) < SWITCH_ANIM_DURATION then
-		local dir = player.heistRound.lastSwap
+	if player and player.hr.lastSkin ~= nil and getTic(player) < SWITCH_ANIM_DURATION then
+		local dir = player.hr.lastSwap
 		local t = ease.outcubic(FixedDiv(getTic(player), SWITCH_ANIM_DURATION), 0, 100 * FU) / 100 -- i dont feel like writing manual easing code give me a break
 
 		portraitX = $ + FixedMul(screenWidth * dir, FU - t)
 
-		local lastPortrait = FH:getCharPortrait(v, player.heistRound.lastSkin)
+		local lastPortrait = FH:getCharPortrait(v, player.hr.lastSkin)
 		local lastPortraitX = 160 * FU - lastPortrait.width * PORTRAIT_SCALE / 2
 		lastPortraitX = $ + FixedMul(screenWidth * dir * -1, t)
 
 		-- ease in new background
 		if getTic(player) < 10 then
-			FH.playerIconParallax:draw(v, skins[player.heistRound.lastSkin].name, leveltime, V_10TRANS * getTic(player))
+			FH.playerIconParallax:draw(v, skins[player.hr.lastSkin].name, leveltime, V_10TRANS * getTic(player))
 		end
 
 		v.drawScaled(lastPortraitX, PORTRAIT_Y * FU, PORTRAIT_SCALE, lastPortrait, 0)
@@ -106,7 +106,7 @@ function state:draw(gamestate, v, player)
 	FH:drawPaletteRect(v, 0, RIBBON_Y * FU, v.width() * FU / v.dupx(), RIBBON_HEIGHT * FU, palette, V_SNAPTOLEFT)
 	SSL.drawString(v, 160, CHAR_NAME_Y, skin.realname, "STCFN%03d", 0, FU/2, 0, textmap, 0, 0)
 	if FH.altSkins[skin.name] then
-		SSL.drawString(v, 160, SKIN_TOGGLE_Y, "[SPIN] Alt. Skin: "..FH:boolToString(player.heistRound.useSuper), "TNYFN%03d", 0, FU/2, FU, V_YELLOWMAP, 0, 0)
+		SSL.drawString(v, 160, SKIN_TOGGLE_Y, "[SPIN] Alt. Skin: "..FH:boolToString(player.hr.useSuper), "TNYFN%03d", 0, FU/2, FU, V_YELLOWMAP, 0, 0)
 	end
 	-- arrows
 	v.drawScaled(160 * FU - stringWidth * FU / 2 - leftArrow.width * FU, CHAR_NAME_Y * FU, FU, leftArrow,  0, v.getStringColormap(V_YELLOWMAP))

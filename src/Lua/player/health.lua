@@ -17,9 +17,9 @@ states[S_FH_PLAY_DOWNED] = {
 --- @param health fixed_t
 --- @return boolean
 function FH:setHealth(player, health)
-	player.heistRound.health = health
+	player.hr.health = health
 
-	if player.heistRound.health == 0 then
+	if player.hr.health == 0 then
 		FH:downPlayer(player, 10 * TICRATE)
 		return true
 	end
@@ -34,13 +34,13 @@ function FH:downPlayer(player, time)
 
 	player.mo.state = S_FH_PLAY_DOWNED
 
-	player.heistRound.downed = true
-	player.heistRound.downedTime = time or 0
-	player.heistRound.canUseInstaShield = false
-	player.heistRound.canUseBlock = false
+	player.hr.downed = true
+	player.hr.downedTime = time or 0
+	player.hr.canUseInstaShield = false
+	player.hr.canUseBlock = false
 
-	for i = #player.heistRound.collectibles, 1, -1 do
-		FH:dropCollectible(player, player.heistRound.collectibles[i])
+	for i = #player.hr.collectibles, 1, -1 do
+		FH:dropCollectible(player, player.hr.collectibles[i])
 	end
 
 	player.powers[pw_flashing] = 2
@@ -65,15 +65,15 @@ end
 ---@param player player_t
 function FH:revivePlayer(player)
 	if FHR.currentState ~= "game" then return end
-	if not player.heistRound.downed then return end
+	if not player.hr.downed then return end
 	
 	player.mo.state = S_PLAY_STND
 	player.powers[pw_flashing] = 2 * TICRATE
 
-	player.heistRound.downed = false
-	player.heistRound.downedTime = 0
-	player.heistRound.canUseInstaShield = true
-	player.heistRound.canUseBlock = true
+	player.hr.downed = false
+	player.hr.downedTime = 0
+	player.hr.canUseInstaShield = true
+	player.hr.canUseBlock = true
 
 	FH:setHealth(player, FH.characterHealths[player.mo.skin])
 	FH:setPlayerExpression(player, "default")
@@ -89,8 +89,8 @@ end
 addHook("PlayerThink", function(player)
 	if not FH:isMode() then return end
 	if not player.mo then return end
-	if not player.heistRound then return end
-	if not player.heistRound.downed then return end
+	if not player.hr then return end
+	if not player.hr.downed then return end
 	if not player.mo.health then
 		FH:revivePlayer(player)
 		return
@@ -100,24 +100,24 @@ addHook("PlayerThink", function(player)
 	player.pflags = $|PF_JUMPSTASIS
 	player.mo.state = S_FH_PLAY_DOWNED
 
-	if player.heistRound.downedTime then
-		player.heistRound.downedTime = $ - 1
+	if player.hr.downedTime then
+		player.hr.downedTime = $ - 1
 
-		if player.heistRound.downedTime == 0 then
+		if player.hr.downedTime == 0 then
 			FH:revivePlayer(player)
 			return
 		end
 	end
 
-	for _, member in ipairs(player.heistGlobal.team.players) do
+	for _, member in ipairs(player.hg.team.players) do
 		if member == player then continue end
 		if not member.mo then continue end
 		if not member.mo.health then continue end
-		if member.heistRound.downed then continue end
-		if member.heistRound.escaped then continue end
-		if member.heistRound.spectator then continue end
+		if member.hr.downed then continue end
+		if member.hr.escaped then continue end
+		if member.hr.spectator then continue end
 
-		local distance = R_PointToDist2(0, member.mo.z, R_PointToDist2(member.mo.x, member.mo.y, player.mo.x, player.mo.y), player.mo.z)
+		local distance = FH:pointTo3DDist(member.mo.x, member.mo.y, member.mo.z, player.mo.x, player.mo.y, player.mo.z)
 
 		if distance <= player.mo.radius + member.mo.radius then
 			S_StartSound(member.mo, sfx_s3k4a)
@@ -131,9 +131,9 @@ end)
 addHook("ShouldDamage", function(player)
 	if not FH:isMode() then return end
 	if not player.player then return end
-	if not player.player.heistRound then return end
+	if not player.player.hr then return end
 
-	if player.player.heistRound.downed then
+	if player.player.hr.downed then
 		return false
 	end
 end, MT_PLAYER)

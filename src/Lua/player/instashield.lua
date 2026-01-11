@@ -117,7 +117,7 @@ function A_FH_PlayerInstaShieldTicker(mobj, xyRange, zRange)
 	local vx = mobj.target.momx
 	local vy = mobj.target.momy
 	local vz = mobj.target.momz
-	local spd = R_PointToDist2(0,0,R_PointToDist2(0,0,vx,vy),vz)
+	local spd = FH:pointTo3DDist(0,0,0, vx,vy,vz)
 	local cap = 20 * mobj.scale
 
 	if spd > cap then

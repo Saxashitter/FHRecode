@@ -32,12 +32,12 @@ local function getClosestPlayer(eggmanChaser)
 		if not player.mo then continue end
 		if not player.mo.health then continue end
 		if not player.mo.valid then continue end
-		if not player.heistRound then continue end
-		if player.heistRound.escaped then continue end
-		if player.heistRound.downed then continue end
+		if not player.hr then continue end
+		if player.hr.escaped then continue end
+		if player.hr.downed then continue end
 
         -- Calculate the full 3D distance
-        local playerDist = R_PointToDist2(0, eggmanChaser.z, R_PointToDist2(eggmanChaser.x, eggmanChaser.y, player.mo.x, player.mo.y), player.mo.z)
+        local playerDist = FH:pointTo3DDist(eggmanChaser.x, eggmanChaser.y, eggmanChaser.z, player.mo.x, player.mo.y, player.mo.z)
 
 		if target == nil
 		or playerDist < dist then
@@ -158,7 +158,7 @@ end, MT_FH_EGGMAN_CHASER)
 addHook("TouchSpecial", function(eggmanChaser, player)
 	if not player.health then return true end
 	if not player.player then return true end
-	if not player.player.heistRound then return true end
+	if not player.player.hr then return true end
 	if P_PlayerInPain(player.player) then return true end
 
 	if not P_DamageMobj(player, eggmanChaser, eggmanChaser) then

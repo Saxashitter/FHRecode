@@ -84,9 +84,9 @@ function gamestate:update()
 			mobj.__stopped = nil
 		end
 		for player in players.iterate do
-			if not player.heistRound then continue end
+			if not player.hr then continue end
 
-			player.heistRound.stasis = false
+			player.hr.stasis = false
 		end
 		S_SetInternalMusicVolume(100)
 		FH:setGamestate("game", true)
@@ -94,9 +94,9 @@ function gamestate:update()
 	end
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 
-		player.heistRound.stasis = true
+		player.hr.stasis = true
 
 		if player.mo then
 			player.mo.momx = 0

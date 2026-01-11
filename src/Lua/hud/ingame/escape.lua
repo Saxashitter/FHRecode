@@ -12,12 +12,12 @@ local ui = {
 --- @param player player_t
 --- @return patch_t|false
 function ui:getExpression(v, player)
-	if not (player and player.heistRound) then return false end
+	if not (player and player.hr) then return false end
 
 	local skin = skins[player.skin]
 	local skinName = (skin and skin.name or "sonic"):upper()
 
-	local expression = player.heistRound.expression
+	local expression = player.hr.expression
 	if not expression then return false end
 	expression = expression:upper()
 
@@ -48,19 +48,19 @@ end
 --- @param camera camera_t
 function ui:draw(v, player, camera)
 	if not player then return end
-	if not player.heistRound then return end
+	if not player.hr then return end
 
 	local x = self.x
 	local y = self.y
 	local inside = self.inside
-	local div = FixedDiv(player.heistRound.health, FH.characterHealths[skins[player.skin].name])
+	local div = FixedDiv(player.hr.health, FH.characterHealths[skins[player.skin].name])
 
 	local monitor = self:getExpression(v, player)
 	local blockBar = v.cachePatch("FH_BLOCKBAR")
 	local blockBarFill = v.cachePatch("FH_BLOCKBAR_FILL")
 	
 	if monitor then
-		v.drawScaled(x, y, player.heistRound.expressionScale, monitor, self.flags, v.getColormap(player.skin, player.skincolor))
+		v.drawScaled(x, y, player.hr.expressionScale, monitor, self.flags, v.getColormap(player.skin, player.skincolor))
 	else
 		-- TODO: life icon fallback
 	end
@@ -68,7 +68,7 @@ function ui:draw(v, player, camera)
 	y = $ - 16 * FU
 
 	-- block bar
-	local blockDiv = FixedDiv(player.heistRound.blockStrength, FU) -- 0..FU
+	local blockDiv = FixedDiv(player.hr.blockStrength, FU) -- 0..FU
 	---@diagnostic disable-next-line: cast-local-type
 	blockDiv = min(FU, max(0, blockDiv)) -- clamp for safety
 	

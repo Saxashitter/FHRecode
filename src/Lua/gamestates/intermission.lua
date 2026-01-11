@@ -24,14 +24,14 @@ function gamestate:init()
 
 	local queuedTeams = {}
 	for player in players.iterate do
-		if not player.heistRound then continue end
-		local team = player.heistGlobal.team
+		if not player.hr then continue end
+		local team = player.hg.team
 		if queuedTeams[team] then continue end  -- already processed this team
 
 		-- check if any player in this team has escaped
 		local teamHasEscaped = false
 		for _, member in ipairs(team.players) do
-			if member.heistRound.escaped then
+			if member.hr.escaped then
 				teamHasEscaped = true
 				break
 			end
@@ -47,15 +47,15 @@ function gamestate:init()
 		queuedTeams[team] = true
 
 		-- sort leader's profit log
-		table.sort(leader.heistRound.profitLog, function(a, b) return a.profit > b.profit end)
+		table.sort(leader.hr.profitLog, function(a, b) return a.profit > b.profit end)
 
 		-- create leaderboard entry
 		local entry = {
 			name = leader.name,
-			profit = leader.heistRound.profit,
+			profit = leader.hr.profit,
 			skin = leader.skin,
 			color = leader.skincolor,
-			log = leader.heistRound.profitLog,
+			log = leader.hr.profitLog,
 			player = leader,
 			team = team
 		}
@@ -112,7 +112,7 @@ end
 
 function gamestate:preUpdate() end
 function gamestate:playerUpdate(player)
-	player.heistRound.stasis = true
+	player.hr.stasis = true
 
 	if player.mo then
 		player.mo.momx = 0

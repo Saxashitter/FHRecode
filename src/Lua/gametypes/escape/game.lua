@@ -44,26 +44,26 @@ FH.ringStates["Goal"] = {
 		if not gametype then return end -- just here for formatting purposes
 
 		if not FHR.escape then return end
-		if player.heistRound.escaped then return end
+		if player.hr.escaped then return end
 
-		player.heistRound.forcedPosition = {
+		player.hr.forcedPosition = {
 			x = ring.x,
 			y = ring.y,
 			z = ring.z,
 			angle = player.drawangle
 		}
-		player.heistRound.stasis = true
-		player.heistRound.escaped = true
+		player.hr.stasis = true
+		player.hr.escaped = true
 		player.powers[pw_flashing] = 2 * TICRATE + 1 -- infinite invulnerability!!
 		player.mo.alpha = 0
 
-		for _, v in ipairs(player.heistRound.collectibles) do
+		for _, v in ipairs(player.hr.collectibles) do
 			if v and v.valid then
 				v.target = nil
 				P_RemoveMobj(v)
 			end
 		end
-		player.heistRound.collectibles = {}
+		player.hr.collectibles = {}
 
 		S_StartSound(player.mo, sfx_s1c3)
 		S_StartSound(ring, sfx_s1c3)
@@ -89,7 +89,7 @@ FH.ringStates["Round 2 Teleport From"] = {
 		if not gametype then return end -- just here for formatting purposes
 
 		if not FHR.escape then return end
-		if player.heistRound.escaped then return end
+		if player.hr.escaped then return end
 
 		-- find other link
 		local otherRing = FHR.round2FinishRings[ring.index]
@@ -98,7 +98,7 @@ FH.ringStates["Round 2 Teleport From"] = {
 			return
 		end
 
-		local speed = R_PointToDist2(0, 0, R_PointToDist2(0, 0, player.mo.momx, player.mo.momy), player.mo.momz)
+		local speed = FH:pointTo3DDist(0,0,0, player.mo.momx, player.mo.momy, player.mo.momz)
 
 		P_SetOrigin(player.mo, otherRing.x, otherRing.y, otherRing.z)
 		P_InstaThrust(player.mo, otherRing.angle, speed)
@@ -135,6 +135,7 @@ function escape:init()
 	FHR.round2FinishRings = {}
 	FHR.endPosition = {x = 0, y = 0, z = 0, angle = 0}
 	FHR.enemyRespawnQueue = {}
+	FHR.appendedSideModifiers = {}
 end
 
 function escape:load()
@@ -175,7 +176,7 @@ function escape:escapeUpdate()
 			for player in players.iterate do
 				P_SetSkyboxMobj(nil, player)
 
-				if player.heistRound then
+				if player.hr then
 					FH:setPlayerExpression(player, "hurt")
 				end
 			end
@@ -191,7 +192,7 @@ function escape:escapeUpdate()
 				P_SetSkyboxMobj(nil, player)
 				P_FlashPal(player, 0, 10)
 
-				if player.heistRound then
+				if player.hr then
 					FH:setPlayerExpression(player, "dead")
 				end
 			end
@@ -236,7 +237,7 @@ function escape:startEscape(starter)
 	FHR.maxEscapeTime = FHR.escapeTime
 	FHR.escapeStartTime = leveltime
 
-	if starter and starter.heistRound then
+	if starter and starter.hr then
 		FH:addProfit(starter, FH.profitCVars.startedEscape.value, "Started the Escape Sequence", 0)
 	end
 
@@ -265,23 +266,70 @@ function escape:startEscape(starter)
 	local escapeSong = FH:getMapVariable(nil, "fh_escapetheme", "FH_ESC")
 
 	if FHN.retakes then
-		-- activate modifiers
-		local mainModifier = FH:randomItems(FH.modifiers.types.main, 1)[1]
-		local sideModifiers = {}
+		local used = {}
 
-		if FHN.retakes > 1 then
-			sideModifiers = FH:randomItems(FH.modifiers.types.side, FHN.retakes - 1)
+		-- Total modifiers scale with retakes
+		local totalMods = max(1, FHN.retakes)
+		local sideCount = max(0, totalMods - 1)
+		local mainModifier
+
+		if FHR.appendedMainModifier then
+			mainModifier = FH:getModifier(FHR.appendedMainModifier)
+		else
+			mainModifier = FH:randomItems(FH.modifiers.types.main, 1)[1]
 		end
 
-		FH:activateModifier(mainModifier)
-		for k, v in ipairs(sideModifiers) do
-			FH:activateModifier(v)
+		if mainModifier then
+			used[mainModifier.id] = true
+			FH:activateModifier(mainModifier)
+		end
+
+		local sideModifiers = {}
+
+		-- Consume appended side modifiers first
+		for _, id in ipairs(FHR.appendedSideModifiers) do
+			if #sideModifiers >= sideCount then break end
+
+			local mod = FH:getModifier(id)
+			if mod and not used[mod.id] then
+				table.insert(sideModifiers, mod)
+				used[mod.id] = true
+			end
+		end
+
+		-- Fill remaining slots randomly
+		if #sideModifiers < sideCount then
+			local pool = {}
+
+			for _, mod in ipairs(FH.modifiers.types.side) do
+				if not used[mod.id] then
+					table.insert(pool, mod)
+				end
+			end
+
+			local needed = min(sideCount - #sideModifiers, #pool)
+			local picks = FH:randomItems(pool, needed)
+
+			for _, mod in ipairs(picks) do
+				table.insert(sideModifiers, mod)
+				used[mod.id] = true
+			end
+		end
+
+		-- Activate side modifiers
+		for _, mod in ipairs(sideModifiers) do
+			FH:activateModifier(mod)
 		end
 
 		-- decide on retake song based on map
 		escapeSong = FH:getMapVariable(nil, "fh_retake1theme", "FH_RTK")
+	
 		for i = 2, FHN.retakes do
 			escapeSong = $ or FH:getMapVariable(nil, "fh_retake"..i.."theme")
+		end
+
+		if mainModifier and mainModifier.music then
+			escapeSong = mainModifier.music
 		end
 	end
 
@@ -301,7 +349,7 @@ function escape:startEscape(starter)
 	end
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 
 		FH:setPlayerExpression(player, "hurt", 5 * TICRATE)
 	end
@@ -317,17 +365,17 @@ function escape:safeFinish()
 
 	for player in players.iterate do
 		---@diagnostic disable-next-line: undefined-field
-		-- if (player.heistRound and player.heistRound.spectator) or not player.mo or not player.mo.health or player.hasLeftServer then continue end
-		if not player.heistRound then continue end
-		if player.heistRound.spectator then continue end
-		if player.heistRound.downed then continue end
+		-- if (player.hr and player.hr.spectator) or not player.mo or not player.mo.health or player.hasLeftServer then continue end
+		if not player.hr then continue end
+		if player.hr.spectator then continue end
+		if player.hr.downed then continue end
 		if not player.mo then continue end
 		if not player.mo.health then continue end
 		if player.hasLeftServer then continue end
 
 		totalCount = $ + 1
 
-		if player.heistRound.escaped then
+		if player.hr.escaped then
 			leavingCount = $ + 1
 		end
 	end
@@ -374,6 +422,38 @@ end)
 COM_AddCommand("fh_startescape", function(player)
 	escape:startEscape(player)
 end, COM_ADMIN)
+
+COM_AddCommand("fh_appendmodifier", function(player, id)
+	local mod = FH:getModifier(id)
+
+	if not mod then
+		CONS_Printf(player, "Unknown modifier: "..id)
+		return
+	end
+
+	if mod.type == "main" then
+		FHR.appendedMainModifier = id
+		CONS_Printf(player, "Appended MAIN modifier: "..id)
+		return
+	end
+
+	if mod.type == "side" then
+		for _, v in ipairs(FHR.appendedSideModifiers) do
+			if v == id then
+				CONS_Printf(player, "Side modifier already appended.")
+				return
+			end
+		end
+
+		table.insert(FHR.appendedSideModifiers, id)
+		CONS_Printf(player, "Appended SIDE modifier: "..id)
+		return
+	end
+
+	CONS_Printf(player, "Modifier type not appendable.")
+end)
+
+
 
 COM_AddCommand("fh_setretakes", function(player, amount)
 	amount = tonumber(amount)

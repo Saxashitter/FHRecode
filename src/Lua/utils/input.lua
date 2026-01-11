@@ -3,7 +3,7 @@
 --- @param button SINT8
 --- @return boolean
 function FH:isButtonPressed(player, button)
-	return player.heistGlobal.buttons & button > 0 and player.heistGlobal.lastButtons & button == 0
+	return player.hg.buttons & button > 0 and player.hg.lastButtons & button == 0
 end
 
 --- Returns an x and y value depending on if the player is moving their directional inputs that way. Despite it's name, it's main use is for menus.
@@ -13,6 +13,6 @@ end
 --- @return number
 function FH:isMovePressed(player, leniency)
 	return
-		((abs(player.heistGlobal.sidemove) >= leniency and abs(player.heistGlobal.lastSidemove) < leniency) and 1 or 0) * max(-1, min(1, player.heistGlobal.sidemove)),
-		((abs(player.heistGlobal.forwardmove) >= leniency and abs(player.heistGlobal.lastForwardmove) < leniency) and 1 or 0) * max(-1, min(1, player.heistGlobal.forwardmove))
+		((abs(player.hg.sidemove) >= leniency and abs(player.hg.lastSidemove) < leniency) and 1 or 0) * max(-1, min(1, player.hg.sidemove)),
+		((abs(player.hg.forwardmove) >= leniency and abs(player.hg.lastForwardmove) < leniency) and 1 or 0) * max(-1, min(1, player.hg.forwardmove))
 end

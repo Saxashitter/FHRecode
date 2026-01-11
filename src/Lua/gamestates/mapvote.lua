@@ -53,12 +53,12 @@ function gamestate:switch()
 	end
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 		---@diagnostic disable-next-line: undefined-field
 		if player.hasLeftServer then continue end
-		if not player.heistRound.mapVote then continue end
+		if not player.hr.mapVote then continue end
 
-		votes[player.heistRound.mapSelection] = $ + 1
+		votes[player.hr.mapSelection] = $ + 1
 	end
 
 	-- now decide the map
@@ -85,12 +85,12 @@ function gamestate:canSwitch()
 	local votedCount = 0
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 		---@diagnostic disable-next-line: undefined-field
 		if player.hasLeftServer then continue end
 
 		count = $ + 1
-		if player.heistRound.mapVote then
+		if player.hr.mapVote then
 			votedCount = $ + 1
 		end
 	end
@@ -103,7 +103,7 @@ function gamestate:preUpdate() end
 
 -- TODO: take advantage of PlayerSpawn to stop whatever tf this is for new players
 function gamestate:playerUpdate(player)
-	player.heistRound.stasis = true
+	player.hr.stasis = true
 
 	if player.mo then
 		player.mo.momx = 0
@@ -116,30 +116,30 @@ function gamestate:playerUpdate(player)
 	local confirmed = FH:isButtonPressed(player, BT_JUMP)
 	local revert = FH:isButtonPressed(player, BT_SPIN)
 
-	if x ~= 0 and not player.heistRound.mapVote then
-		player.heistRound.mapSelection = $ + x
+	if x ~= 0 and not player.hr.mapVote then
+		player.hr.mapSelection = $ + x
 
-		if player.heistRound.mapSelection > #FHR.mapVoteMaps then
-			player.heistRound.mapSelection = 1
-		elseif player.heistRound.mapSelection < 1 then
-			player.heistRound.mapSelection = #FHR.mapVoteMaps
+		if player.hr.mapSelection > #FHR.mapVoteMaps then
+			player.hr.mapSelection = 1
+		elseif player.hr.mapSelection < 1 then
+			player.hr.mapSelection = #FHR.mapVoteMaps
 		end
 
 		S_StartSound(nil, sfx_kc39, player)
 	end
 
-	if confirmed and not player.heistRound.mapVote then
+	if confirmed and not player.hr.mapVote then
 		S_StartSound(nil, sfx_kc5e, player)
-		player.heistRound.mapVote = true
+		player.hr.mapVote = true
 
 		if self:canSwitch() then
 			self:switch()
 		end
 	end
 	
-	if revert and player.heistRound.mapVote then
+	if revert and player.hr.mapVote then
 		S_StartSound(nil, sfx_kc5d, player)
-		player.heistRound.mapVote = false
+		player.hr.mapVote = false
 	end
 end
 --- @param player player_t

@@ -47,14 +47,14 @@ end
 
 function FH:getPlayerPlace(player)
 	local place = 1
-	local leader = player.heistGlobal.team.players[1]
+	local leader = player.hg.team.players[1]
 
 	for other in players.iterate do
 		if not FH:isTeamLeader(other) then continue end
 		if other == leader then continue end
-		if not other.heistRound then continue end
-		if other.heistRound.spectator then continue end
-		if other.heistRound.profit <= leader.heistRound.profit then continue end
+		if not other.hr then continue end
+		if other.hr.spectator then continue end
+		if other.hr.profit <= leader.hr.profit then continue end
 
 		place = place + 1
 	end

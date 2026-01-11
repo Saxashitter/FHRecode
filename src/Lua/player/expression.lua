@@ -5,21 +5,21 @@ function FH:setPlayerExpression(player, expression, tics)
 	-- TODO: effects per expression and stuff
 	if tics == nil then tics = 0 end
 
-	local sameExpression = expression == player.heistRound.expression
+	local sameExpression = expression == player.hr.expression
 
-	if player.heistRound.expressionTics and not tics then
-		player.heistRound.lastExpression = expression
+	if player.hr.expressionTics and not tics then
+		player.hr.lastExpression = expression
 		return
 	end
 
-	if not player.heistRound.expressionTics then
-		player.heistRound.lastExpression = player.heistRound.expression
+	if not player.hr.expressionTics then
+		player.hr.lastExpression = player.hr.expression
 	end
-	player.heistRound.expression = expression
-	player.heistRound.expressionTics = tics
+	player.hr.expression = expression
+	player.hr.expressionTics = tics
 
 	if not sameExpression then
-		player.heistRound.expressionScale = FU * 3 / 2
+		player.hr.expressionScale = FU * 3 / 2
 	end
 end
 
@@ -28,15 +28,15 @@ addHook("PlayerThink", function(player)
 	local gametype = FH:isMode()
 
 	if not gametype then return end
-	if not player.heistRound then return end
+	if not player.hr then return end
 
-	if player.heistRound.expressionTics then
-		player.heistRound.expressionTics = $ - 1
+	if player.hr.expressionTics then
+		player.hr.expressionTics = $ - 1
 
-		if player.heistRound.expressionTics == 0 then
-			FH:setPlayerExpression(player, player.heistRound.lastExpression, 0)
+		if player.hr.expressionTics == 0 then
+			FH:setPlayerExpression(player, player.hr.lastExpression, 0)
 		end
 	end
 
-	player.heistRound.expressionScale = ease.linear(FU / 2, $, FU)
+	player.hr.expressionScale = ease.linear(FU / 2, $, FU)
 end)

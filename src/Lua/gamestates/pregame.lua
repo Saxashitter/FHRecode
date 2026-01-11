@@ -14,9 +14,9 @@ function gamestate:init()
 	FHR.pregameTimeLeft = self.timeLeft
 
 	for player in players.iterate do
-		if not player.heistRound then return end
+		if not player.hr then return end
 
-		player.heistRound.stasis = true
+		player.hr.stasis = true
 	end
 end
 
@@ -39,9 +39,9 @@ function gamestate:update()
 	end
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 
-		player.heistRound.stasis = true
+		player.hr.stasis = true
 
 		if player.mo then
 			player.mo.momx = 0
@@ -55,9 +55,9 @@ end
 
 function gamestate:switch()
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 
-		player.heistRound.skin = player.skin
+		player.hr.skin = player.skin
 	end
 
 	if skipTitlecard then
@@ -73,13 +73,13 @@ function gamestate:canSwitch()
 	local finishedCount = 0
 
 	for player in players.iterate do
-		if not player.heistRound then continue end
+		if not player.hr then continue end
 		---@diagnostic disable-next-line: undefined-field
 		if player.hasLeftServer then continue end
 
 		count = $+1
 
-		if player.heistRound.pregameState == "waiting" then
+		if player.hr.pregameState == "waiting" then
 			finishedCount = $+1
 		end
 	end
@@ -99,14 +99,14 @@ function gamestate:playerUpdate(player)
 
 	-- TODO: actual states instead of if checks that are overly messy
 
-	local state = self.states[player.heistRound.pregameState]
+	local state = self.states[player.hr.pregameState]
 
 	if state then
 		local result = state:playerUpdate(self, player)
 
 		if result then
 			local newState = self.states[result]
-			player.heistRound.pregameState = result
+			player.hr.pregameState = result
 
 			if newState and newState.enter then
 				newState:enter(self, player)
