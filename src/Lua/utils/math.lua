@@ -2,7 +2,9 @@
 --- @param current number
 --- @param target number
 --- @param step number
-function FH:approach(current, target, step)
+--- @param destep number|nil
+function FH:approach(current, target, step, destep)
+	if destep == nil then destep = step end
     if current < target then
         current = current + step
 
@@ -11,7 +13,7 @@ function FH:approach(current, target, step)
         end
 
     elseif current > target then
-        current = current - step
+        current = current - destep
 
         if current < target then
             current = target

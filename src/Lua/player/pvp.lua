@@ -9,6 +9,14 @@ local blockRegainStrengthTics = 6 * TICRATE
 local blockDamage = FU / 3
 local blockChargeCooldown = TICRATE
 
+--- @class mobj_t
+--- If valid, this will be how much damage the mobj does to the player in Fang's Heist.
+--- @field fh_playerdamage fixed_t|nil
+--- If valid, this will multiply fh_playerdamage if the player's block breaks in Fang's Heist.
+--- @field fh_blockbreakmult fixed_t|nil
+--- If valid, this will be how much damage the mobj does to the player's block in Fang's Heist.
+--- @field fh_playerblockdamage fixed_t|nil
+
 --- @param player player_t
 function FH:playerUseBlock(player)
 	FH:useBlock(player.mo)
@@ -186,13 +194,22 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 	if victim.player.powers[pw_invulnerability] then return end
 	if victim.player.powers[pw_super] then return end
 
-	local health = max(0, victim.player.hr.health - 25*FU)
+	local damage = 18 * FU
+	if inflictor and inflictor.valid and inflictor.fh_playerdamage ~= nil then
+		damage = inflictor.fh_playerdamage
+	end 
 
 	if (damagetype & DMG_DEATHMASK) then
 		return
 	elseif victim.fh_block then
 		--- TODO: slap this in a function
 		--- @diagnostic disable-next-line: assign-type-mismatch
+		local blockDamage = blockDamage
+
+		if inflictor and inflictor.valid and inflictor.fh_playerblockdamage ~= nil then
+			blockDamage = inflictor.fh_playerblockdamage
+		end
+
 		victim.player.hr.blockStrength = max(0, $ - blockDamage)
 
 		if victim.player.hr.blockStrength <= blockDamage then
@@ -217,7 +234,10 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 		end
 
 		FH:playerStopBlock(victim.player, false)
-		health = max(0, victim.player.hr.health - 50*FU)
+
+		if inflictor and inflictor.valid and inflictor.fh_blockbreakmult ~= nil then
+			damage = FixedMul($, inflictor.fh_blockbreakmult)
+		end
 	end
 
 	if victim.player.powers[pw_flashing] then return end
@@ -228,7 +248,7 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 	overlay.translation = "FH_AllRed"
 	overlay.alphaFuse = 15
 
-	if FH:setHealth(victim.player, health) then
+	if FH:setHealth(victim.player, max(0, victim.player.hr.health - damage)) then
 		if source
 		and source.valid
 		and source.type == MT_PLAYER
