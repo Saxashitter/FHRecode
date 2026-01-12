@@ -24,7 +24,13 @@ freeslot(
 	"S_FH_REGULARBULLET",
 	"S_FH_COOLERLOOKINGBULLET",
 	"S_FH_BEAMBULLET",
-	"S_FH_REMIBAT"
+	"S_FH_REMIBAT",
+
+	"sfx_rm_frd",
+	"sfx_rm_sh1",
+	"sfx_rm_sh2",
+	"sfx_rm_stn",
+	"sfx_rm_trg"
 )
 
 mobjinfo[MT_FH_REMILIA_CHASER].radius = 48 * FU
@@ -75,6 +81,12 @@ states[S_FH_REMIBAT] = {
 	tics = -1
 }
 
+sfxinfo[sfx_rm_frd].caption = "You are no longer being targetted!"
+sfxinfo[sfx_rm_sh1].caption = "Shot"
+sfxinfo[sfx_rm_sh2].caption = "Shot"
+sfxinfo[sfx_rm_stn].caption = "Stunned"
+sfxinfo[sfx_rm_trg].caption = "You are being targetted."
+
 -- ======================================================
 -- AI HELPER FUNCTIONS
 -- ======================================================
@@ -106,6 +118,11 @@ local function getClosestPlayer(chaser)
 end
 
 local function setTarget(chaser, target)
+	if (chaser.tracer and chaser.tracer.valid and chaser.tracer ~= target and playerIsValid(chaser.tracer.player)) then
+		S_StartSound(nil, sfx_rm_frd, chaser.tracer.player)
+	end
+	S_StartSound(nil, sfx_rm_trg, target.player)
+
 	chaser.tracer = target
 	modifier:setState(chaser, "bigBulletShoot")
 end
@@ -230,6 +247,9 @@ modifier.attacks = {
 			end
 			chaser.shotDelay = 3
 
+			S_StopSoundByID(chaser, sfx_rm_sh2)
+			S_StartSound(chaser, sfx_rm_sh2)
+
 			for i = 1, 3 do
 				local random = 128 * FU
 				local randomZ = 32 * FU
@@ -293,6 +313,9 @@ modifier.attacks = {
 				return
 			end
 			chaser.shotDelay = 6
+
+			S_StopSoundByID(chaser, sfx_rm_sh1)
+			S_StartSound(chaser, sfx_rm_sh1)
 
 			for i = 1, 1 do
 				local speed = 16 * FU
@@ -427,6 +450,7 @@ addHook("TouchSpecial", function(chaser, victim)
 	overlay.target = chaser
 	overlay.translation = "FH_AllRed"
 	overlay.alphaFuse = 10
+	S_StartSound(chaser, sfx_rm_stn)
 
 	chaser.hurtTime = leveltime
 	modifier:setState(chaser, "stunned")
@@ -446,6 +470,11 @@ function modifier:init()
 		if mt.type == gametype.signpostThing then
 			x,y,z = FH:getMapthingWorldPosition(mt)
 		end
+	end
+
+	P_SetupLevelSky(87)
+	for player in players.iterate do
+		P_SetSkyboxMobj(nil, player)
 	end
 
 	FHR.remiliaChaser = P_SpawnMobj(x,y,z, MT_FH_REMILIA_CHASER)
