@@ -48,6 +48,11 @@ function FH:addUI(ui, name, priority, hudtype)
 			local gametype = FH:isMode()
 			if not gametype then return end
 
+			if gametype.hud[ui.name] then
+				gametype.hud[ui.name]:draw(v, player, camera, ui)
+				return
+			end
+
 			ui:draw(v, player, camera)
 		end,
 		hudtype,            -- game / scores / intermission / overlay

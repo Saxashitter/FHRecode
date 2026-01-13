@@ -24,12 +24,14 @@ function ui:draw(v)
 	if FHR.currentState ~= "game" then self.sparkles = {} return end
 
 	local gametype = FH:isMode() --[[@as heistGametype_t]]
-	local string = (gametype.timesUpStart / TICRATE).." SECONDS\nREMAIN."
+	if not gametype.isEscape then return end
+
+	local string = (FHR.timesUpStart / TICRATE).." SECONDS\nREMAIN."
 
 	if not FHR.escape then return end
-	if FHR.escapeTime > gametype.timesUpStart then return end
+	if FHR.escapeTime > FHR.timesUpStart then return end
 
-	local progress = (gametype.timesUpStart - FHR.escapeTime)
+	local progress = (FHR.timesUpStart - FHR.escapeTime)
 	local alpha = max(0, min(progress - 5 * TICRATE, 10))
 
 	if alpha < 10 then

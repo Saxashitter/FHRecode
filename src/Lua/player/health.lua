@@ -32,6 +32,13 @@ end
 function FH:downPlayer(player, time)
 	if FHR.currentState ~= "game" then return end
 
+	local gametype = FH:isMode() --[[@as heistGametype_t]]
+
+	if gametype.killOnDowned then
+		P_DamageMobj(player.mo, nil, nil, 999, DMG_INSTAKILL)
+		return
+	end
+
 	player.mo.state = S_FH_PLAY_DOWNED
 
 	player.hr.downed = true
@@ -114,7 +121,7 @@ addHook("PlayerThink", function(player)
 		if not member.mo then continue end
 		if not member.mo.health then continue end
 		if member.hr.downed then continue end
-		if member.hr.escaped then continue end
+		if member.hr.qualified then continue end
 		if member.hr.spectator then continue end
 
 		local distance = FH:pointTo3DDist(member.mo.x, member.mo.y, member.mo.z, player.mo.x, player.mo.y, player.mo.z)

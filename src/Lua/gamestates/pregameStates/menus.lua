@@ -69,6 +69,9 @@ state.menus = {
 		func = function(self, gamestate, player)
 			player.hg.spectatorMode = not $
 			S_StartSound(nil, sfx_kc5e, player)
+			if gamestate:canSwitch() then
+				gamestate:switch()
+			end
 		end
 	},
 	{

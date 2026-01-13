@@ -12,6 +12,10 @@
 --- @field rules number
 --- Determines the color of the header for the mode.
 --- @field headercolor number
+--- If this is true, when the player is downed, they will die.
+--- @field killOnDowned boolean
+--- If true, there are teams in the gametype.
+--- @field teams boolean
 --- Runs upon gametype initalization, after Fang's Heist initalizes itself.
 --- @field init fun(self: heistGametype_t, gamemap: number)
 --- Runs during MapLoad, useful for initalizing points of objects within maps.
@@ -28,6 +32,8 @@
 --- @field playerDeath fun(self: heistGametype_t, player: player_t, currentState: string)
 --- Runs upon the game ending, useful for de-initing or stopping stuff.
 --- @field finish fun(self: heistGametype_t, currentState: string)
+--- HUD replacements, referenced by [ui.name]
+--- @field hud table
 --- Runs immediately after the finish function. Return a list of sorted players to determine their place on the leaderboard, or return nil to use the default profit-sorted list.
 --- @field declareWinner fun(self: heistGametype_t, players: player_t[]): player_t[]|nil
 --- Runs when a player collects profit.
@@ -45,6 +51,9 @@ local heistGametype_t = {
 	typeoflevel = TOL_COOP,
 	rules = 0,
 	headercolor = 103,
+	killOnDowned = false,
+	teams = true,
+	hud = {},
 
 	init = function() end,
 	load = function() end,
@@ -116,7 +125,10 @@ function FH:copyGametype(gametype)
 	end
 
 	--- @type heistGametype_t
-	return copy(gametype)
+	local c = copy(gametype)
+	c.hud = {} -- for safety
+
+	return c
 end
 
 --- Call a function on the gametype key given.
@@ -145,3 +157,4 @@ end
 
 --- Get all gametypes within Fang's Heist
 dofile("gametypes/escape/init.lua")
+dofile("gametypes/battle/init.lua")

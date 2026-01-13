@@ -1,5 +1,5 @@
 local gamestate = {}
-local skipTitlecard = true
+local skipTitlecard = false
 
 gamestate.states = {
 	character = dofile("gamestates/pregameStates/character.lua"),
@@ -79,7 +79,7 @@ function gamestate:canSwitch()
 
 		count = $+1
 
-		if player.hr.pregameState == "waiting" then
+		if player.hr.pregameState == "waiting" or player.hg.spectatorMode then
 			finishedCount = $+1
 		end
 	end

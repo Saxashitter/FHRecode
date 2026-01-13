@@ -309,7 +309,7 @@ function gamestate:switch()
 	for player in players.iterate do
 		if not player.hr then continue end
 		if player.hr.spectator then continue end
-		if player.hr.escaped then continue end
+		if player.hr.qualified then continue end
 		if not player.mo then continue end
 
 		if player.hr.quizTimeSelection ~= FHR.quizQuestion.correct or player.hr.quizTimeSelected == false then
@@ -325,7 +325,7 @@ function gamestate:safeSwitch()
 	for player in players.iterate do
 		if not player.hr then continue end
 		if player.hr.spectator then continue end
-		if player.hr.escaped then continue end
+		if player.hr.qualified then continue end
 		if player.hasLeftServer then continue end
 
 		count = $ + 1

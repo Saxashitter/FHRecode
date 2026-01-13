@@ -113,6 +113,8 @@ end
 --- @field quizTimeSelection integer
 --- If this is true, the player has selected their selection for Quiz Time.
 --- @field quizTimeSelected boolean
+--- If this is true, the player is qualified to be in the intermission.
+--- @field qualified boolean
 
 setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
 	__index = function(self, key)
@@ -167,7 +169,8 @@ function FH:initPlayerRound(player)
 		useSuper = false,
 		selectedTeamPlayer = 1,
 		quizTimeSelection = 1,
-		quizTimeSelected = false
+		quizTimeSelected = false,
+		qualified = false
 	}
 
 	player.hr = playerRound
@@ -195,8 +198,8 @@ end
 
 --- Add fields to player_t
 --- @class player_t
---- @field heistRound heistPlayerRound_t?
---- @field heistGlobal heistPlayerGlobal_t?
+--- @field hr heistPlayerRound_t?
+--- @field hg heistPlayerGlobal_t?
 
 --- @param player player_t
 --- @param gametype heistGametype_t

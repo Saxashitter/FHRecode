@@ -33,7 +33,7 @@ local function getClosestPlayer(eggmanChaser)
 		if not player.mo.health then continue end
 		if not player.mo.valid then continue end
 		if not player.hr then continue end
-		if player.hr.escaped then continue end
+		if player.hr.qualified then continue end
 		if player.hr.downed then continue end
 
         -- Calculate the full 3D distance

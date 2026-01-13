@@ -55,6 +55,7 @@ NoVisitNeeded = true
 InterScreen = INTERSCR
 FlickyList = Demo
 Lua.FH_EscapeTime = 360
+Lua.FH_SkipStartingCutscene = true
 
 Level P1
 Levelname = Acidic Overflux
@@ -107,16 +108,58 @@ Lua.FH_EscapeTheme = YOKADI
 Level Z1
 Levelname = Test
 Act = 0
-Keywords = FHZ
-Music = GFZ1
-NextLevel = 1
-RecordAttack = true
+Keywords = TEST
+Music = TESTYX
+RecordAttack = False
 TypeOfLevel = Escape
-SkyNum = 30
-LevelSelect = 2
-Weather = 2
-FlickyList = Penguin,Seal
+SkyNum = 230
+Lua.FH_VotableMap = False
+
+# Battle maps
+Level 67
+Levelname = Turqoise Isle
+Act = 1
+Keywords = TIZ
+Music = BLUISL
+TypeOfLevel = Battle
+SelectHeading = Battle Maps
+NextLevel = 1
+SkyNum = 69
 NoVisitNeeded = true
-Lua.FH_EscapeTheme = FH_FHE
-Lua.FH_VotableMap = false
+SkyboxScale = 1
 Lua.FH_SkipStartingCutscene = true
+
+Level MB
+LevelName = Meadow Match
+Music = MP_MED
+TypeOfLevel = Battle
+SelectHeading = Battle Maps
+NextLevel = F0
+SkyNum = 2
+Lua.FH_SkipStartingCutscene = true
+
+Level 69
+Levelname = Sr. Little James
+Act = 1
+Music = GFZ1
+TypeOfLevel = Battle
+NextLevel = 1
+SkyNum = 1
+RecordAttack = true
+LevelSelect = 1
+SaveGame = true
+SkyboxScale = 64
+FlickyList = Bluebird,Chipmunk
+NoVisitNeeded = true
+SelectHeading = Battle Maps
+Lua.FH_SkipStartingCutscene = true
+
+Level 68
+Levelname = Sunset Heights
+Keywords = SHZ
+Skynum = 4
+Music = SUNSET
+TypeOfLevel = Battle
+NoVisitNeeded = True
+SelectHeading = Battle Maps
+Lua.FH_SkipStartingCutscene = True

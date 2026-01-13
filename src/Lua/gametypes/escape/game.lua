@@ -54,6 +54,7 @@ FH.ringStates["Goal"] = {
 		}
 		player.hr.stasis = true
 		player.hr.escaped = true
+		player.hr.qualified = true
 		player.powers[pw_flashing] = 2 * TICRATE + 1 -- infinite invulnerability!!
 		player.mo.alpha = 0
 
@@ -136,6 +137,9 @@ function escape:init()
 	FHR.endPosition = {x = 0, y = 0, z = 0, angle = 0}
 	FHR.enemyRespawnQueue = {}
 	FHR.appendedSideModifiers = {}
+
+	FHR.timesUpStart = self.timesUpStart
+	FHR.timesUpMusic = "FH_OVT"
 end
 
 function escape:load()
@@ -153,7 +157,7 @@ function escape:escapeUpdate()
 	if FHR.escapeTime then
 		FHR.escapeTime = $ - 1
 
-		if FHR.escapeTime == 2 * TICRATE + self.timesUpStart then
+		if FHR.escapeTime == 2 * TICRATE + FHR.timesUpStart then
 			S_FadeMusic(0, 2 * MUSICRATE)
 		end
 
@@ -168,8 +172,8 @@ function escape:escapeUpdate()
 
 		-- TODO: separate alot of these into their own functions
 
-		if FHR.escapeTime == self.timesUpStart then
-			FH:changeMusic("FH_OVT", true)
+		if FHR.escapeTime == FHR.timesUpStart then
+			FH:changeMusic(FHR.timesUpMusic, true)
 
 			P_SetupLevelSky(56)
 			P_SwitchWeather(54)
@@ -282,6 +286,13 @@ function escape:startEscape(starter)
 		if mainModifier then
 			used[mainModifier.id] = true
 			FH:activateModifier(mainModifier)
+
+			if mainModifier.timesUpMusic ~= nil then
+				FHR.timesUpMusic = mainModifier.timesUpMusic
+			end
+			if mainModifier.timesUpStart ~= nil then
+				FHR.timesUpStart = mainModifier.timesUpStart
+			end
 		end
 
 		local sideModifiers = {}

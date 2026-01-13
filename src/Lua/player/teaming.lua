@@ -16,7 +16,7 @@ mobjinfo[MT_FH_TEAM].flags =
 	MF_NOCLIP|MF_NOCLIPHEIGHT|MF_NOGRAVITY|MF_NOBLOCKMAP
 
 FH.teamRange = 128 * FU
-FH.teamLimit = 3
+FH.teamLimit = 4
 
 -- =====================
 -- TEAM REQUEST MOBJ
@@ -69,6 +69,13 @@ function FH:canUseTeamInput(player)
 	if not player.hr then return false end
 	if not (player.mo and player.mo.health) then return false end
 	if P_PlayerInPain(player) then return false end
+
+	local gametype = FH:isMode() --[[@as heistGametype_t]]
+
+	if not gametype.teams then
+		return false
+	end
+
 	return true
 end
 
@@ -220,6 +227,12 @@ end
 --- @return boolean
 --- @return integer
 function FH:isInTeam(player, target)
+	local gametype = FH:isMode() --[[@as heistGametype_t]]
+
+	if not gametype.teams then
+		return false, 0
+	end
+
 	for k, v in ipairs(player.hg.team.players) do
 		if v == target then
 			return true, k
@@ -232,6 +245,12 @@ end
 --- @param player player_t
 --- @return boolean
 function FH:isTeamLeader(player)
+	local gametype = FH:isMode() --[[@as heistGametype_t]]
+
+	if not gametype.teams then
+		return true
+	end
+
 	return player.hg.team.players[1] == player
 end
 
@@ -242,6 +261,12 @@ end
 --- @param player player_t
 --- @return boolean
 function FH:shouldShowJoinTeamUI(player)
+	local gametype = FH:isMode() --[[@as heistGametype_t]]
+
+	if not gametype.teams then
+		return false
+	end
+
 	if not FH:canUseTeamInput(player) then return false end
 	return FH:getJoinableLeader(player) ~= nil
 end
@@ -249,6 +274,12 @@ end
 --- @param player player_t
 --- @return boolean
 function FH:shouldShowCreateTeamUI(player)
+	local gametype = FH:isMode() --[[@as heistGametype_t]]
+
+	if not gametype.teams then
+		return false
+	end
+
 	if not FH:canUseTeamInput(player) then return false end
 	return FH:canCreateTeamRequest(player)
 end
@@ -256,5 +287,11 @@ end
 --- @param player player_t
 --- @return player_t|nil
 function FH:getTeamUILeader(player)
+	local gametype = FH:isMode() --[[@as heistGametype_t]]
+
+	if not gametype.teams then
+		return
+	end
+
 	return FH:getJoinableLeader(player)
 end

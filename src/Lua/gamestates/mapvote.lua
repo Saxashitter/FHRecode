@@ -16,12 +16,13 @@ function gamestate:init()
 	S_StartSound(nil, sfx_s24f)
 	FHR.mapVoteTime = leveltime
 
+	local gametype = FH:isMode() --[[@as heistGametype_t]]
 	local maps = {}
 	for map = 1, #mapheaderinfo do
 		local header = mapheaderinfo[map]
 		if not header then continue end
 
-		if header.typeoflevel & TOL_ESCAPE ~= 0 and FH:getMapVariable(map, "fh_votablemap", true) then
+		if header.typeoflevel & gametype.typeoflevel ~= 0 and FH:getMapVariable(map, "fh_votablemap", true) then
 			table.insert(maps, map)
 		end
 	end

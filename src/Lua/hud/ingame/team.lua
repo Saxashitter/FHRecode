@@ -9,6 +9,12 @@ local ui = {
 function ui:draw(v, player)
 	if not player.hg then return end
 
+	local gametype = FH:isMode() --[[@as heistGametype_t]]
+
+	if not gametype.teams then
+		return
+	end
+
 	if FH:shouldShowJoinTeamUI(player) then
 		SSL.drawString(v, self.x, self.y - 10, "[TOSS FLAG] Join Team", "TNYFN%03d", self.flags, 0, 0, V_YELLOWMAP)
 		return

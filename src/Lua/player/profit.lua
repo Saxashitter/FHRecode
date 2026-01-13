@@ -13,8 +13,10 @@ function FH:addProfit(player, profit, tag, division)
 		local alivePlayers = 0
 
 		for _, member in ipairs(player.hg.team.players) do
-			if member.hr.escaped then continue end
+			if member.hr.qualfiied then continue end
 			if member.hr.spectator then continue end
+			if not member.mo then continue end
+			if not member.mo.health then continue end
 
 			alivePlayers = $ + 1
 		end

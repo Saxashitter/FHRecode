@@ -1,5 +1,6 @@
 --- @param v videolib
 return function(v)
+	local gametype = FH:isMode() --[[@as heistGametype_t]]
 	local screenWidth = v.width() * FU / v.dupx()
 	local screenHeight = v.height() * FU / v.dupy()
 	
@@ -91,7 +92,7 @@ return function(v)
 			110 * FU, 2 * FU
 		)
 
-		if #winner.team.players > 1 then
+		if #winner.team.players > 1 and gametype.teams then
 			for k, member in ipairs(winner.team.players) do
 				if winner.player.valid and member == winner.player then
 					continue

@@ -9,6 +9,7 @@ escape.description = "Work in progress."
 escape.typeoflevel = freeslot("TOL_ESCAPE")
 
 escape.rules = GTR_SPAWNENEMIES|GTR_NOTITLECARD
+escape.isEscape = true
 
 rawset(_G, "_FH_ESCAPE", escape)
 

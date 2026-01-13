@@ -12,7 +12,7 @@ function timer:draw(v, player, camera)
 
 	local escapeTime = FHR.escapeTime
 
-	if escapeTime <= gametype.timesUpStart then
+	if escapeTime <= FHR.timesUpStart then
 		return
 	end
 	-- Tween timing
@@ -37,8 +37,8 @@ function timer:draw(v, player, camera)
 	local y = 12 * FU
 
 	local length = 17
-	if escapeTime <= gametype.timesUpStart + length then
-		local t = FU - FixedDiv(escapeTime - gametype.timesUpStart, length)
+	if escapeTime <= FHR.timesUpStart + length then
+		local t = FU - FixedDiv(escapeTime - FHR.timesUpStart, length)
 		-- make t from escapeTime + timesUpStart + length to escapeTime + timesUpStart + timesUpStart
 
 		y = ease.inback(t, $, -75 * FU, FU * 2)

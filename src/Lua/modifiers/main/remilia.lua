@@ -9,6 +9,8 @@ modifier.name = "Remilia Scarlet"
 modifier.description = "It's gonna be a long night..."
 modifier.type = "main"
 modifier.music = "SPFTDP"
+modifier.timesUpMusic = "FH_OVF"
+modifier.timesUpStart = 38400 * TICRATE / MUSICRATE
 
 modifier.chaseDelay = TICRATE
 
@@ -93,7 +95,7 @@ sfxinfo[sfx_rm_trg].caption = "You are being targetted."
 
 --- @param player player_t
 local function playerIsValid(player)
-	return player and player.valid and player.mo and player.mo.valid and player.mo.health and player.hr and not player.hr.escaped and not player.hr.downed
+	return player and player.valid and player.mo and player.mo.valid and player.mo.health and player.hr and not player.hr.qualified and not player.hr.downed
 end
 
 local function getClosestPlayer(chaser)

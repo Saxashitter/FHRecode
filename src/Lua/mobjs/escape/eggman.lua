@@ -25,7 +25,7 @@ local function canChaseTarget(target)
 	if not target.health then return false end
 	if not target.player then return false end
 	if not target.player.hr then return false end
-	if target.player.hr.escaped then return false end
+	if target.player.hr.qualified then return false end
 
 	return true
 end

@@ -22,29 +22,37 @@ function gamestate:init()
 
 	FHR.winningPlayers = {}
 
+	local gametype = FH:isMode()
 	local queuedTeams = {}
+
 	for player in players.iterate do
 		if not player.hr then continue end
 		local team = player.hg.team
 		if queuedTeams[team] then continue end  -- already processed this team
 
 		-- check if any player in this team has escaped
-		local teamHasEscaped = false
-		for _, member in ipairs(team.players) do
-			if member.hr.escaped then
-				teamHasEscaped = true
-				break
+		local teamQualified = false
+		if gametype.teams then
+			for _, member in ipairs(team.players) do
+				if member.hr.qualified then
+					teamQualified = true
+					break
+				end
 			end
+		else
+			teamQualified = player.hr.qualified
 		end
 
-		if not teamHasEscaped then continue end  -- skip team if no one escaped
+		if not teamQualified then continue end  -- skip team if no one escaped
 
 		-- get the leader of the team
-		local leader = team.players[1]
+		local leader = gametype.teams and team.players[1] or player
 		if not leader then continue end
 
-		-- mark the team as processed
-		queuedTeams[team] = true
+		if gametype.teams then
+			-- mark the team as processed
+			queuedTeams[team] = true
+		end
 
 		-- sort leader's profit log
 		table.sort(leader.hr.profitLog, function(a, b) return a.profit > b.profit end)
