@@ -158,7 +158,7 @@ Level 68
 Levelname = Sunset Heights
 Keywords = SHZ
 Skynum = 4
-SkyboxScale 10
+SkyboxScale = 10
 Music = SUNSET
 TypeOfLevel = Battle
 NoVisitNeeded = True
