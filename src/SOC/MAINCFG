@@ -1,7 +1,7 @@
 MainCfg
 TitleScrollXSpeed = 0
-LoopTitle = true
-HideTitlePics = true
+LoopTitle = True
+HideTitlePics = True
 NumDemos = 0
 GameData = fangsheist.dat
 
@@ -10,6 +10,14 @@ Clear All
 Unlockable 2
 Unlockable 3
 Unlockable 23
+
+
+    ##################
+    #                #
+    #  ESCAPE MAPS   #
+    #                #
+    ##################
+
 
 Level 1
 Levelname = Greenflower
@@ -103,29 +111,23 @@ SelectHeading = Bonus
 SkyNum = 99
 Lua.FH_EscapeTheme = YOKADI
 
-Level Z1
-Levelname = Test
-Act = 0
-Keywords = TEST
-Music = TESTY3
-RecordAttack = False
-TypeOfLevel = Escape,Battle
-SkyNum = 230
-Lua.FH_VotableMap = False
 
-### Battle maps ###
+    ##################
+    #                #
+    #  BATTLE MAPS   #
+    #                #
+    ##################
+
+
 Level 67
 Levelname = Turqoise Isle
-Act = 1
 Keywords = TIZ
 Music = BLUISL
 TypeOfLevel = Battle
 SelectHeading = Battle Maps
-NextLevel = 1
 SkyNum = 69
-NoVisitNeeded = true
-SkyboxScale = 1
-Lua.FH_SkipStartingCutscene = true
+NoVisitNeeded = True
+Lua.FH_SkipStartingCutscene = True
 
 Level MB
 LevelName = Meadow Match
@@ -134,7 +136,7 @@ TypeOfLevel = Battle
 SelectHeading = Battle Maps
 NextLevel = F0
 SkyNum = 2
-Lua.FH_SkipStartingCutscene = true
+Lua.FH_SkipStartingCutscene = True
 
 Level 68
 Levelname = Sunset Heights
@@ -144,6 +146,7 @@ Music = SUNSET
 TypeOfLevel = Battle
 NoVisitNeeded = True
 SelectHeading = Battle Maps
+Lua.FH_SkipStartingCutscene = True
 
 Level 69
 Levelname = Troplucky's Abode
@@ -157,7 +160,28 @@ LevelSelect = 1
 SaveGame = true
 SkyboxScale = 64
 FlickyList = Bluebird,Chipmunk
-NoVisitNeeded = true
+NoVisitNeeded = True
 NoZone = true
 SelectHeading = Battle Maps
-Lua.FH_SkipStartingCutscene = true
+Lua.FH_SkipStartingCutscene = True
+
+
+    ##################
+    #                #
+    # AUXILIARY MAPS #
+    #                #
+    ##################
+
+
+Level Z1
+Levelname = Test
+Act = 0
+Keywords = TEST
+Music = TESTY3
+RecordAttack = False
+TypeOfLevel = Escape,Battle
+SkyNum = 230
+Lua.FH_VotableMap = False
+SelectHeading = Auxiliary Maps
+#Hidden = True
+#Commented for ease of development, de-comment before release
