@@ -138,6 +138,15 @@ NextLevel = F0
 SkyNum = 2
 Lua.FH_SkipStartingCutscene = true
 
+Level 68
+Levelname = Sunset Heights
+Keywords = SHZ
+Skynum = 4
+Music = SUNSET
+TypeOfLevel = Battle
+NoVisitNeeded = True
+SelectHeading = Battle Maps
+
 Level 69
 Levelname = Sr. Little James
 Act = 1
@@ -153,13 +162,3 @@ FlickyList = Bluebird,Chipmunk
 NoVisitNeeded = true
 SelectHeading = Battle Maps
 Lua.FH_SkipStartingCutscene = true
-
-Level 68
-Levelname = Sunset Heights
-Keywords = SHZ
-Skynum = 4
-SkyboxScale = 10
-Music = SUNSET
-TypeOfLevel = Battle
-NoVisitNeeded = True
-SelectHeading = Battle Maps
