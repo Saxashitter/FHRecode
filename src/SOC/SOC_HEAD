@@ -107,13 +107,13 @@ Level Z1
 Levelname = Test
 Act = 0
 Keywords = TEST
-Music = TESTYX
+Music = TESTY3
 RecordAttack = False
-TypeOfLevel = Escape
+TypeOfLevel = Escape,Battle
 SkyNum = 230
 Lua.FH_VotableMap = False
 
-# Battle maps
+### Battle maps ###
 Level 67
 Levelname = Turqoise Isle
 Act = 1
@@ -136,6 +136,15 @@ NextLevel = F0
 SkyNum = 2
 Lua.FH_SkipStartingCutscene = true
 
+Level 68
+Levelname = Sunset Heights
+Keywords = SHZ
+Skynum = 4
+Music = SUNSET
+TypeOfLevel = Battle
+NoVisitNeeded = True
+SelectHeading = Battle Maps
+
 Level 69
 Levelname = Troplucky's Abode
 Act = 0
@@ -152,13 +161,3 @@ NoVisitNeeded = true
 NoZone = true
 SelectHeading = Battle Maps
 Lua.FH_SkipStartingCutscene = true
-
-Level 68
-Levelname = Sunset Heights
-Keywords = SHZ
-Skynum = 4
-Music = SUNSET
-TypeOfLevel = Battle
-NoVisitNeeded = True
-SelectHeading = Battle Maps
-Lua.FH_SkipStartingCutscene = True
