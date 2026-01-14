@@ -69,8 +69,6 @@ Music = BRCRPW
 SelectHeading = Bonus
 ForceResetMusic = 0
 MusicInterFadeOut = 3000
-TitleCardZigZag = ACIDZIGZAG
-TitleCardZigZagText = ACIDTEXT
 Lua.FH_EscapeHurryUp = false
 Lua.FH_EscapeTheme = OLNORE
 Lua.FH_EscapeTime = 177
@@ -139,8 +137,8 @@ SkyNum = 2
 Lua.FH_SkipStartingCutscene = true
 
 Level 69
-Levelname = Sr. Little James
-Act = 1
+Levelname = Troplucky's Abode
+Act = 0
 Music = GFZ1
 TypeOfLevel = Battle
 NextLevel = 1
@@ -151,6 +149,7 @@ SaveGame = true
 SkyboxScale = 64
 FlickyList = Bluebird,Chipmunk
 NoVisitNeeded = true
+NoZone = true
 SelectHeading = Battle Maps
 Lua.FH_SkipStartingCutscene = true
 

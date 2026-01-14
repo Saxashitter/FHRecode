@@ -57,9 +57,13 @@ function gamestate:init()
 
 	for player in players.iterate do
 		if not player.mo then continue end
+		if not player.hr then continue end
 
 		local fallback
 		local found = false
+
+		player.hr.skin = player.skin
+		player.hr.health = FH.characterHealths[skins[player.skin].name] or (100 * FU)
 
 		if player.hg.spectatorMode then
 			player.spectator = true
