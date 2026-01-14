@@ -148,23 +148,6 @@ NoVisitNeeded = True
 SelectHeading = Battle Maps
 Lua.FH_SkipStartingCutscene = True
 
-Level 69
-Levelname = Troplucky's Abode
-Act = 0
-Music = GFZ1
-TypeOfLevel = Battle
-NextLevel = 1
-SkyNum = 1
-RecordAttack = true
-LevelSelect = 1
-SaveGame = true
-SkyboxScale = 64
-FlickyList = Bluebird,Chipmunk
-NoVisitNeeded = True
-NoZone = true
-SelectHeading = Battle Maps
-Lua.FH_SkipStartingCutscene = True
-
 
     ##################
     #                #
