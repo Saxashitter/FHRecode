@@ -332,6 +332,10 @@ addHook("ThinkFrame", function()
 	for player in players.iterate do
 		initChecks(player, gametype)
  
+		if player.hr.skin ~= nil and player.skin ~= player.hr.skin then
+			R_SetPlayerSkin(player, player.hr.skin)
+		end
+
 		-- TODO: make our own counter that accounts for fixed values.
 		-- UPD: this is half done, need to make the scoreboard
 		player.score = player.hr.profit/FU

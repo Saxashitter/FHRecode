@@ -1,17 +1,14 @@
 freeslot("MT_FH_OVERLAY")
 
--- Base mobjinfo setup for overlay mobj.
+-- Overlay
+-- Draws a sprite over the player.
+
 mobjinfo[MT_FH_OVERLAY].radius = FU
 mobjinfo[MT_FH_OVERLAY].height = FU
 mobjinfo[MT_FH_OVERLAY].spawnstate = S_INVISIBLE
 mobjinfo[MT_FH_OVERLAY].flags = MF_NOCLIP | MF_NOCLIPHEIGHT | MF_NOGRAVITY | MF_NOBLOCKMAP
 mobjinfo[MT_FH_OVERLAY].dispoffset = 1
 
--------------------------------------------------------------------------------------------
--- EmmyLua type definitions
--------------------------------------------------------------------------------------------
-
---- FH_Overlay mobj type with extra properties for overlay effects.
 ---@class heistOverlay_t : mobj_t
 ---@field ticker tic_t               # Ticks elapsed since spawn, used for timing effects.
 ---@field alphaFuse tic_t            # Duration of alpha fade; -1 means no fade.
@@ -22,39 +19,19 @@ mobjinfo[MT_FH_OVERLAY].dispoffset = 1
 ---@field alphaEnd fixed_t           # Ending alpha value for fade (fixed-point).
 ---@field translation string|nil     # Optional palette translation string.
 
--------------------------------------------------------------------------------------------
--- Overlay creation
--------------------------------------------------------------------------------------------
-
---- Initializes default properties for FH_Overlay on spawn.
 ---@param mobj heistOverlay_t
 addHook("MobjSpawn", function(mobj)
-	--- Ticks elapsed for timing effects.
 	mobj.ticker = 0
-
-	--- Duration of alpha fade. Set to -1 for no fading.
 	mobj.alphaFuse = -1
-
-	--- Frame flags added to copied frames (e.g. fullbright, additive).
 	mobj.frameFlags = 0
-
-	--- Automatically remove overlay if target becomes invalid.
 	mobj.autoRemove = true
-
-	--- Starting alpha value (fixed-point), default 1/3.
 	mobj.alphaStart = FU
-
-	--- Ending alpha value (fixed-point), default fully transparent (0).
 	mobj.alphaEnd = 0
-
-	--- Optional palette translation string, nil if none.
 	mobj.translation = nil
 end, MT_FH_OVERLAY)
 
---- Updates overlay each tick to match target's appearance and handle fading.
 ---@param mobj heistOverlay_t
 addHook("MobjThinker", function(mobj)
-	-- Remove overlay if target is missing or invalid (and autoRemove enabled).
 	if not mobj.target or not mobj.target.valid then
 		if mobj.autoRemove then
 			P_RemoveMobj(mobj)
@@ -66,7 +43,6 @@ addHook("MobjThinker", function(mobj)
 	local target = mobj.target
 
 	if target then
-		-- Copy all relevant visual properties from target.
 		mobj.state = target.state
 		mobj.sprite = target.sprite
 		if target.type == MT_PLAYER then
@@ -81,12 +57,11 @@ addHook("MobjThinker", function(mobj)
 		if target.type == MT_PLAYER and target.player then
 			mobj.angle = target.player.drawangle
 		end
+		mobj.eflags = $|(target.eflags & MFE_VERTICALFLIP)
 
-		-- Move overlay to exactly match target's position.
 		P_MoveOrigin(mobj, target.x, target.y, target.z)
 	end
 
-	-- Handle alpha fading if enabled.
 	if mobj.alphaFuse > 0 then
 		local fadeProgress = FixedDiv(mobj.ticker, mobj.alphaFuse)
 		local alphaDiff = mobj.alphaStart - mobj.alphaEnd
