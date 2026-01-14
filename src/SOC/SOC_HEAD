@@ -109,13 +109,13 @@ Level Z1
 Levelname = Test
 Act = 0
 Keywords = TEST
-Music = TESTYX
+Music = TESTY3
 RecordAttack = False
-TypeOfLevel = Escape
+TypeOfLevel = Escape,Battle
 SkyNum = 230
 Lua.FH_VotableMap = False
 
-# Battle maps
+### Battle maps ###
 Level 67
 Levelname = Turqoise Isle
 Act = 1
@@ -158,8 +158,8 @@ Level 68
 Levelname = Sunset Heights
 Keywords = SHZ
 Skynum = 4
+SkyboxScale 10
 Music = SUNSET
 TypeOfLevel = Battle
 NoVisitNeeded = True
 SelectHeading = Battle Maps
-Lua.FH_SkipStartingCutscene = True
