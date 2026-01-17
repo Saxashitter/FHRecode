@@ -139,6 +139,14 @@ NoVisitNeeded = True
 SelectHeading = Battle Maps
 Lua.FH_SkipStartingCutscene = True
 
+Level B2
+Levelname = Magma Factory
+Keywords = MFZ
+SelectHeading = Battle Maps
+Music = QRTQAB
+TypeOfLevel = Battle
+Lua.FH_SkipStartingCutscene = True
+
 Level MB
 LevelName = Meadow Match
 Music = MP_MED
