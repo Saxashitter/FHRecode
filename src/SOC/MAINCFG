@@ -32,6 +32,7 @@ LevelSelect = 1
 SaveGame = true
 SkyboxScale = 64
 FlickyList = Bluebird,Chipmunk
+SelectHeading = Vanilla
 NoVisitNeeded = true
 #Flicky selection is final.
 
@@ -48,6 +49,7 @@ LevelSelect = 1
 SaveGame = true
 SkyboxScale = 64
 FlickyList = Bluebird,Chipmunk
+SelectHeading = Vanilla
 NoVisitNeeded = true
 #see act 1
 
@@ -58,7 +60,7 @@ TypeOfLevel = Escape
 NextLevel = 1
 SkyNum = 2
 LevelSelect = 2
-SelectHeading = Bonus
+SelectHeading = Vanilla (Legacy)
 NoVisitNeeded = true
 InterScreen = INTERSCR
 FlickyList = Demo
@@ -74,7 +76,7 @@ NoReload = true
 Skynum = 86
 Weather = 5
 Music = BRCRPW
-SelectHeading = Bonus
+SelectHeading = Fang's Heist
 ForceResetMusic = 0
 MusicInterFadeOut = 3000
 Lua.FH_EscapeHurryUp = false
@@ -97,7 +99,7 @@ FlickyList = All
 SaveGame = true
 ForceResetMusic = On
 WarningTitle = true
-SelectHeading = Bonus
+SelectHeading = Vanilla
 
 Level Z0
 Levelname = Tutorial
@@ -107,7 +109,7 @@ LevelSelect = 1
 Music = MAMORU
 NextLevel = 1
 TypeOfLevel = Escape
-SelectHeading = Bonus
+SelectHeading = Vanilla
 SkyNum = 99
 Lua.FH_EscapeTheme = YOKADI
 
