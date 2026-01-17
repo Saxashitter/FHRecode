@@ -129,11 +129,6 @@ SkyNum = 69
 NoVisitNeeded = True
 Lua.FH_SkipStartingCutscene = True
 
-NextLevel = F0
-SkyNum = 2
-Lua.FH_SkipStartingCutscene = True
-
-Level 68
 Level B1
 Levelname = Sunset Heights
 Keywords = SHZ
