@@ -119,7 +119,7 @@ Lua.FH_EscapeTheme = YOKADI
     ##################
 
 
-Level 67
+Level B0
 Levelname = Turqoise Isle
 Keywords = TIZ
 Music = BLUISL
@@ -129,16 +129,12 @@ SkyNum = 69
 NoVisitNeeded = True
 Lua.FH_SkipStartingCutscene = True
 
-Level MB
-LevelName = Meadow Match
-Music = MP_MED
-TypeOfLevel = Battle
-SelectHeading = Battle Maps
 NextLevel = F0
 SkyNum = 2
 Lua.FH_SkipStartingCutscene = True
 
 Level 68
+Level B1
 Levelname = Sunset Heights
 Keywords = SHZ
 Skynum = 4
@@ -146,6 +142,15 @@ Music = SUNSET
 TypeOfLevel = Battle
 NoVisitNeeded = True
 SelectHeading = Battle Maps
+Lua.FH_SkipStartingCutscene = True
+
+Level MB
+LevelName = Meadow Match
+Music = MP_MED
+TypeOfLevel = Battle
+SelectHeading = Battle Maps
+NextLevel = F0
+SkyNum = 2
 Lua.FH_SkipStartingCutscene = True
 
 
