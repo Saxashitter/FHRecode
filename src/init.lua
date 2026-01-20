@@ -3,6 +3,9 @@ dofile("lib/customhud.lua")
 
 dofile("config.lua")
 
+-- coming soon ;)
+-- dofile("hooks.lua")
+
 dofile("mobjs/escape/specialring.lua")
 dofile("mobjs/escape/eggman.lua")
 

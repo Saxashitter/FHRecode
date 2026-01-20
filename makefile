@@ -11,11 +11,15 @@ BUILD_DIR := $(PROJECT_DIR)/_build
 
 # ----- Run python and capture absolute build filename -----
 BUILD := $(shell $(PYTHON) "$(BUILD_SCRIPT)")
+PTO_BUILD := $(shell $(PYTHON) "$(BUILD_SCRIPT)" -pto)
 
 .PHONY: build run dual clean
 
 build:
 	@echo Build output: $(BUILD)
+
+pto:
+	@echo Build output: $(PTO_BUILD)
 
 run: build
 	cd "$(SRB2_DIR)" && "$(SRB2_EXE)" -file "$(BUILD)" -windowed -console -server -gametype 8

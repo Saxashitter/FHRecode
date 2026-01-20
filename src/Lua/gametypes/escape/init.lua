@@ -1,8 +1,8 @@
 --- Escape
 --- Grab what you can and GO! GO! GO!
 --- Base gamemode for all the other ones.
-
 local escape = setmetatable({}, FH:returnGametypeMetatable())
+
 escape.id = "ESCAPE"
 escape.name = "Escape"
 escape.description = "Work in progress."
