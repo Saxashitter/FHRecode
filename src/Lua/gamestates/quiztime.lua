@@ -16,7 +16,7 @@ gamestate.questions = {
 	},
 
 	{
-		question = "Which character is known as\nSonic's rival?",
+		question = "Which character is most commonly \nknown as Sonic's rival?",
 		answers = {
 			"Knuckles",
 			"Metal Sonic",
@@ -45,7 +45,7 @@ gamestate.questions = {
 			"Angel Island Zone",
 			"Emerald Hill Zone",
 		},
-		correct = 2
+		correct = 3
 	},
 
 	{
@@ -82,14 +82,14 @@ gamestate.questions = {
 	},
 
 	{
-		question = "Which Mesaage Board judge is the\nmost prominent in the community?",
+		question = "What is the most dowloaded\naddon on the SRB2 Message Board?",
 		answers = {
-			"DylanDude",
-			"Xian",
-			"SonicX8000",
-			"Pikaspoop",
+			"Shadow the Hedgehog",
+			"X Sonic",
+			"Jeck Jims' 2.2 3D Models",
+			"SRB2Kart",
 		},
-		correct = 1
+		correct = 3
 	},
 
 	{
@@ -115,7 +115,7 @@ gamestate.questions = {
 	},
 
 	{
-		question = "What is the unofficial\nSRB2 difficulty?",
+		question = "What is the unoffical\nSRB2 'difficulty?''",
 		answers = {
 			"Easy",
 			"Normal",
@@ -159,7 +159,7 @@ gamestate.questions = {
 	},
 
 	{
-		question = "What's the reason most\npeople rejoin net games?",
+		question = "What's the most common reason\npeople rejoin net games?",
 		answers = {
 			"Hardware failures",
 			"Chatbug",
