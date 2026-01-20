@@ -147,6 +147,28 @@ Keywords = MFZ
 SelectHeading = Battle Maps
 Music = QRTQAB
 TypeOfLevel = Battle
+NoVisitNeeded = True
+Lua.FH_SkipStartingCutscene = True
+
+Level B4
+Levelname = Combat Castle
+Music = BATARE
+TypeOfLevel = Battle
+SelectHeading = Battle Maps
+Weather = PRECIP_STORM
+SkyNum = 302
+SkyboxScale = 2
+NoVisitNeeded = True
+Lua.FH_SkipStartingCutscene = True
+
+Level B5
+Levelname = Jungle Jam
+Keywords = JJZ
+Music = JUJAZ
+TypeOfLevel = Battle
+SelectHeading = Battle Maps
+SkyNum = 64
+NoVisitNeeded = True
 Lua.FH_SkipStartingCutscene = True
 
 Level MB
