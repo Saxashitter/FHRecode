@@ -115,7 +115,7 @@ gamestate.questions = {
 	},
 
 	{
-		question = "What is the unoffical\nSRB2 'difficulty?''",
+		question = "What is the unofficial\nSRB2 'difficulty?''",
 		answers = {
 			"Easy",
 			"Normal",
