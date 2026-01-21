@@ -3,7 +3,7 @@ local battle = _FH_BATTLE
 battle.signpostThing = 501
 battle.ringThing = 1
 battle.timesUpStart = 22591 * TICRATE / MUSICRATE
-battle.timeLeft = 60 * 7 -- 7 minutes
+battle.timeLeft = 60 * 3 -- 3 minutes
 battle.stocks = 3
 
 --- @param map number
