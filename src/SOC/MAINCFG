@@ -150,6 +150,14 @@ TypeOfLevel = Battle
 NoVisitNeeded = True
 Lua.FH_SkipStartingCutscene = True
 
+Level B3
+Levelname = Ghastly Dwelling
+NoZone = True
+SelectHeading = Battle Maps
+Music = DRKROM
+TypeOfLevel = Battle
+Lua.FH_SkipStartingCutscene = True
+
 Level B4
 Levelname = Combat Castle
 Music = BATARE
