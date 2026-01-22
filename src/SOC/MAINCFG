@@ -122,8 +122,8 @@ Lua.FH_EscapeTheme = YOKADI
 
 
 Level B0
-Levelname = Turqoise Isle
-Keywords = TIZ
+Levelname = Turqoise Tablet
+Keywords = TTZ
 Music = BLUISL
 TypeOfLevel = Battle
 SelectHeading = Battle Maps
@@ -132,8 +132,8 @@ NoVisitNeeded = True
 Lua.FH_SkipStartingCutscene = True
 
 Level B1
-Levelname = Sunset Heights
-Keywords = SHZ
+Levelname = Sunset Sights
+Keywords = SSZ
 Skynum = 4
 Music = SUNSET
 TypeOfLevel = Battle
@@ -142,8 +142,8 @@ SelectHeading = Battle Maps
 Lua.FH_SkipStartingCutscene = True
 
 Level B2
-Levelname = Magma Factory
-Keywords = MFZ
+Levelname = Magma Mechanic
+Keywords = MMZ
 SelectHeading = Battle Maps
 Music = QRTQAB
 TypeOfLevel = Battle
@@ -151,7 +151,8 @@ NoVisitNeeded = True
 Lua.FH_SkipStartingCutscene = True
 
 Level B3
-Levelname = Ghastly Dwelling
+Levelname = Ghostly Gadroon
+Keywords = GGZ
 NoZone = True
 SelectHeading = Battle Maps
 Music = DRKROM
@@ -206,5 +207,7 @@ TypeOfLevel = Escape,Battle
 SkyNum = 230
 Lua.FH_VotableMap = False
 SelectHeading = Auxiliary Maps
+WideIcon = True
 #Hidden = True
 #Commented for ease of development, de-comment before release
+Lua.FH_SkipStartingCutscene = True
