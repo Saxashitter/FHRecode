@@ -115,7 +115,9 @@ function titleCardMenu:draw(v, player, camera)
 
 	-- le map name
 	SSL.drawString(v, 160, 12, G_BuildMapTitle(gamemap), "LTFNT%03d", V_SNAPTOTOP, FU/2, 0, 0, 0, FU)
-	SSL.drawString(v, 160, 12 + 24, "Act "..mapheaderinfo[gamemap].actnum, "TNYFN%03d", V_SNAPTOTOP, FU/2, 0, 0, 0, FU)
+	if mapheaderinfo[gamemap].actnum then
+		SSL.drawString(v, 160, 12 + 24, "Act "..mapheaderinfo[gamemap].actnum, "TNYFN%03d", V_SNAPTOTOP, FU/2, 0, 0, 0, FU)
+	end
 
 	-- draw characters
 	local floorY = 180 * FU
@@ -148,6 +150,7 @@ function titleCardMenu:draw(v, player, camera)
 	)
 
 	local characterX = 160 * FU + distance
+	local characterScale = drawScale
 	local character, flipCharacter = v.getSprite2Patch(
 		skin,
 		SPR2_RUN_,
@@ -155,11 +158,14 @@ function titleCardMenu:draw(v, player, camera)
 		frameByTime(leveltime, skins[skin].sprites[SPR2_RUN_].numframes, 2),
 		7
 	)
+	if (skins[skin].flags & SF_HIRES) then
+		characterScale = FixedMul($, skins[skin].highresscale)
+	end
 	
 	drawSprite(v, tailsX,     floorY + tailsY, drawScale, nil, tailsOverlay, V_SNAPTOBOTTOM, flipTailsOverlay, v.getColormap(TC_ALLWHITE, SKINCOLOR_WHITE))
 	drawSprite(v, tailsX,     floorY + tailsY, drawScale, nil, tails,        V_SNAPTOBOTTOM, flipTails,        v.getColormap(TC_ALLWHITE, SKINCOLOR_WHITE))
 	drawSprite(v, fangX,      floorY,          drawScale, nil, fang,         V_SNAPTOBOTTOM, flipFang,         v.getColormap(TC_ALLWHITE, SKINCOLOR_WHITE))
-	drawSprite(v, characterX, floorY,          drawScale, nil, character,    V_SNAPTOBOTTOM, flipCharacter,    v.getColormap(TC_ALLWHITE, SKINCOLOR_WHITE))
+	drawSprite(v, characterX, floorY,          characterScale, nil, character,    V_SNAPTOBOTTOM, flipCharacter,    v.getColormap(TC_ALLWHITE, SKINCOLOR_WHITE))
 
 	if progress < 10 then
 		FH:drawPaletteRect(v, 0, 0, screenWidth, screenHeight, 0, V_SNAPTOTOP|V_SNAPTOLEFT|(V_10TRANS * progress))
