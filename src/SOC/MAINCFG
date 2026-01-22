@@ -192,15 +192,6 @@ SkyNum = 64
 NoVisitNeeded = True
 Lua.FH_SkipStartingCutscene = True
 
-Level MB
-LevelName = Meadow Match
-Music = MP_MED
-TypeOfLevel = Battle
-SelectHeading = Battle Maps
-NextLevel = F0
-SkyNum = 2
-Lua.FH_SkipStartingCutscene = True
-
 
     ##################
     #                #
