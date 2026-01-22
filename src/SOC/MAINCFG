@@ -65,7 +65,19 @@ NoVisitNeeded = true
 InterScreen = INTERSCR
 FlickyList = Demo
 Lua.FH_EscapeTime = 360
-Lua.FH_SkipStartingCutscene = true
+Lua.FH_SkipStartingCutscene = True
+
+Level 35
+Levelname = FD Castle Eggman
+Music = FDEMO5
+TypeOfLevel = Escape
+SkyNum = 65
+SelectHeading = Vanilla (Legacy)
+NoVisitNeeded = True
+FlickyList = Demo
+Weather = 1
+Lua.FH_EscapeTime = 360
+Lua.FH_SkipStartingCutscene = True
 
 Level P1
 Levelname = Acidic Overflux
