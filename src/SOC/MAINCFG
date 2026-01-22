@@ -83,7 +83,7 @@ Level P1
 Levelname = Acidic Overflux
 TypeOfLevel = Escape
 LevelFlags = 518
-FlickyList = BlueBird,Rabbit,Chipmunk,Penguin,Puffin,Rat,Cat,Spider,Bat
+FlickyList = BlueBird,Rabbit,Penguin,Puffin,Rat,Cat,Spider,Bat
 NoReload = true
 Skynum = 86
 Weather = 5
@@ -91,9 +91,9 @@ Music = BRCRPW
 SelectHeading = Fang's Heist
 ForceResetMusic = 0
 MusicInterFadeOut = 3000
-Lua.FH_EscapeHurryUp = false
+Lua.FH_EscapeHurryUp = False
 Lua.FH_EscapeTheme = OLNORE
-Lua.FH_EscapeTime = 177
+Lua.FH_EscapeTime = 200
 Lua.FH_EscapeLinedefTrigger = 9000
 
 Level 25
