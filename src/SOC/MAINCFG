@@ -7,9 +7,47 @@ GameData = fangsheist.dat
 
 Clear All
 
-Unlockable 2
-Unlockable 3
-Unlockable 23
+    ##################
+    #                #
+    #  UNLOCKABLES   #
+    #                #
+    ##################
+
+Unlockable 1
+Name = Level Select
+Type = LevelSelect
+Height = 20
+ConditionSet = -1
+Var = 1
+
+Unlockable 20
+Name = Sound Test (Vanilla)
+Type = SoundTest
+Height = 40
+ConditionSet = -1
+Var = 1
+
+Unlockable 21
+Name = Sound Test (Heist)
+Type = SoundTest
+Height = 50
+ConditionSet = -1
+Var = 2
+#In the future this will be a Warp I assure you :eyes:
+
+Unlockable 10
+Name = ???????
+Type = Warp
+Height = 70
+ConditionSet = -1
+Var = Z2
+
+Unlockable 11
+Name = [TEST]
+Type = Warp
+Height = 80
+ConditionSet = -1
+Var = Z1
 
 
     ##################
@@ -59,7 +97,7 @@ Music = FDEMO3
 TypeOfLevel = Escape
 NextLevel = 1
 SkyNum = 2
-LevelSelect = 2
+LevelSelect = 1
 SelectHeading = Vanilla (Legacy)
 NoVisitNeeded = true
 InterScreen = INTERSCR
@@ -72,6 +110,7 @@ Levelname = FD Castle Eggman
 Music = FDEMO5
 TypeOfLevel = Escape
 SkyNum = 65
+LevelSelect = 1
 SelectHeading = Vanilla (Legacy)
 NoVisitNeeded = True
 FlickyList = Demo
@@ -88,6 +127,7 @@ NoReload = true
 Skynum = 86
 Weather = 5
 Music = BRCRPW
+LevelSelect = 1
 SelectHeading = Fang's Heist
 ForceResetMusic = 0
 MusicInterFadeOut = 3000
