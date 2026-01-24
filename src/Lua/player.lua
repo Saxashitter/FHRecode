@@ -115,6 +115,10 @@ end
 --- @field quizTimeSelected boolean
 --- If this is true, the player is qualified to be in the intermission.
 --- @field qualified boolean
+--- If this is a string, this is the current song playing for the player, which overrides FHN.globalMusic.
+--- @field music string|nil
+--- If this is valid, this determines if the music should loop or not. If heistRound_t.music is valid, you can guarantee this would be as well.
+--- @field musicLoop boolean|nil
 
 setmetatable(FH.characterHealths, { -- NOTE: maybe not the best way to do this? -pac
 	__index = function(self, key)
@@ -148,6 +152,7 @@ function FH:initPlayerRound(player)
 		downedTime = 0,
 		canUseInstaShield = true,
 		health = FH.characterHealths[skins[player.skin].name],
+		skin = player.skin,
 		canUseBlock = true,
 		blockMaxStrength = FU,
 		blockStrength = FU,
@@ -170,7 +175,8 @@ function FH:initPlayerRound(player)
 		selectedTeamPlayer = 1,
 		quizTimeSelection = 1,
 		quizTimeSelected = false,
-		qualified = false
+		qualified = false,
+		music = nil
 	}
 
 	player.hr = playerRound
@@ -331,10 +337,6 @@ addHook("ThinkFrame", function()
 
 	for player in players.iterate do
 		initChecks(player, gametype)
- 
-		if player.hr.skin ~= nil and player.skin ~= player.hr.skin then
-			R_SetPlayerSkin(player, player.hr.skin)
-		end
 
 		-- TODO: make our own counter that accounts for fixed values.
 		-- UPD: this is half done, need to make the scoreboard

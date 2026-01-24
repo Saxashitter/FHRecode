@@ -2,6 +2,9 @@
 --- If this isn't nil, the mobj has an insta-shield active.
 --- @field fh_instashield mobj_t|nil
 
+FH:makeHook("ClashInstashield", "boolean")
+FH:makeHook("CounterInstashield", "boolean")
+
 --- Runs the hit-scan and follow logic for the insta-shield.
 --- Returns a table of mobjs hit and the count.
 --- @param mobj mobj_t
@@ -26,12 +29,9 @@ function A_FH_InstaShieldTicker(mobj, xyRange, zRange)
 	zRange  = FixedMul(zRange,  mobj.target.scale)
 
 	local ox, oy, oz = mobj.target.x, mobj.target.y, mobj.target.z + mobj.target.height / 2
-	local count = 1
 	searchBlockmap(
 		"objects",
 		function(_, foundMobj)
-			count = $ + 1
-	
 			if not foundMobj
 			or not foundMobj.valid
 			or not foundMobj.health then
@@ -50,7 +50,6 @@ function A_FH_InstaShieldTicker(mobj, xyRange, zRange)
 			local xyDist = R_PointToDist2(ox, oy, foundMobj.x, foundMobj.y)
 			local zDist = abs(oz - (foundMobj.z + foundMobj.height / 2))
 			
-			-- Oval hit check
 			local nx = FixedDiv(xyDist, xyRange)
 			local nz = FixedDiv(zDist,  zRange)
 			
@@ -58,17 +57,22 @@ function A_FH_InstaShieldTicker(mobj, xyRange, zRange)
 				return
 			end
 
-			if foundMobj.fh_instashield then
-				FH:knockbackMobj(foundMobj, mobj.target)
-				FH:knockbackMobj(mobj.target, foundMobj)
+			if FH:runHook("CounterInstashield", foundMobj.type, foundMobj, mobj.target) then
+				return true
+			end
 
+			if foundMobj.fh_instashield or FH:runHook("ClashInstashield", foundMobj.type, foundMobj, mobj.target) then
+				FH:knockbackMobj(foundMobj, mobj.target)
 				S_StartSound(foundMobj,   sfx_dmpain)
 				S_StartSound(foundMobj,   sfx_mspogo)
+				if foundMobj.fh_instashield then
+					P_RemoveMobj(foundMobj.fh_instashield)
+				end
+
+				FH:knockbackMobj(mobj.target, foundMobj)
 				S_StartSound(mobj.target, sfx_dmpain)
 				S_StartSound(mobj.target, sfx_mspogo)
-	
 				P_RemoveMobj(mobj)
-				P_RemoveMobj(foundMobj.fh_instashield)
 
 				return true
 			end

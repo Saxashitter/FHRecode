@@ -12,13 +12,6 @@ Unlockable 3
 Unlockable 23
 
 
-    ##################
-    #                #
-    #  ESCAPE MAPS   #
-    #                #
-    ##################
-
-
 Level 1
 Levelname = Greenflower
 Act = 1
@@ -125,14 +118,6 @@ SelectHeading = Vanilla
 SkyNum = 99
 Lua.FH_EscapeTheme = YOKADI
 
-
-    ##################
-    #                #
-    #  BATTLE MAPS   #
-    #                #
-    ##################
-
-
 Level B0
 Levelname = Turqoise Tablet
 Keywords = TTZ
@@ -192,6 +177,20 @@ SkyNum = 64
 NoVisitNeeded = True
 Lua.FH_SkipStartingCutscene = True
 
+Level B6
+Levelname = Scarlet Land
+Act = 3
+Keywords = SLZ
+Music = GFZ1
+RecordAttack = False
+TypeOfLevel = Battle
+SkyNum = 230
+Lua.FH_VotableMap = False
+SelectHeading = Touhou
+WideIcon = True
+#Hidden = True
+Lua.FH_SkipStartingCutscene = True
+
 Level MB
 LevelName = Meadow Match
 Music = MP_MED
@@ -200,14 +199,6 @@ SelectHeading = Battle Maps
 NextLevel = F0
 SkyNum = 2
 Lua.FH_SkipStartingCutscene = True
-
-
-    ##################
-    #                #
-    # AUXILIARY MAPS #
-    #                #
-    ##################
-
 
 Level Z1
 Levelname = Test

@@ -104,6 +104,10 @@ FH.ringStates["Round 2 Teleport From"] = {
 		P_SetOrigin(player.mo, otherRing.x, otherRing.y, otherRing.z)
 		P_InstaThrust(player.mo, otherRing.angle, speed)
 
+		if FHN.globalMusic == "FH_ESC" then
+			FH:changePlayerMusic(player, "FH_RN2", true)
+		end
+
 		S_StartSound(player.mo, sfx_s1c3)
 		S_StartSound(ring, sfx_s1c3)
 		S_StartSound(otherRing, sfx_s1c3)

@@ -97,6 +97,13 @@ function gamestate:load()
 end
 
 function gamestate:update()
+	for player in players.iterate do
+		if not player.hr then continue end
+
+		if not player.hr.spectator and player.hr.skin ~= nil and player.skin ~= player.hr.skin then
+			R_SetPlayerSkin(player, player.hr.skin)
+		end
+	end
 	if FHR.gameCountdown then
 		if FHR.gameCountdown % TICRATE == 0 then
 			local sound = _G["sfx_fh_cd"..FHR.gameCountdown / TICRATE]

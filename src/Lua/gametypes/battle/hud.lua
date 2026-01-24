@@ -31,11 +31,11 @@ local function drawRightAlignedNumber(v, x, y, text, flags)
 end
 
 
-battle.hud["score"] = {}
+battle.hud.rings = {}
 
 --- @param v videolib
 --- @param player player_t
-function battle.hud.score:draw(v, player, camera, ui)
+function battle.hud.rings:draw(v, player, camera, ui)
 	--- @type tic_t
 	local time = FHR.battleTime
 

@@ -98,16 +98,6 @@ addHook("NetVars", function(network)
 	FHR = network($)
 end)
 
-addHook("MusicChange", function(old, new)
-	if new == mapmusname and FHN.globalMusic then
-		if old == FHN.globalMusic then
-			return true
-		end
-
-		return FHN.globalMusic
-	end
-end)
-
 addHook("GameQuit", function()
 	FHR = {}
 

@@ -11,6 +11,22 @@ local PORTRAIT_SCALE = (FU / 5) * 3
 
 local SWITCH_ANIM_DURATION = 25
 
+FHN.bannedSkins = {}
+COM_AddCommand("fh_banskin", function(player, skin)
+	if not (skin and skins[skin]) then
+		CONS_Printf(player, "Skin is not valid.")
+		return
+	end
+
+	FHN.bannedSkins[skin] = not $
+
+	if FHN.bannedSkins[skin] then
+		print(skins[skin].realname.." has been banned from Fang's Heist!")
+	else
+		print(skins[skin].realname.." has been unbanned from Fang's Heist!")
+	end
+end, COM_ADMIN)
+
 --- @param player player_t
 local function getTic(player)
 	return leveltime - player.hr.selectedSkinTime
@@ -31,7 +47,8 @@ function state:playerUpdate(gamestate, player)
 			newSkin = 0
 		end
 
-		while not R_SkinUsable(player, newSkin) do
+		while not R_SkinUsable(player, newSkin)
+		or FHN.bannedSkins[skins[newSkin].name] do
 			newSkin = $ + x
 			if newSkin < 0 then
 				newSkin = #skins - 1
@@ -54,6 +71,7 @@ function state:playerUpdate(gamestate, player)
 	if jump then
 		return "menus"
 	end
+
 	if spin and FH.altSkins[skins[player.skin].name] then
 		S_StartSound(nil, sfx_kc5e, player)
 		player.hr.useSuper = not $

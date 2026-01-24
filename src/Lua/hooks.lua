@@ -30,7 +30,7 @@ function returnTypes.any(old, new)
 end
 
 function FH:makeHook(name, returntype)
-	if hooks then
+	if hooks[name] then
 		return
 	end
 
@@ -68,7 +68,7 @@ local function runList(result, merge, list, ...)
 	end
 end
 
-function FH:runHook(typeArg, name, ...)
+function FH:runHook(name, typeArg, ...)
 	local def = hooks[name]
 	if not def then return end
 	
