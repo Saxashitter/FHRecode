@@ -15,6 +15,8 @@
 --- If this is true, when the player is downed, they will die.
 --- @field killOnDowned boolean
 --- If true, there are teams in the gametype.
+--- @field damageAwardsPlayers boolean
+--- If true, simply damaging players awards profit!
 --- @field teams boolean
 --- Runs upon gametype initalization, after Fang's Heist initalizes itself.
 --- @field init fun(self: heistGametype_t, gamemap: number)
@@ -52,6 +54,7 @@ local heistGametype_t = {
 	rules = 0,
 	headercolor = 103,
 	killOnDowned = false,
+	damageAwardsPlayers = true,
 	teams = true,
 	hud = {},
 

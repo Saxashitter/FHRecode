@@ -6,6 +6,7 @@ local timer = {}
 function timer:draw(v, player, camera)
 	local gametype = FH:isMode()
 	if not gametype then return end
+	if not gametype.isEscape then return end
 
 	if FHR.currentState ~= "game" then return end
 	if not FHR.escape then return end

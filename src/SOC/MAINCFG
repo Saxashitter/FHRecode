@@ -7,9 +7,41 @@ GameData = fangsheist.dat
 
 Clear All
 
-Unlockable 2
-Unlockable 3
-Unlockable 23
+Unlockable 1
+Name = Level Select
+Type = LevelSelect
+Height = 20
+ConditionSet = -1
+Var = 1
+
+Unlockable 20
+Name = Sound Test (Vanilla)
+Type = SoundTest
+Height = 40
+ConditionSet = -1
+Var = 1
+
+Unlockable 21
+Name = Sound Test (Heist)
+Type = SoundTest
+Height = 50
+ConditionSet = -1
+Var = 2
+#In the future this will be a Warp I assure you :eyes:
+
+Unlockable 10
+Name = ???????
+Type = Warp
+Height = 70
+ConditionSet = -1
+Var = Z2
+
+Unlockable 11
+Name = [TEST]
+Type = Warp
+Height = 80
+ConditionSet = -1
+Var = Z1
 
 
 Level 1
@@ -52,7 +84,7 @@ Music = FDEMO3
 TypeOfLevel = Escape
 NextLevel = 1
 SkyNum = 2
-LevelSelect = 2
+LevelSelect = 1
 SelectHeading = Vanilla (Legacy)
 NoVisitNeeded = true
 InterScreen = INTERSCR
@@ -65,6 +97,7 @@ Levelname = FD Castle Eggman
 Music = FDEMO5
 TypeOfLevel = Escape
 SkyNum = 65
+LevelSelect = 1
 SelectHeading = Vanilla (Legacy)
 NoVisitNeeded = True
 FlickyList = Demo
@@ -76,17 +109,18 @@ Level P1
 Levelname = Acidic Overflux
 TypeOfLevel = Escape
 LevelFlags = 518
-FlickyList = BlueBird,Rabbit,Chipmunk,Penguin,Puffin,Rat,Cat,Spider,Bat
+FlickyList = BlueBird,Rabbit,Penguin,Puffin,Rat,Cat,Spider,Bat
 NoReload = true
 Skynum = 86
 Weather = 5
 Music = BRCRPW
+LevelSelect = 1
 SelectHeading = Fang's Heist
 ForceResetMusic = 0
 MusicInterFadeOut = 3000
-Lua.FH_EscapeHurryUp = false
+Lua.FH_EscapeHurryUp = False
 Lua.FH_EscapeTheme = OLNORE
-Lua.FH_EscapeTime = 177
+Lua.FH_EscapeTime = 200
 Lua.FH_EscapeLinedefTrigger = 9000
 
 Level 25
@@ -167,13 +201,14 @@ SkyboxScale = 2
 NoVisitNeeded = True
 Lua.FH_SkipStartingCutscene = True
 
-Level B5
+Level B6
 Levelname = Jungle Jam
 Keywords = JJZ
 Music = JUJAZ
 TypeOfLevel = Battle
 SelectHeading = Battle Maps
 SkyNum = 64
+SkyboxScale = 8
 NoVisitNeeded = True
 Lua.FH_SkipStartingCutscene = True
 
@@ -181,23 +216,13 @@ Level B6
 Levelname = Scarlet Land
 Act = 3
 Keywords = SLZ
-Music = GFZ1
-RecordAttack = False
-TypeOfLevel = Battle
-SkyNum = 230
-Lua.FH_VotableMap = False
-SelectHeading = Touhou
-WideIcon = True
-#Hidden = True
-Lua.FH_SkipStartingCutscene = True
-
-Level MB
-LevelName = Meadow Match
-Music = MP_MED
+Music = SHTEA
 TypeOfLevel = Battle
 SelectHeading = Battle Maps
-NextLevel = F0
-SkyNum = 2
+SkyNum = 2429
+SkyboxScale = 10
+NoVisitNeeded = True
+Lua.FH_ShowdownMusic = SAOM17
 Lua.FH_SkipStartingCutscene = True
 
 Level Z1

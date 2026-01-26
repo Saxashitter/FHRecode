@@ -107,6 +107,11 @@ function A_FH_PlayerInstaShieldTicker(mobj, xyRange, zRange)
 			v.momz = mobj.target.momz
 			P_SetObjectMomZ(v, 8 * FU, true)
 			P_MovePlayer(v.player)
+
+			if v.player.hr then
+				v.player.hr.lastHitBy = mobj.target
+				print("targeto")
+			end
 		end
 	end
 

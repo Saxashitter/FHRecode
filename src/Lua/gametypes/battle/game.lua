@@ -3,27 +3,47 @@ local battle = _FH_BATTLE
 battle.signpostThing = 501
 battle.ringThing = 1
 battle.timesUpStart = 22591 * TICRATE / MUSICRATE
-battle.timeLeft = 60 * 3 -- 3 minutes
-battle.stocks = 3
+battle.freeTimeTics = 20 * TICRATE
+battle.ticsUntilDeath = 15 * TICRATE
 
 --- @param map number
 function battle:init(map)
-	FHR.battleTime = self.timeLeft * TICRATE + FH.gamestates.game.countdown
+	FHR.freeTimeTics = self.freeTimeTics
+	FHR.ticsUntilDeath = self.ticsUntilDeath
+	FHR.showdown = false
 end
 
 --- @param currentState string
 function battle:update(currentState)
 	if currentState ~= "game" then return end
 
-	FHR.battleTime = $ - 1
-
-	if FHR.battleTime == 0 then
-		for player in players.iterate do
-			if not player.hr then continue end
-			player.hr.qualified = false
-		end
-		FH:endGame()
+	if not FHR.gameCountdown and FHR.freeTimeTics then
+		FHR.freeTimeTics = $ - 1
 	end
+
+	if not FHR.freeTimeTics and not FHR.showdown then
+		FHR.ticsUntilDeath = $ - 1
+
+		if not FHR.ticsUntilDeath then
+			FHR.ticsUntilDeath = self.ticsUntilDeath
+
+			local player = self:getWorstPlayer()
+
+			if player then
+				self:eliminate(player)
+			end
+		end
+	end
+
+	-- FHR.battleTime = $ - 1
+
+	-- if FHR.battleTime == 0 then
+	-- 	for player in players.iterate do
+	-- 		if not player.hr then continue end
+	-- 		player.hr.qualified = false
+	-- 	end
+	-- 	FH:endGame()
+	-- end
 end
 
 function battle:safeFinish()
@@ -49,7 +69,8 @@ function battle:safeFinish()
 	end
 
 	if aliveCount == 2 then
-		FH:changeMusic("FH_SDN")
+		FHR.showdown = true
+		FH:changeMusic(FH:getMapVariable(nil, "fh_showdownmusic", "FH_SDN"))
 	end
 
 	if aliveCount == 1 or count == 0 then

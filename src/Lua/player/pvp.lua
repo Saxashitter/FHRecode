@@ -95,6 +95,12 @@ addHook("PlayerThink", function(player)
 		player.hr.blockCooldown = $ - 1
 	end
 
+	if not P_PlayerInPain(player)
+	or not (player.mo and player.mo.health)
+	or not (player.hr.lastHitBy and player.hr.lastHitBy.valid) then
+		player.hr.lastHitBy = nil
+	end
+
 	if player.mo then
 		if player.mo.fh_block then
 			local t = FixedDiv(player.hr.blockStrength, player.hr.blockMaxStrength)
@@ -194,7 +200,9 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 	if victim.player.powers[pw_invulnerability] then return end
 	if victim.player.powers[pw_super] then return end
 
+	local gametype = FH:isMode()
 	local damage = 18 * FU
+
 	if inflictor and inflictor.valid and inflictor.fh_playerdamage ~= nil then
 		damage = inflictor.fh_playerdamage
 	end 
@@ -256,21 +264,26 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 		and source.player.hr then
 			FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Downed "..victim.player.name)
 		end
-		
-		FH:addProfit(victim.player, -FH.profitCVars.playerDeath.value, "Got downed")
+
+		if not gametype.killOnDowned then
+			FH:addProfit(victim.player, -FH.profitCVars.playerDeath.value, "Got downed")
+		end
 		return true
 	else
 		if source
 		and source.valid
 		and source.type == MT_PLAYER
 		and source.player
-		and source.player.hr then
+		and source.player.hr
+		and gametype.damageAwardsPlayers then
 			FH:addProfit(source.player, FH.profitCVars.playerHurt.value, "Damaged "..victim.player.name)
 		end
 
 		-- TODO: unhardcode
 
-		FH:addProfit(victim.player, -FH.profitCVars.playerHurt.value, "Got hurt")
+		if gametype.damageAwardsPlayers then
+			FH:addProfit(victim.player, -FH.profitCVars.playerHurt.value, "Got hurt")
+		end
 		FH:setPlayerExpression(victim.player, "hurt", 2 * TICRATE)
 		P_DoPlayerPain(victim.player, source, inflictor)
 
@@ -292,17 +305,33 @@ addHook("MobjDamage", function(victim, inflictor, source, _, damagetype)
 	end
 end, MT_PLAYER)
 
-addHook("MobjDeath", function(victim)
+addHook("MobjDeath", function(victim, _, source, _, damagetype)
 	if not FH:isMode() then return end
 	if not victim.player then return end
 	if not victim.player.hr then return end
 
 	local player = victim.player
 
+	if player.hr and player.hr.lastHitBy and not source then
+		source = player.hr.lastHitBy
+	end
+
+	if source
+	and source.valid
+	and source.type == MT_PLAYER
+	and source.player
+	and source.player.hr
+	and not source.player.hr.spectator then
+		FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Killed "..victim.player.name)
+	end
+	
+	FH:addProfit(player, -FH.profitCVars.playerDeath.value, "Killed")
+
 	for i = #player.hr.collectibles, 1, -1 do
 		FH:dropCollectible(player, player.hr.collectibles[i])
 	end
 	FH:playerStopBlock(player, false)
+	player.hr.health = FH.characterHealths[victim.skin] or 100*FU
 end, MT_PLAYER)
 
 addHook("PlayerQuit", function(player)

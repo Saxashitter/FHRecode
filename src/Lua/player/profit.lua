@@ -151,9 +151,4 @@ addHook("MobjDeath", function(target, _, source)
 		overlay.alphaFuse = 15
 		return
 	end
-
-	if target.type == MT_PLAYER and target.player then
-		FH:addProfit(source.player, FH.profitCVars.playerDeath.value, "Killed "..target.player.name)
-		return
-	end
 end)

@@ -16,7 +16,8 @@
 --- @field spectatorMode boolean
 --- The team that this player is on.
 --- @field team heistTeam_t
-
+--- The mobj that the player was hit last by. Used for kills from pits.
+--- @field lastHitBy mobj_t|nil
 --- Initalizes the player's global variables. Should be called once per player initalization.
 --- @param player player_t
 --- @return heistPlayerGlobal_t

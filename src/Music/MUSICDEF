@@ -1,0 +1,161 @@
+Lump FH_PRG
+Title = Pregame
+Alttitle = One_More_Time
+Authors = Tokonemu
+Source = Fang's_Heist
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 108
+
+Lump FH_ESC
+Title = Escape
+Alttitle = No_More_Limits!
+Authors = Tokonemu
+Source = Fang's_Heist
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 180
+
+Lump FH_RTK
+Title = Retake_Escape
+Alttitle = Show_Up_Again!
+Authors = ZrUltra
+Source = Fang's_Heist
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 190
+
+Lump FH_OVT
+Title = Overtime!
+#Fill in Author/Real Title pls
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 170
+
+Lump FH_SDN
+Title = Last_Man_Standing!
+#Fill in Author/Real Title pls
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 172
+
+Lump FH_END
+Title = GAME!
+Alttitle = Act_Clear!
+Authors = Tokonemu
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 244
+
+Lump FH_INT
+Title = Results
+Alttitle = Roll_Down_the_Results!
+Authors = ZrUltra
+Source = Fang's_Heist
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 134
+
+Lump FH_MPV
+Title = Map_Vote
+Alttitle = Beautiful_World
+Authors = Tokonemu
+Source = Fang's_Heist
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 116
+
+Lump MAMORU
+Title = Tutorial
+Alttitle = Bless_You,_Boy!
+Authors = Yousuke_Yasui
+Source = Mamorukun_Curse
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 173
+
+Lump YOKADI
+Title = Tutorial_Escape
+Alttitle = Yo-Kai_Disco
+Authors = Yousuke_Yasui
+Source = Mamorukun_Curse
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 153
+
+Lump BRCRPW
+Title = Acidic_Overflux
+Alttitle = Burning,_Churning_Power_Plant
+Authors = Jun_Ishikawa
+Source = Kirby_&_the_Forgotten_Land
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 83
+
+Lump OLNORE
+Title = Acidic_Escape
+Alttitle = Point_of_No_Return
+Source = (Eschatos)
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 138
+
+Lump BLUISL
+Title = Turqoise_Tablet
+Alttitle = Time_for_a_Challenge!
+Authors = Jun_Ishikawa
+Source = Kirby's_Return_to_Dreamland
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 180
+
+Lump SUNSET
+Title = Sunset_Sights
+Alttitle = Splash_Hill_3
+Authors = Turret_3471
+Source = Sonic_the_Hedgehog_4_2020_Edition
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 144
+
+Lump QRTQAB
+Title = Magma_Mechanic
+Alttitle = Quartz_Quadrant_'B'_Mix
+Source = Sonic_CD_[JP]
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 145
+
+Lump DRKROM
+Title = Ghostly_Gadroon
+Alttitle = Unnamed_Final_Boss_Song
+Authors = keestak
+Source = Heck_Deck
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 100
+
+Lump BATARE
+Title = Combat_Castle
+Alttitle = Dyna_Blade
+Authors = Jun_Ishikawa
+Source = Kirby_Air_Ride
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 135
+
+Lump
+Title = Jungle_Jam
+Alttitle = Jungle_Man_[MMX_Style]
+Authors = 브금맨_JX_(Mega_Man_Shattered_Diamond)
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 158
+
+Lump TESTY3
+Title = Test
+Alttitle = Miles_Shop
+Source = (Kirby_Air_Riders
+Soundtestpage = 2
+Soundtestcond = 1001
+BPM = 115

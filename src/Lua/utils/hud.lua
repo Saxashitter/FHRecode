@@ -15,9 +15,8 @@ function FH:getCharPortrait(v, skin, colorable)
 		return v.cachePatch(name..skin)
 	end
 
-	local portrait = v.getSprite2Patch(data.name, SPR2_XTRA, false, B, 0)
-	if portrait then
-		return portrait
+	if data.sprites[SPR2_XTRA].numframes >= 2 then
+		return v.getSprite2Patch(data.name, SPR2_XTRA, false, B, 0)
 	end
 
 	return v.cachePatch("MISSING")

@@ -104,10 +104,13 @@ doUiFile("menus/quiztime")
 -- ingame
 doUiFile("ingame/profit")
 doUiFile("ingame/place")
-doUiFile("ingame/timer")
 doUiFile("ingame/health")
 doUiFile("ingame/team")
-doUiFile("ingame/warning")
+
+doUiFile("ingame/escape/timer")
+doUiFile("ingame/escape/warning")
+
+doUiFile("ingame/battle/elimtimer")
 
 -- modifiers
 doUiFile("ingame/modifiers/jumpscare")
