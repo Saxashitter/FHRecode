@@ -160,6 +160,7 @@ TypeOfLevel = Battle
 SelectHeading = Battle Maps
 SkyNum = 69
 NoVisitNeeded = True
+Lua.FH_ShowdownMusic = TTZOVR
 Lua.FH_SkipStartingCutscene = True
 
 Level B1
@@ -170,6 +171,7 @@ Music = SUNSET
 TypeOfLevel = Battle
 NoVisitNeeded = True
 SelectHeading = Battle Maps
+Lua.FH_ShowdownMusic = SSZOVR
 Lua.FH_SkipStartingCutscene = True
 
 Level B2
@@ -233,9 +235,9 @@ Music = TESTY3
 RecordAttack = False
 TypeOfLevel = Escape,Battle
 SkyNum = 230
-Lua.FH_VotableMap = False
 SelectHeading = Auxiliary Maps
 WideIcon = True
 #Hidden = True
 #Commented for ease of development, de-comment before release
+Lua.FH_VotableMap = False
 Lua.FH_SkipStartingCutscene = True
