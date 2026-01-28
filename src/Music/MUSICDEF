@@ -109,11 +109,28 @@ Soundtestpage = 2
 Soundtestcond = 0
 BPM = 180
 
+Lump TTZOVR
+Title = Turqoise_Overtime
+Alttitle = Rush_to_the_Goal
+Authors = Jun_Ishikawa
+Source = Kirby's_Return_to_Dreamland
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 218
+
 Lump SUNSET
 Title = Sunset_Sights
 Alttitle = Splash_Hill_3
 Authors = Turret_3471
 Source = Sonic_the_Hedgehog_4_2020_Edition
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 144
+
+Lump SSZOVR
+Title = Sunset_Overtime
+Authors = Jun_Senoue
+Source = Sonic_the_Hedgehog_4
 Soundtestpage = 2
 Soundtestcond = 0
 BPM = 144
@@ -144,7 +161,7 @@ Soundtestpage = 2
 Soundtestcond = 0
 BPM = 135
 
-Lump
+Lump JUJAZ
 Title = Jungle_Jam
 Alttitle = Jungle_Man_[MMX_Style]
 Authors = 브금맨_JX_(Mega_Man_Shattered_Diamond)
@@ -152,10 +169,22 @@ Soundtestpage = 2
 Soundtestcond = 0
 BPM = 158
 
+Lump SHTEA
+Title = Scarlet_Land
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 145
+
+Lump SHTEA
+Title = Scarlet_Overtime
+Soundtestpage = 2
+Soundtestcond = 0
+BPM = 145
+
 Lump TESTY3
 Title = Test
 Alttitle = Miles_Shop
-Source = (Kirby_Air_Riders
+Source = Kirby_Air_Riders
 Soundtestpage = 2
 Soundtestcond = 1001
 BPM = 115
