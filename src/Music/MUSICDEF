@@ -111,7 +111,7 @@ BPM = 180
 
 Lump TTZOVR
 Title = Turqoise_Overtime
-Alttitle = Rush_to_the_Goal
+Alttitle = Rush_to_the_Goal!
 Authors = Jun_Ishikawa
 Source = Kirby's_Return_to_Dreamland
 Soundtestpage = 2
@@ -129,6 +129,7 @@ BPM = 144
 
 Lump SSZOVR
 Title = Sunset_Overtime
+Alttitle = Splash_Hill_Melody
 Authors = Jun_Senoue
 Source = Sonic_the_Hedgehog_4
 Soundtestpage = 2
@@ -163,8 +164,9 @@ BPM = 135
 
 Lump JUJAZ
 Title = Jungle_Jam
-Alttitle = Jungle_Man_[MMX_Style]
-Authors = 브금맨_JX_(Mega_Man_Shattered_Diamond)
+Alttitle = Jungle_Man_(MMX_Style)
+Authors = 브금맨_JX
+Source = Mega_Man_Shattered_Diamond
 Soundtestpage = 2
 Soundtestcond = 0
 BPM = 158
@@ -175,7 +177,7 @@ Soundtestpage = 2
 Soundtestcond = 0
 BPM = 145
 
-Lump SHTEA
+Lump SAOM17
 Title = Scarlet_Overtime
 Soundtestpage = 2
 Soundtestcond = 0
