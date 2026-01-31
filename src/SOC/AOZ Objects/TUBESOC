@@ -118,6 +118,7 @@ ReactionTime = 20
 #$Sprite TBRFA0
 #$Category Fangs Heist Decco\Test Tube Subjects
 #$NotAngled
+#Replace
 
 Object MT_TUBEREF2
 MapThingNum = 5201
@@ -157,6 +158,7 @@ ReactionTime = 20
 #$Sprite TBRFD0
 #$Category Fangs Heist Decco\Test Tube Subjects
 #$NotAngled
+#Replace
 
 Object MT_TUBEREF5
 MapThingNum = 5204
@@ -170,6 +172,7 @@ ReactionTime = 20
 #$Sprite TBRFE0
 #$Category Fangs Heist Decco\Test Tube Subjects
 #$NotAngled
+#Replace
 
 Object MT_TUBEREF7
 MapThingNum = 5206
@@ -183,6 +186,7 @@ ReactionTime = 20
 #$Sprite TBRFF0
 #$Category Fangs Heist Decco\Test Tube Subjects
 #$NotAngled
+#Replace
 
 Object MT_TUBEREF8
 MapThingNum = 5207
@@ -196,6 +200,7 @@ ReactionTime = 20
 #$Sprite TBRFG0
 #$Category Fangs Heist Decco\Test Tube Subjects
 #$NotAngled
+#Replace
 
 Object MT_TUBEREF9
 MapThingNum = 5208
@@ -209,6 +214,7 @@ ReactionTime = 20
 #$Sprite TBRFH0
 #$Category Fangs Heist Decco\Test Tube Subjects
 #$NotAngled
+#Replace
 
 Object MT_TUBEREFB
 MapThingNum = 5210
@@ -235,6 +241,7 @@ ReactionTime = 20
 #$Sprite TBRFJ0
 #$Category Fangs Heist Decco\Test Tube Subjects
 #$NotAngled
+#Replace(?)
 
 Object MT_TUBEREFD
 MapThingNum = 5212
@@ -261,6 +268,7 @@ ReactionTime = 20
 #$Sprite TBRFL0
 #$Category Fangs Heist Decco\Test Tube Subjects
 #$NotAngled
+#Replace
 
 Object MT_TUBEREFF
 MapThingNum = 5214
@@ -274,6 +282,7 @@ ReactionTime = 20
 #$Sprite TBRFM0
 #$Category Fangs Heist Decco\Test Tube Subjects
 #$NotAngled
+#Replace
 
 Object MT_TUBEREFG
 MapThingNum = 5215
@@ -287,6 +296,7 @@ ReactionTime = 20
 #$Sprite TBRFN0
 #$Category Fangs Heist Decco\Test Tube Subjects
 #$NotAngled
+#Replace
 
 Object MT_TUBEREFH
 MapThingNum = 5216
@@ -300,3 +310,4 @@ ReactionTime = 20
 #$Sprite TBRFO0
 #$Category Fangs Heist Decco\Test Tube Subjects
 #$NotAngled
+#Replace(?)
