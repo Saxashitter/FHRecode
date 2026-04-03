@@ -105,23 +105,24 @@ Weather = 1
 Lua.FH_EscapeTime = 360
 Lua.FH_SkipStartingCutscene = True
 
-Level P1
-Levelname = Acidic Overflux
-TypeOfLevel = Escape
-LevelFlags = 518
-FlickyList = BlueBird,Rabbit,Penguin,Puffin,Rat,Cat,Spider,Bat
-NoReload = true
-Skynum = 86
-Weather = 5
-Music = BRCRPW
-LevelSelect = 1
-SelectHeading = Fang's Heist
-ForceResetMusic = 0
-MusicInterFadeOut = 3000
-Lua.FH_EscapeHurryUp = False
-Lua.FH_EscapeTheme = OLNORE
-Lua.FH_EscapeTime = 200
-Lua.FH_EscapeLinedefTrigger = 9000
+#Level P1
+#Levelname = Acidic Overflux
+#TypeOfLevel = Escape
+#LevelFlags = 518
+#FlickyList = BlueBird,Rabbit,Penguin,Puffin,Rat,Cat,Spider,Bat
+#NoReload = true
+#Skynum = 86
+#Weather = 5
+#Music = BRCRPW
+#LevelSelect = 1
+#SelectHeading = Fang's Heist
+#ForceResetMusic = 0
+#MusicInterFadeOut = 3000
+#Lua.FH_EscapeHurryUp = False
+#Lua.FH_EscapeTheme = OLNORE
+#Lua.FH_EscapeTime = 200
+#Lua.FH_EscapeLinedefTrigger = 9000
+#AOZ is dead. Commented in case ya'll wanna replace it or something
 
 Level 25
 Levelname = Black Core
