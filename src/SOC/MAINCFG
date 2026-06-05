@@ -43,6 +43,9 @@ Height = 80
 ConditionSet = -1
 Var = Z1
 
+#lol, gotta make it work
+Level 99
+Lua.FH_Titlescreen = true
 
 Level 1
 Levelname = Greenflower

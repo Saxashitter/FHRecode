@@ -2,6 +2,13 @@
 --- If this isn't nil, the mobj has an insta-shield active.
 --- @field fh_instashield mobj_t|nil
 
+for i = 1, 4 do
+	local caption = "Smash"
+
+	sfxinfo[freeslot("sfx_dmga"..i)].caption = caption
+	sfxinfo[freeslot("sfx_dmgb"..i)].caption = caption
+end
+
 FH:makeHook("ClashInstashield", "boolean")
 FH:makeHook("CounterInstashield", "boolean")
 
