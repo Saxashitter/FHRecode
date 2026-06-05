@@ -108,23 +108,24 @@ Weather = 1
 Lua.FH_EscapeTime = 360
 Lua.FH_SkipStartingCutscene = True
 
-Level P1
-Levelname = Acidic Overflux
-TypeOfLevel = Escape
-LevelFlags = 518
-FlickyList = BlueBird,Rabbit,Penguin,Puffin,Rat,Cat,Spider,Bat
-NoReload = true
-Skynum = 86
-Weather = 5
-Music = BRCRPW
-LevelSelect = 1
-SelectHeading = Fang's Heist
-ForceResetMusic = 0
-MusicInterFadeOut = 3000
-Lua.FH_EscapeHurryUp = False
-Lua.FH_EscapeTheme = OLNORE
-Lua.FH_EscapeTime = 200
-Lua.FH_EscapeLinedefTrigger = 9000
+#Level P1
+#Levelname = Acidic Overflux
+#TypeOfLevel = Escape
+#LevelFlags = 518
+#FlickyList = BlueBird,Rabbit,Penguin,Puffin,Rat,Cat,Spider,Bat
+#NoReload = true
+#Skynum = 86
+#Weather = 5
+#Music = BRCRPW
+#LevelSelect = 1
+#SelectHeading = Fang's Heist
+#ForceResetMusic = 0
+#MusicInterFadeOut = 3000
+#Lua.FH_EscapeHurryUp = False
+#Lua.FH_EscapeTheme = OLNORE
+#Lua.FH_EscapeTime = 200
+#Lua.FH_EscapeLinedefTrigger = 9000
+#AOZ is dead. Commented in case ya'll wanna replace it or something
 
 Level 25
 Levelname = Black Core
@@ -163,6 +164,7 @@ TypeOfLevel = Battle
 SelectHeading = Battle Maps
 SkyNum = 69
 NoVisitNeeded = True
+Lua.FH_ShowdownMusic = TTZOVR
 Lua.FH_SkipStartingCutscene = True
 
 Level B1
@@ -173,6 +175,7 @@ Music = SUNSET
 TypeOfLevel = Battle
 NoVisitNeeded = True
 SelectHeading = Battle Maps
+Lua.FH_ShowdownMusic = SSZOVR
 Lua.FH_SkipStartingCutscene = True
 
 Level B2
@@ -236,9 +239,9 @@ Music = TESTY3
 RecordAttack = False
 TypeOfLevel = Escape,Battle
 SkyNum = 230
-Lua.FH_VotableMap = False
 SelectHeading = Auxiliary Maps
 WideIcon = True
 #Hidden = True
 #Commented for ease of development, de-comment before release
+Lua.FH_VotableMap = False
 Lua.FH_SkipStartingCutscene = True
